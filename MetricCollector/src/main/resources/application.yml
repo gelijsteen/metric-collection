@@ -1,0 +1,10 @@
+reader:
+  jacoco:
+#    targetDirectory: SystemTest/target/
+    targetDirectory: /home/tegel/Courses/Thesis/Bears/bears-benchmark/wffweb/target/
+    parallel: true
+
+writer:
+#  csv:
+#    outputFile: MetricCollector/target/output.csv
+  console: {}
