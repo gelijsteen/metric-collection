@@ -1,0 +1,21 @@
+<profile xmlns="http://maven.apache.org/POM/4.0.0">
+    <id>test-analysis</id>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.uva</groupId>
+            <artifactId>JacocoListener</artifactId>
+        </dependency>
+    </dependencies>
+</profile>

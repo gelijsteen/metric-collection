@@ -18,6 +18,7 @@
 
         <jacoco.version>0.8.8</jacoco.version>
         <snakeyaml.version>1.30</snakeyaml.version>
+        <dom4j.version>2.1.3</dom4j.version>
         <lombok.version>1.18.22</lombok.version>
         <logback.version>1.2.11</logback.version>
 
@@ -51,6 +52,12 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
+                <groupId>org.dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
@@ -72,6 +79,12 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
                 <version>${junit-jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -111,5 +124,6 @@
         <module>JacocoListener</module>
         <module>MetricCollector</module>
         <module>SystemTest</module>
+        <module>MavenPreparation</module>
     </modules>
 </project>
