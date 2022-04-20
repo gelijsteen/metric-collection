@@ -40,10 +40,10 @@ public class Main {
             return;
         }
 
-        Reader reader = wireReader(args[0], args.length == 2 ? args[1] : null);
+        Reader reader = wireReader(args[0], args.length >= 2 ? args[1] : null);
         List<CoverageFilter> coverageFilters = wireCoverageFilters();
         List<MetricCollector> metricCollectors = wireMetricCollectors();
-        List<Writer> writers = wireWriters(args[0]);
+        List<Writer> writers = wireWriters(args[0], args.length >= 3 ? args[2] : null);
 
         new MetricCalculation(reader, coverageFilters, metricCollectors, writers).calculate();
     }
@@ -53,8 +53,8 @@ public class Main {
         Optional.ofNullable(override).ifPresent(v -> readerConfiguration.getReader().getJacoco().setTargetDirectory(v));
         return Optional.ofNullable(readerConfiguration.getReader().getJacoco())
             .map(jacocoReaderConfiguration -> {
-                JacocoFileParser jacocoFileParser = new JacocoFileParser(readerConfiguration.getReader().getJacoco());
-                ProjectResourceLoader projectResourceLoader = new ProjectResourceLoader(readerConfiguration.getReader().getJacoco());
+                JacocoFileParser jacocoFileParser = new JacocoFileParser();
+                ProjectResourceLoader projectResourceLoader = new ProjectResourceLoader();
                 return new JacocoReader(readerConfiguration.getReader().getJacoco(), jacocoFileParser, projectResourceLoader);
             })
             .orElseThrow(() -> new IllegalArgumentException("Required reader configuration missing."));
@@ -71,8 +71,9 @@ public class Main {
             new UniqueMethodsMetricCollector());
     }
 
-    private static List<Writer> wireWriters(String configurationFile) {
+    private static List<Writer> wireWriters(String configurationFile, String override) {
         WriterConfiguration writerConfiguration = loadConfiguration(configurationFile, WriterConfiguration.class);
+        Optional.ofNullable(override).ifPresent(v -> writerConfiguration.getWriter().getCsv().setOutputFile(v));
         return Stream.of(
                 Optional.ofNullable(writerConfiguration.getWriter().getCsv()).map(CsvWriter::new),
                 Optional.ofNullable(writerConfiguration.getWriter().getConsole()).map(configuration -> new ConsoleWriter()))

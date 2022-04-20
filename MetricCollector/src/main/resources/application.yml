@@ -1,7 +1,8 @@
 reader:
   jacoco:
 #    targetDirectory: SystemTest/target/
-    targetDirectory: /home/tegel/Courses/Thesis/Bears/bears-benchmark/wffweb/target/
+#    targetDirectory: /home/tegel/Courses/Thesis/Bears/repositories/webfirmframework-wff-453188520-453188718
+    targetDirectory: /home/tegel/Courses/Thesis/Bears/repositories/AxonFramework-AxonFramework-451926440-451937647
     parallel: true
 
 writer:

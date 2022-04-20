@@ -15,13 +15,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JacocoFileParser {
 
-    private final JacocoReaderConfiguration configuration;
     private ExecutionDataStore executionDataStore;
 
     @SneakyThrows
-    Map<String, ExecutionDataStore> readJacocoExec() {
+    Map<String, ExecutionDataStore> readJacocoExec(String targetDirectory) {
         Map<String, ExecutionDataStore> map = new HashMap<>();
-        try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(configuration.getTargetDirectory() + "jacoco.exec")))) {
+        try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(targetDirectory + "/jacoco.exec")))) {
             ExecutionDataReader reader = new ExecutionDataReader(inputStream);
             reader.setSessionInfoVisitor(sessionInfo -> executionDataStore = map.computeIfAbsent(sessionInfo.getId(), key -> new ExecutionDataStore()));
             reader.setExecutionDataVisitor(executionData -> executionDataStore.put(executionData));

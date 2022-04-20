@@ -6,7 +6,7 @@
 
     <groupId>org.uva</groupId>
     <artifactId>ya-maven-plugin</artifactId>
-    <version>${revision}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>

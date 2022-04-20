@@ -9,7 +9,7 @@
     <parent>
         <artifactId>ya-maven-plugin</artifactId>
         <groupId>org.uva</groupId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>

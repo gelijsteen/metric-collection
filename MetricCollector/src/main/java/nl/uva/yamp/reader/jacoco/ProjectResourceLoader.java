@@ -1,6 +1,5 @@
 package nl.uva.yamp.reader.jacoco;
 
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -11,14 +10,32 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@RequiredArgsConstructor
 public class ProjectResourceLoader {
 
-    private final JacocoReaderConfiguration configuration;
+    @SneakyThrows
+    Set<Module> getTargetDirectories(String rootDirectory) {
+        Path classesDirectory = new File(rootDirectory).toPath();
+        try (Stream<Path> paths = Files.find(classesDirectory, Integer.MAX_VALUE, this::isJacocoTargetDirectory)) {
+            return paths.map(this::createModule).collect(Collectors.toSet());
+        }
+    }
+
+    private boolean isJacocoTargetDirectory(Path path, BasicFileAttributes basicFileAttributes) {
+        return path.getFileName().toString().equals("target") &&
+            path.resolve("jacoco.exec").toFile().exists() &&
+            path.resolve("classes").toFile().exists();
+    }
+
+    private Module createModule(Path path) {
+        return Module.builder()
+            .targetDirectory(path.toAbsolutePath().toString())
+            .name(path.getParent().getFileName().toString())
+            .build();
+    }
 
     @SneakyThrows
-    Set<File> getClassFiles() {
-        Path classesDirectory = new File(configuration.getTargetDirectory() + "classes").toPath();
+    Set<File> getClassFiles(String targetDirectory) {
+        Path classesDirectory = new File(targetDirectory + "/classes").toPath();
         try (Stream<Path> paths = Files.find(classesDirectory, Integer.MAX_VALUE, this::isClassFile)) {
             return paths.map(Path::toFile).collect(Collectors.toSet());
         }

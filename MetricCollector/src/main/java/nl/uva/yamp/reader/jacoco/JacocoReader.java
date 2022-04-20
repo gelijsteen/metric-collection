@@ -2,6 +2,7 @@ package nl.uva.yamp.reader.jacoco;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.Reader;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
@@ -20,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JacocoReader implements Reader {
 
@@ -30,9 +32,19 @@ public class JacocoReader implements Reader {
     @Override
     @SneakyThrows
     public Set<Coverage> read() {
-        Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec();
+        Set<Module> targetDirectories = projectResourceLoader.getTargetDirectories(configuration.getTargetDirectory());
+        return targetDirectories.stream()
+            .map(this::readModule)
+            .flatMap(Set::stream)
+            .collect(Collectors.toSet());
+    }
 
-        Set<File> files = projectResourceLoader.getClassFiles();
+    private Set<Coverage> readModule(Module module) {
+        log.debug("Discovered module: {}", module.getName());
+
+        Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec(module.getTargetDirectory());
+
+        Set<File> files = projectResourceLoader.getClassFiles(module.getTargetDirectory());
 
         return (configuration.getParallel() ? jacocoData.entrySet().parallelStream() : jacocoData.entrySet().stream())
             .filter(pair -> isValidSessionId(pair.getKey()))
