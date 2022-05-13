@@ -1,6 +1,7 @@
 package nl.uva.yamp.core.model.metric;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -8,6 +9,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@EqualsAndHashCode
 public class IntegerMetric implements Metric {
 
     @NonNull
