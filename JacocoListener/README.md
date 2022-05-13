@@ -1,6 +1,8 @@
 ### Jacoco Listener
 
-To set up the Jacoco Listener to collect coverage data for individual test cases, add the profile below to the `pom.xml` file, then run the tests using `mvn clean test -Ptest-analysis`. To automate the modification of `pom.xml` files you can use the `MavenPreparation` module.
+To set up the Jacoco Listener to collect coverage data for individual test cases, add the profile below to the `pom.xml` file, then run the tests using `mvn clean test -Ptest-analysis`.
+
+**Note**: To automate the modification of `pom.xml` files you can use the `MavenPreparation` module.
 
 ```xml
 <profile>

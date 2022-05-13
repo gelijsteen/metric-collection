@@ -9,7 +9,7 @@ import lombok.Setter;
 public class JacocoReaderConfiguration {
 
     @NonNull
-    private String targetDirectory;
+    private String projectDirectory;
     @NonNull
     private Boolean parallel;
 }

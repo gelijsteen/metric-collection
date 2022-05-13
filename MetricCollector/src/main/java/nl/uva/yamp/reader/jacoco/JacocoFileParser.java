@@ -8,7 +8,7 @@ import org.jacoco.core.data.ExecutionDataStore;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +18,9 @@ public class JacocoFileParser {
     private ExecutionDataStore executionDataStore;
 
     @SneakyThrows
-    Map<String, ExecutionDataStore> readJacocoExec(String targetDirectory) {
+    Map<String, ExecutionDataStore> readJacocoExec(Path targetDirectory) {
         Map<String, ExecutionDataStore> map = new HashMap<>();
-        try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(targetDirectory + "/jacoco.exec")))) {
+        try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(targetDirectory.resolve("jacoco.exec")))) {
             ExecutionDataReader reader = new ExecutionDataReader(inputStream);
             reader.setSessionInfoVisitor(sessionInfo -> executionDataStore = map.computeIfAbsent(sessionInfo.getId(), key -> new ExecutionDataStore()));
             reader.setExecutionDataVisitor(executionData -> executionDataStore.put(executionData));

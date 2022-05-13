@@ -1,3 +1,6 @@
 .idea
-**/target
+JacocoListener/target
+MavenPreparation/target
+MetricCollector/target
+SystemTest/target
 *-reduced-pom.xml

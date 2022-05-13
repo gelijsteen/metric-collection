@@ -13,9 +13,9 @@ import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,28 +27,29 @@ public class JacocoReader implements Reader {
 
     private final JacocoReaderConfiguration configuration;
     private final JacocoFileParser jacocoFileParser;
-    private final ProjectResourceLoader projectResourceLoader;
+    private final TargetDirectoryLocator targetDirectoryLocator;
+    private final ClassFileLoader classFileLoader;
 
     @Override
     @SneakyThrows
     public Set<Coverage> read() {
-        Set<Module> targetDirectories = projectResourceLoader.getTargetDirectories(configuration.getTargetDirectory());
+        Set<TargetDirectory> targetDirectories = targetDirectoryLocator.findTargetDirectories(configuration.getProjectDirectory());
         return targetDirectories.stream()
             .map(this::readModule)
             .flatMap(Set::stream)
             .collect(Collectors.toSet());
     }
 
-    private Set<Coverage> readModule(Module module) {
-        log.debug("Discovered module: {}", module.getName());
+    private Set<Coverage> readModule(TargetDirectory targetDirectory) {
+        log.debug("Discovered module: {}", targetDirectory.getModuleName());
 
-        Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec(module.getTargetDirectory());
+        Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec(targetDirectory.getPath());
 
-        Set<File> files = projectResourceLoader.getClassFiles(module.getTargetDirectory());
+        Set<Path> classFiles = classFileLoader.getClassFiles(targetDirectory.getPath());
 
         return (configuration.getParallel() ? jacocoData.entrySet().parallelStream() : jacocoData.entrySet().stream())
             .filter(pair -> isValidSessionId(pair.getKey()))
-            .map(pair -> collectTestMethodData(pair.getKey(), pair.getValue(), files))
+            .map(pair -> collectTestMethodData(pair.getKey(), pair.getValue(), classFiles))
             .collect(Collectors.toSet());
     }
 
@@ -56,8 +57,8 @@ public class JacocoReader implements Reader {
         return sessionId != null && sessionId.contains("#");
     }
 
-    private Coverage collectTestMethodData(String sessionId, ExecutionDataStore executionDataStore, Set<File> files) {
-        CoverageBuilder coverageBuilder = getCoverageBuilder(executionDataStore, files);
+    private Coverage collectTestMethodData(String sessionId, ExecutionDataStore executionDataStore, Set<Path> classFiles) {
+        CoverageBuilder coverageBuilder = getCoverageBuilder(executionDataStore, classFiles);
         Method testMethod = getTestMethod(sessionId);
         Set<Method> coveredMethods = getCoveredMethods(coverageBuilder);
         return Coverage.builder()
@@ -67,12 +68,12 @@ public class JacocoReader implements Reader {
     }
 
     @SneakyThrows
-    private CoverageBuilder getCoverageBuilder(ExecutionDataStore executionDataStore, Set<File> files) {
+    private CoverageBuilder getCoverageBuilder(ExecutionDataStore executionDataStore, Set<Path> classFiles) {
         CoverageBuilder coverageBuilder = new CoverageBuilder();
         Analyzer analyzer = new Analyzer(executionDataStore, coverageBuilder);
-        for (File file : files) {
-            try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
-                analyzer.analyzeClass(inputStream, file.getPath());
+        for (Path classFile : classFiles) {
+            try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(classFile))) {
+                analyzer.analyzeClass(inputStream, classFile.toFile().getPath());
             }
         }
         return coverageBuilder;

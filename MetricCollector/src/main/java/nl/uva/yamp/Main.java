@@ -13,9 +13,10 @@ import nl.uva.yamp.core.metric.UniqueClassesMetricCollector;
 import nl.uva.yamp.core.metric.UniqueMethodsMetricCollector;
 import nl.uva.yamp.core.metric.UniquePackagesMetricCollector;
 import nl.uva.yamp.reader.ReaderConfiguration;
+import nl.uva.yamp.reader.jacoco.ClassFileLoader;
 import nl.uva.yamp.reader.jacoco.JacocoFileParser;
 import nl.uva.yamp.reader.jacoco.JacocoReader;
-import nl.uva.yamp.reader.jacoco.ProjectResourceLoader;
+import nl.uva.yamp.reader.jacoco.TargetDirectoryLocator;
 import nl.uva.yamp.writer.WriterConfiguration;
 import nl.uva.yamp.writer.console.ConsoleWriter;
 import nl.uva.yamp.writer.csv.CsvWriter;
@@ -50,12 +51,13 @@ public class Main {
 
     private static Reader wireReader(String configurationFile, String override) {
         ReaderConfiguration readerConfiguration = loadConfiguration(configurationFile, ReaderConfiguration.class);
-        Optional.ofNullable(override).ifPresent(v -> readerConfiguration.getReader().getJacoco().setTargetDirectory(v));
+        Optional.ofNullable(override).ifPresent(v -> readerConfiguration.getReader().getJacoco().setProjectDirectory(v));
         return Optional.ofNullable(readerConfiguration.getReader().getJacoco())
             .map(jacocoReaderConfiguration -> {
                 JacocoFileParser jacocoFileParser = new JacocoFileParser();
-                ProjectResourceLoader projectResourceLoader = new ProjectResourceLoader();
-                return new JacocoReader(readerConfiguration.getReader().getJacoco(), jacocoFileParser, projectResourceLoader);
+                TargetDirectoryLocator targetDirectoryLocator = new TargetDirectoryLocator();
+                ClassFileLoader classFileLoader = new ClassFileLoader();
+                return new JacocoReader(readerConfiguration.getReader().getJacoco(), jacocoFileParser, targetDirectoryLocator, classFileLoader);
             })
             .orElseThrow(() -> new IllegalArgumentException("Required reader configuration missing."));
     }
