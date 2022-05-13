@@ -7,6 +7,7 @@ import nl.uva.yamp.core.Reader;
 import nl.uva.yamp.core.Writer;
 import nl.uva.yamp.core.filter.ConstructorCoverageFilter;
 import nl.uva.yamp.core.filter.CoverageFilter;
+import nl.uva.yamp.core.filter.MethodCommaCoverageFilter;
 import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.metric.UniqueClassesMetricCollector;
 import nl.uva.yamp.core.metric.UniqueMethodsMetricCollector;
@@ -25,7 +26,6 @@ import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,7 +61,9 @@ public class Main {
     }
 
     private static List<CoverageFilter> wireCoverageFilters() {
-        return Collections.singletonList(new ConstructorCoverageFilter());
+        return Arrays.asList(
+            new MethodCommaCoverageFilter(),
+            new ConstructorCoverageFilter());
     }
 
     private static List<MetricCollector> wireMetricCollectors() {
