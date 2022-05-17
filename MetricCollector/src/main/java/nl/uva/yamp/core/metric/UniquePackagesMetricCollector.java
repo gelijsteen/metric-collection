@@ -18,7 +18,7 @@ public class UniquePackagesMetricCollector implements MetricCollector {
     }
 
     private int calculate(CombinedData combinedData) {
-        return combinedData.getCoveredMethods()
+        return combinedData.getMethods()
             .stream()
             .map(Method::getPackageName)
             .collect(Collectors.toSet())

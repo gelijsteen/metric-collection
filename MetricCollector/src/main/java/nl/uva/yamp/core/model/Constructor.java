@@ -6,18 +6,18 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-import java.util.Set;
-
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
-public class Coverage {
+public class Constructor {
 
     @NonNull
-    private final Method testMethod;
+    private final String packageName;
     @NonNull
-    private final Set<Constructor> constructors;
-    @NonNull
-    private final Set<Method> methods;
+    private final String className;
+
+    public String getFullyQualifiedClassName() {
+        return packageName + "." + className;
+    }
 }

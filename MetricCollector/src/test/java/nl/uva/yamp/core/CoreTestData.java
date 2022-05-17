@@ -3,6 +3,7 @@ package nl.uva.yamp.core;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CombinedData;
+import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.Mutation;
@@ -20,7 +21,8 @@ public class CoreTestData {
     public static Coverage.CoverageBuilder coverageBuilder() {
         return Coverage.builder()
             .testMethod(methodBuilder().build())
-            .coveredMethods(Set.of(methodBuilder().build()));
+            .constructors(Set.of(constructorBuilder().build()))
+            .methods(Set.of(methodBuilder().build()));
     }
 
     public static Mutation.MutationBuilder mutationBuilder() {
@@ -32,8 +34,15 @@ public class CoreTestData {
     public static CombinedData.CombinedDataBuilder combinedDataBuilder() {
         return CombinedData.builder()
             .testMethod(methodBuilder().build())
-            .coveredMethods(Set.of(methodBuilder().build()))
+            .constructors(Set.of(constructorBuilder().build()))
+            .methods(Set.of(methodBuilder().build()))
             .mutationScore(MUTATION_SCORE);
+    }
+
+    public static Constructor.ConstructorBuilder constructorBuilder() {
+        return Constructor.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME);
     }
 
     public static Method.MethodBuilder methodBuilder() {

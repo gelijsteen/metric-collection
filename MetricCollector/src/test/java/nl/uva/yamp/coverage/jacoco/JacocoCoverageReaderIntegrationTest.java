@@ -33,22 +33,22 @@ class JacocoCoverageReaderIntegrationTest {
                     .className("UnitTest")
                     .methodName("test1")
                     .build())
-                .coveredMethods(Set.of(
+                .constructors(Set.of(
+                    CoverageTestData.constructorBuilder()
+                        .className("Direct")
+                        .build(),
+                    CoverageTestData.constructorBuilder()
+                        .className("Indirect")
+                        .build()
+                ))
+                .methods(Set.of(
                     CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
                     CoverageTestData.methodBuilder()
-                        .className("Direct")
-                        .methodName("<init>")
-                        .build(),
-                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
-                        .build(),
-                    CoverageTestData.methodBuilder()
-                        .className("Indirect")
-                        .methodName("<init>")
                         .build()
                 ))
                 .build(),
@@ -57,22 +57,22 @@ class JacocoCoverageReaderIntegrationTest {
                     .className("UnitTest")
                     .methodName("test2")
                     .build())
-                .coveredMethods(Set.of(
+                .constructors(Set.of(
+                    CoverageTestData.constructorBuilder()
+                        .className("Direct")
+                        .build(),
+                    CoverageTestData.constructorBuilder()
+                        .className("Indirect")
+                        .build()
+                ))
+                .methods(Set.of(
                     CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
                     CoverageTestData.methodBuilder()
-                        .className("Direct")
-                        .methodName("<init>")
-                        .build(),
-                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
-                        .build(),
-                    CoverageTestData.methodBuilder()
-                        .className("Indirect")
-                        .methodName("<init>")
                         .build()
                 ))
                 .build(),
@@ -81,22 +81,22 @@ class JacocoCoverageReaderIntegrationTest {
                     .className("UnitTest")
                     .methodName("test3")
                     .build())
-                .coveredMethods(Set.of(
+                .constructors(Set.of(
+                    CoverageTestData.constructorBuilder()
+                        .className("Direct")
+                        .build(),
+                    CoverageTestData.constructorBuilder()
+                        .className("Indirect")
+                        .build()
+                ))
+                .methods(Set.of(
                     CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
                     CoverageTestData.methodBuilder()
-                        .className("Direct")
-                        .methodName("<init>")
-                        .build(),
-                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
-                        .build(),
-                    CoverageTestData.methodBuilder()
-                        .className("Indirect")
-                        .methodName("<init>")
                         .build()
                 ))
                 .build()

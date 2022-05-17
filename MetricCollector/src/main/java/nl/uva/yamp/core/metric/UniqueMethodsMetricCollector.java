@@ -18,7 +18,7 @@ public class UniqueMethodsMetricCollector implements MetricCollector {
     }
 
     private int calculate(CombinedData combinedData) {
-        return combinedData.getCoveredMethods()
+        return combinedData.getMethods()
             .stream()
             .map(Method::getFullyQualifiedMethodName)
             .collect(Collectors.toSet())

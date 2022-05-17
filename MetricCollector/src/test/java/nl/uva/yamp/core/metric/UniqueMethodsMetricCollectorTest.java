@@ -18,7 +18,7 @@ class UniqueMethodsMetricCollectorTest {
     @Test
     void whenEmptyCoveredMethods_expectZero() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
-            .coveredMethods(Collections.emptySet())
+            .methods(Collections.emptySet())
             .build();
 
         Metric result = sut.collect(combinedData);
@@ -44,7 +44,7 @@ class UniqueMethodsMetricCollectorTest {
     @Test
     void whenTwoDistinctMethods_expectTwo() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
-            .coveredMethods(Set.of(
+            .methods(Set.of(
                 CoreTestData.methodBuilder().build(),
                 CoreTestData.methodBuilder()
                     .methodName("Unique")

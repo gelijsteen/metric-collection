@@ -48,7 +48,7 @@ public class PitestMutationReader implements MutationReader {
             MavenProfileAppender processor = new MavenProfileAppender();
             processor.append(pomFile, Paths.get("MetricCollector/src/main/resources/pitest.xml"));
 
-            StringBuilder classCoverage = coverage.getCoveredMethods().stream()
+            StringBuilder classCoverage = coverage.getMethods().stream()
                 .map(Method::getFullyQualifiedClassName)
                 .distinct()
                 .reduce(new StringBuilder(), (stringBuilder, fqn) -> stringBuilder.append("<param>").append(fqn).append("</param>"), StringBuilder::append);

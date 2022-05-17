@@ -2,6 +2,7 @@ package nl.uva.yamp.coverage;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 
@@ -17,7 +18,14 @@ public class CoverageTestData {
     public static Coverage.CoverageBuilder coverageBuilder() {
         return Coverage.builder()
             .testMethod(methodBuilder().build())
-            .coveredMethods(Set.of(methodBuilder().build()));
+            .constructors(Set.of(constructorBuilder().build()))
+            .methods(Set.of(methodBuilder().build()));
+    }
+
+    public static Constructor.ConstructorBuilder constructorBuilder() {
+        return Constructor.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME);
     }
 
     public static Method.MethodBuilder methodBuilder() {

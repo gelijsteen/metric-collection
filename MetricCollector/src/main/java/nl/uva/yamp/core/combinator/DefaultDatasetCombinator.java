@@ -13,12 +13,13 @@ public class DefaultDatasetCombinator implements DatasetCombinator {
 
     @Override
     public Set<CombinedData> combine(Set<Coverage> coverageData, Set<Mutation> mutationData) {
-        Map<Method, Set<Method>> collect = coverageData.stream()
-            .collect(Collectors.toMap(Coverage::getTestMethod, Coverage::getCoveredMethods));
+        Map<Method, Coverage> coverageMap = coverageData.stream()
+            .collect(Collectors.toMap(Coverage::getTestMethod, coverage -> coverage));
         return mutationData.stream()
             .map(mutation -> CombinedData.builder()
                 .testMethod(mutation.getTestMethod())
-                .coveredMethods(collect.get(mutation.getTestMethod()))
+                .constructors(coverageMap.get(mutation.getTestMethod()).getConstructors())
+                .methods(coverageMap.get(mutation.getTestMethod()).getMethods())
                 .mutationScore(mutation.getMutationScore())
                 .build())
             .collect(Collectors.toSet());

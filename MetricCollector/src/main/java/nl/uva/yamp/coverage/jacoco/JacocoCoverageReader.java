@@ -1,9 +1,14 @@
 package nl.uva.yamp.coverage.jacoco;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.coverage.CoverageReader;
+import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 import org.jacoco.core.analysis.Analyzer;
@@ -25,6 +30,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class JacocoCoverageReader implements CoverageReader {
 
+    private static final String CONSTRUCTOR_NAME = "<init>";
     private final JacocoCoverageConfiguration configuration;
     private final JacocoFileParser jacocoFileParser;
     private final TargetDirectoryLocator targetDirectoryLocator;
@@ -60,10 +66,11 @@ public class JacocoCoverageReader implements CoverageReader {
     private Coverage collectTestMethodData(String sessionId, ExecutionDataStore executionDataStore, Set<Path> classFiles) {
         CoverageBuilder coverageBuilder = getCoverageBuilder(executionDataStore, classFiles);
         Method testMethod = getTestMethod(sessionId);
-        Set<Method> coveredMethods = getCoveredMethods(coverageBuilder);
+        Set<JacocoMethod> coveredMethods = getCoveredMethods(coverageBuilder);
         return Coverage.builder()
             .testMethod(testMethod)
-            .coveredMethods(coveredMethods)
+            .constructors(filterConstructors(coveredMethods))
+            .methods(filterMethods(coveredMethods))
             .build();
     }
 
@@ -96,7 +103,7 @@ public class JacocoCoverageReader implements CoverageReader {
         return fullyQualifiedName.substring(fullyQualifiedName.lastIndexOf('.') + 1);
     }
 
-    private Set<Method> getCoveredMethods(CoverageBuilder coverageBuilder) {
+    private Set<JacocoMethod> getCoveredMethods(CoverageBuilder coverageBuilder) {
         return coverageBuilder.getClasses()
             .stream()
             .filter(classCoverage -> classCoverage.getClassCounter().getCoveredCount() == 1)
@@ -104,21 +111,55 @@ public class JacocoCoverageReader implements CoverageReader {
             .collect(Collectors.toSet());
     }
 
-    private Stream<Method> getCoveredMethods(IClassCoverage classCoverage) {
+    private Stream<JacocoMethod> getCoveredMethods(IClassCoverage classCoverage) {
         return classCoverage.getMethods()
             .stream()
             .filter(methodCoverage -> methodCoverage.getMethodCounter().getCoveredCount() == 1)
             .map(methodCoverage -> getCoveredMethod(classCoverage, methodCoverage));
     }
 
-    private Method getCoveredMethod(IClassCoverage classCoverage, IMethodCoverage methodCoverage) {
+    private JacocoMethod getCoveredMethod(IClassCoverage classCoverage, IMethodCoverage methodCoverage) {
         String packageName = classCoverage.getPackageName().replace("/", ".");
         String className = classCoverage.getName().replace(classCoverage.getPackageName() + "/", "");
         String methodName = methodCoverage.getName();
-        return Method.builder()
+        return JacocoMethod.builder()
             .packageName(packageName)
             .className(className)
             .methodName(methodName)
             .build();
+    }
+
+    private Set<Constructor> filterConstructors(Set<JacocoMethod> coveredMethods) {
+        return coveredMethods.stream()
+            .filter(method -> method.getMethodName().equals(CONSTRUCTOR_NAME))
+            .map(method -> Constructor.builder()
+                .packageName(method.getPackageName())
+                .className(method.getClassName())
+                .build())
+            .collect(Collectors.toSet());
+    }
+
+    private Set<Method> filterMethods(Set<JacocoMethod> coveredMethods) {
+        return coveredMethods.stream()
+            .filter(method -> !method.getMethodName().equals(CONSTRUCTOR_NAME))
+            .map(method -> Method.builder()
+                .packageName(method.getPackageName())
+                .className(method.getClassName())
+                .methodName(method.getMethodName())
+                .build())
+            .collect(Collectors.toSet());
+    }
+
+    @Getter
+    @Builder
+    @EqualsAndHashCode
+    private static class JacocoMethod {
+
+        @NonNull
+        private final String packageName;
+        @NonNull
+        private final String className;
+        @NonNull
+        private final String methodName;
     }
 }
