@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.filter;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.CombinedData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -13,40 +13,40 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CoverageFilterTest {
+class FilterTest {
 
     @Spy
-    private CoverageFilter firstFilter;
+    private Filter firstFilter;
 
     @Spy
-    private CoverageFilter secondFilter;
+    private Filter secondFilter;
 
     @Test
     void whenAndThenCalled_expectApplyCalledInOrder() {
-        CoverageFilter sut = firstFilter.andThen(secondFilter);
-        Coverage coverage1 = CoreTestData.coverageBuilder()
+        Filter sut = firstFilter.andThen(secondFilter);
+        CombinedData combinedData1 = CoreTestData.combinedDataBuilder()
             .testMethod(CoreTestData.methodBuilder()
                 .methodName("coverage1")
                 .build())
             .build();
-        Coverage coverage2 = CoreTestData.coverageBuilder()
+        CombinedData combinedData2 = CoreTestData.combinedDataBuilder()
             .testMethod(CoreTestData.methodBuilder()
                 .methodName("coverage2")
                 .build())
             .build();
-        Coverage coverage3 = CoreTestData.coverageBuilder()
+        CombinedData combinedData3 = CoreTestData.combinedDataBuilder()
             .testMethod(CoreTestData.methodBuilder()
                 .methodName("coverage3")
                 .build())
             .build();
-        when(firstFilter.apply(coverage1)).thenReturn(coverage2);
-        when(secondFilter.apply(coverage2)).thenReturn(coverage3);
+        when(firstFilter.apply(combinedData1)).thenReturn(combinedData2);
+        when(secondFilter.apply(combinedData2)).thenReturn(combinedData3);
 
-        Coverage result = sut.apply(coverage1);
+        CombinedData result = sut.apply(combinedData1);
 
         InOrder inOrder = inOrder(firstFilter, secondFilter);
-        inOrder.verify(firstFilter).apply(coverage1);
-        inOrder.verify(secondFilter).apply(coverage2);
-        assertThat(result).isEqualTo(coverage3);
+        inOrder.verify(firstFilter).apply(combinedData1);
+        inOrder.verify(secondFilter).apply(combinedData2);
+        assertThat(result).isEqualTo(combinedData3);
     }
 }

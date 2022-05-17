@@ -1,10 +1,10 @@
-package nl.uva.yamp.core;
+package nl.uva.yamp.core.coverage;
 
 import nl.uva.yamp.core.model.Coverage;
 
 import java.util.Set;
 
-public interface Reader {
+public interface CoverageReader {
 
     Set<Coverage> read();
 }

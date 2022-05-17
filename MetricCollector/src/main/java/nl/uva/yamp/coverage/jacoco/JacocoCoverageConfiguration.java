@@ -1,4 +1,4 @@
-package nl.uva.yamp.reader.jacoco;
+package nl.uva.yamp.coverage.jacoco;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class JacocoReaderConfiguration {
+public class JacocoCoverageConfiguration {
 
     @NonNull
     private String projectDirectory;

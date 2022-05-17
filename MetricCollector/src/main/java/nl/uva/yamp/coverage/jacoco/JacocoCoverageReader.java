@@ -1,9 +1,9 @@
-package nl.uva.yamp.reader.jacoco;
+package nl.uva.yamp.coverage.jacoco;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nl.uva.yamp.core.Reader;
+import nl.uva.yamp.core.coverage.CoverageReader;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 import org.jacoco.core.analysis.Analyzer;
@@ -23,9 +23,9 @@ import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JacocoReader implements Reader {
+public class JacocoCoverageReader implements CoverageReader {
 
-    private final JacocoReaderConfiguration configuration;
+    private final JacocoCoverageConfiguration configuration;
     private final JacocoFileParser jacocoFileParser;
     private final TargetDirectoryLocator targetDirectoryLocator;
     private final ClassFileLoader classFileLoader;

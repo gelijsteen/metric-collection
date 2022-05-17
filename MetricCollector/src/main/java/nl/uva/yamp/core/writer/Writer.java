@@ -1,4 +1,4 @@
-package nl.uva.yamp.core;
+package nl.uva.yamp.core.writer;
 
 import nl.uva.yamp.core.model.metric.TestMetrics;
 

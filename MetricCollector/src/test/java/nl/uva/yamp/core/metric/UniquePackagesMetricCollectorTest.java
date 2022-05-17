@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.CombinedData;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
@@ -17,11 +17,11 @@ class UniquePackagesMetricCollectorTest {
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .coveredMethods(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
             .identifier("UPC")
@@ -31,9 +31,9 @@ class UniquePackagesMetricCollectorTest {
 
     @Test
     void whenSingleCoveredMethod_expectOne() {
-        Coverage coverage = CoreTestData.coverageBuilder().build();
+        CombinedData combinedData = CoreTestData.combinedDataBuilder().build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
             .identifier("UPC")
@@ -43,7 +43,7 @@ class UniquePackagesMetricCollectorTest {
 
     @Test
     void whenMultipleMethodsInPackage_expectOne() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .coveredMethods(Set.of(
                 CoreTestData.methodBuilder().build(),
                 CoreTestData.methodBuilder()
@@ -52,7 +52,7 @@ class UniquePackagesMetricCollectorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
             .identifier("UPC")
@@ -62,7 +62,7 @@ class UniquePackagesMetricCollectorTest {
 
     @Test
     void whenTwoDistinctPackages_expectTwo() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .coveredMethods(Set.of(
                 CoreTestData.methodBuilder().build(),
                 CoreTestData.methodBuilder()
@@ -71,7 +71,7 @@ class UniquePackagesMetricCollectorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
             .identifier("UPC")

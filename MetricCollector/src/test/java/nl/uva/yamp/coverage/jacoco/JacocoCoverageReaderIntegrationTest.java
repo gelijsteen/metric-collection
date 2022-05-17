@@ -1,7 +1,7 @@
-package nl.uva.yamp.reader.jacoco;
+package nl.uva.yamp.coverage.jacoco;
 
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.reader.ReaderTestData;
+import nl.uva.yamp.coverage.CoverageTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,13 +9,13 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JacocoReaderIntegrationTest {
+class JacocoCoverageReaderIntegrationTest {
 
-    private final JacocoReaderConfiguration configuration = new JacocoReaderConfiguration();
+    private final JacocoCoverageConfiguration configuration = new JacocoCoverageConfiguration();
     private final JacocoFileParser jacocoFileParser = new JacocoFileParser();
     private final TargetDirectoryLocator targetDirectoryLocator = new TargetDirectoryLocator();
     private final ClassFileLoader classFileLoader = new ClassFileLoader();
-    private final JacocoReader sut = new JacocoReader(configuration, jacocoFileParser, targetDirectoryLocator, classFileLoader);
+    private final JacocoCoverageReader sut = new JacocoCoverageReader(configuration, jacocoFileParser, targetDirectoryLocator, classFileLoader);
 
     @BeforeEach
     void setUp() {
@@ -28,73 +28,73 @@ class JacocoReaderIntegrationTest {
         Set<Coverage> result = sut.read();
 
         assertThat(result).containsExactlyInAnyOrder(
-            ReaderTestData.coverageBuilder()
-                .testMethod(ReaderTestData.methodBuilder()
+            CoverageTestData.coverageBuilder()
+                .testMethod(CoverageTestData.methodBuilder()
                     .className("UnitTest")
                     .methodName("test1")
                     .build())
                 .coveredMethods(Set.of(
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("<init>")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("<init>")
                         .build()
                 ))
                 .build(),
-            ReaderTestData.coverageBuilder()
-                .testMethod(ReaderTestData.methodBuilder()
+            CoverageTestData.coverageBuilder()
+                .testMethod(CoverageTestData.methodBuilder()
                     .className("UnitTest")
                     .methodName("test2")
                     .build())
                 .coveredMethods(Set.of(
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("<init>")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("<init>")
                         .build()
                 ))
                 .build(),
-            ReaderTestData.coverageBuilder()
-                .testMethod(ReaderTestData.methodBuilder()
+            CoverageTestData.coverageBuilder()
+                .testMethod(CoverageTestData.methodBuilder()
                     .className("UnitTest")
                     .methodName("test3")
                     .build())
                 .coveredMethods(Set.of(
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Direct")
                         .methodName("<init>")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
                         .build(),
-                    ReaderTestData.methodBuilder()
+                    CoverageTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("<init>")
                         .build()

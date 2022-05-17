@@ -1,9 +1,12 @@
-reader:
+coverage:
   jacoco:
-#    targetDirectory: SystemTest/target/
-#    targetDirectory: /home/tegel/Courses/Thesis/Bears/repositories/webfirmframework-wff-453188520-453188718
-    targetDirectory: /home/tegel/Courses/Thesis/Bears/repositories/AxonFramework-AxonFramework-451926440-451937647
+    projectDirectory: SystemTest
+    #projectDirectory: /home/tegel/Courses/Thesis/Bears/repositories/webfirmframework-wff-453188520-453188718/wffweb
     parallel: true
+
+mutation:
+  pitest:
+    projectDirectory: SystemTest
 
 writer:
 #  csv:

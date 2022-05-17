@@ -2,10 +2,16 @@ package nl.uva.yamp.core;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.uva.yamp.core.filter.CoverageFilter;
+import nl.uva.yamp.core.combinator.DatasetCombinator;
+import nl.uva.yamp.core.coverage.CoverageReader;
+import nl.uva.yamp.core.filter.Filter;
 import nl.uva.yamp.core.metric.MetricCollector;
+import nl.uva.yamp.core.model.CombinedData;
 import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.mutation.MutationReader;
+import nl.uva.yamp.core.writer.Writer;
 
 import java.util.List;
 import java.util.Set;
@@ -15,22 +21,33 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MetricCalculation {
 
-    private final Reader reader;
-    private final List<CoverageFilter> coverageFilters;
+    private final CoverageReader coverageReader;
+    private final MutationReader pitestReader;
+    private final DatasetCombinator datasetCombinator;
+    private final List<Filter> coverageFilters;
     private final List<MetricCollector> metricCollectors;
     private final List<Writer> writers;
 
     public void calculate() {
-        log.info("Applying reader.");
-        Set<Coverage> coverages = reader.read();
+        log.info("Collecting coverage data.");
+        Set<Coverage> coverages = coverageReader.read();
+
+        log.info("Collecting mutation data.");
+        Set<Mutation> mutations = coverages.stream()
+            .map(pitestReader::read)
+            .collect(Collectors.toSet());
+
+        log.info("Combining datasets.");
+        Set<CombinedData> combinedData = datasetCombinator.combine(coverages, mutations);
 
         log.info("Applying filter(s).");
-        Set<Coverage> filteredCoverages = coverages.stream()
-            .map(this::applyFilters)
+        Filter aggregatedFilters = coverageFilters.stream().reduce(Filter.identity(), Filter::andThen);
+        Set<CombinedData> filteredData = combinedData.stream()
+            .map(aggregatedFilters::apply)
             .collect(Collectors.toSet());
 
         log.info("Collecting metric(s).");
-        List<TestMetrics> testMetrics = filteredCoverages.stream()
+        List<TestMetrics> testMetrics = filteredData.stream()
             .map(this::collectMetrics)
             .collect(Collectors.toList());
 
@@ -40,17 +57,11 @@ public class MetricCalculation {
         log.info("Metric collection finished.");
     }
 
-    private Coverage applyFilters(Coverage coverage) {
-        return coverageFilters.stream()
-            .reduce(CoverageFilter.identity(), CoverageFilter::andThen)
-            .apply(coverage);
-    }
-
-    private TestMetrics collectMetrics(Coverage coverage) {
+    private TestMetrics collectMetrics(CombinedData combinedData) {
         return TestMetrics.builder()
-            .testMethod(coverage.getTestMethod())
+            .testMethod(combinedData.getTestMethod())
             .metrics(metricCollectors.stream()
-                .map(metricCollector -> metricCollector.collect(coverage))
+                .map(metricCollector -> metricCollector.collect(combinedData))
                 .collect(Collectors.toList()))
             .build();
     }

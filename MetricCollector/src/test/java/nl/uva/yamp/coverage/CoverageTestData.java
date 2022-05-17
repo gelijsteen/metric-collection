@@ -1,4 +1,4 @@
-package nl.uva.yamp.reader;
+package nl.uva.yamp.coverage;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import nl.uva.yamp.core.model.Method;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ReaderTestData {
+public class CoverageTestData {
 
     public static final String PACKAGE_NAME = "test.pkg";
     public static final String CLASS_NAME = "Class";

@@ -2,7 +2,7 @@ package nl.uva.yamp.writer.csv;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import nl.uva.yamp.core.Writer;
+import nl.uva.yamp.core.writer.Writer;
 import nl.uva.yamp.core.model.metric.Metric;
 import nl.uva.yamp.core.model.metric.TestMetrics;
 
@@ -46,7 +46,10 @@ public class CsvWriter implements Writer {
     @SneakyThrows
     private void writeTestMethodRow(TestMetrics testMetrics, PrintWriter printWriter) {
         List<String> list = new LinkedList<>();
-        list.add(testMetrics.getTestMethod().getFullyQualifiedMethodName());
+        list.add(testMetrics.getTestMethod()
+            .getFullyQualifiedMethodName()
+            .replace(',', ';')
+            .replace('\n', ';'));
         list.addAll(testMetrics.getMetrics()
             .stream()
             .map(Metric::getStringValue)

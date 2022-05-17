@@ -1,4 +1,4 @@
-package nl.uva.yamp.reader.jacoco;
+package nl.uva.yamp.coverage.jacoco;
 
 import org.jacoco.core.data.ExecutionDataStore;
 import org.junit.jupiter.api.Test;

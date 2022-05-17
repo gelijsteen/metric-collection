@@ -15,7 +15,7 @@ public class IntegerMetric implements Metric {
     @NonNull
     private final String identifier;
     @NonNull
-    private final int value;
+    private final Integer value;
 
     @Override
     public String getStringValue() {

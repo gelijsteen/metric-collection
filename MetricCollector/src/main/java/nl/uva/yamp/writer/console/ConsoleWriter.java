@@ -1,7 +1,7 @@
 package nl.uva.yamp.writer.console;
 
 import lombok.extern.slf4j.Slf4j;
-import nl.uva.yamp.core.Writer;
+import nl.uva.yamp.core.writer.Writer;
 import nl.uva.yamp.core.model.metric.TestMetrics;
 
 import java.util.Collection;

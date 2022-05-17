@@ -10,7 +10,14 @@ public class GreetingMojoTest {
     private final GreetingMojo sut = new GreetingMojo();
 
     @Test
-    public void name() {
+    public void test1() {
+        boolean result = sut.execute();
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void test2() {
         boolean result = sut.execute();
 
         assertThat(result).isTrue();
@@ -18,7 +25,7 @@ public class GreetingMojoTest {
 
     @Test
     @Ignore
-    public void name1() {
+    public void test3() {
         assertThat("").isEqualTo("");
     }
 }
