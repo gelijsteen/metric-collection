@@ -12,9 +12,8 @@ import java.util.stream.Stream;
 public class ClassFileLoader {
 
     @SneakyThrows
-    Set<Path> getClassFiles(Path targetDirectory) {
-        Path classesDirectory = targetDirectory.resolve("classes");
-        try (Stream<Path> paths = Files.find(classesDirectory, Integer.MAX_VALUE, this::isClassFile)) {
+    Set<Path> getClassFiles(Path directory) {
+        try (Stream<Path> paths = Files.find(directory, Integer.MAX_VALUE, this::isClassFile)) {
             return paths.collect(Collectors.toSet());
         }
     }

@@ -47,11 +47,11 @@ public class JacocoCoverageReader implements CoverageReader {
     }
 
     private Set<Coverage> readModule(TargetDirectory targetDirectory) {
-        log.debug("Discovered module: {}", targetDirectory.getModuleName());
+        log.info("Discovered module: {}", targetDirectory.getModuleName());
 
         Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec(targetDirectory.getPath());
 
-        Set<Path> classFiles = classFileLoader.getClassFiles(targetDirectory.getPath());
+        Set<Path> classFiles = classFileLoader.getClassFiles(targetDirectory.getPath().resolve("classes"));
 
         return (configuration.getParallel() ? jacocoData.entrySet().parallelStream() : jacocoData.entrySet().stream())
             .filter(pair -> isValidSessionId(pair.getKey()))
@@ -87,20 +87,20 @@ public class JacocoCoverageReader implements CoverageReader {
     }
 
     private Method getTestMethod(String sessionId) {
-        String fullyQualifiedName = sessionId.split("#")[0];
+        String fullyQualifiedClassName = sessionId.split("#")[0];
         return Method.builder()
-            .packageName(getPackageName(fullyQualifiedName))
-            .className(getClassName(fullyQualifiedName))
+            .packageName(getPackageName(fullyQualifiedClassName))
+            .className(getClassName(fullyQualifiedClassName))
             .methodName(sessionId.split("#")[1])
             .build();
     }
 
-    private String getPackageName(String fullyQualifiedName) {
-        return fullyQualifiedName.substring(0, fullyQualifiedName.lastIndexOf('.'));
+    private String getPackageName(String fullyQualifiedClassName) {
+        return fullyQualifiedClassName.substring(0, fullyQualifiedClassName.lastIndexOf('.'));
     }
 
-    private String getClassName(String fullyQualifiedName) {
-        return fullyQualifiedName.substring(fullyQualifiedName.lastIndexOf('.') + 1);
+    private String getClassName(String fullyQualifiedClassName) {
+        return fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf('.') + 1);
     }
 
     private Set<JacocoMethod> getCoveredMethods(CoverageBuilder coverageBuilder) {

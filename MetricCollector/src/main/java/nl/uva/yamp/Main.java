@@ -2,7 +2,12 @@ package nl.uva.yamp;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import nl.uva.yamp.callgraph.CallGraphConfiguration;
+import nl.uva.yamp.callgraph.disabled.DisabledCallGraphReader;
+import nl.uva.yamp.callgraph.javassist.JavassistCallGraphReader;
+import nl.uva.yamp.callgraph.javassist.ResultMapper;
 import nl.uva.yamp.core.MetricCalculation;
+import nl.uva.yamp.core.callgraph.CallGraphReader;
 import nl.uva.yamp.core.combinator.DatasetCombinator;
 import nl.uva.yamp.core.combinator.DefaultDatasetCombinator;
 import nl.uva.yamp.core.coverage.CoverageReader;
@@ -13,6 +18,7 @@ import nl.uva.yamp.core.metric.UniqueClassesMetricCollector;
 import nl.uva.yamp.core.metric.UniqueMethodsMetricCollector;
 import nl.uva.yamp.core.metric.UniquePackagesMetricCollector;
 import nl.uva.yamp.core.mutation.MutationReader;
+import nl.uva.yamp.core.validator.Validator;
 import nl.uva.yamp.core.writer.Writer;
 import nl.uva.yamp.coverage.CoverageConfiguration;
 import nl.uva.yamp.coverage.jacoco.ClassFileLoader;
@@ -20,7 +26,9 @@ import nl.uva.yamp.coverage.jacoco.JacocoCoverageReader;
 import nl.uva.yamp.coverage.jacoco.JacocoFileParser;
 import nl.uva.yamp.coverage.jacoco.TargetDirectoryLocator;
 import nl.uva.yamp.mutation.MutationConfiguration;
+import nl.uva.yamp.mutation.disabled.DisabledMutationReader;
 import nl.uva.yamp.mutation.pitest.PitestMutationReader;
+import nl.uva.yamp.validator.CallGraphValidator;
 import nl.uva.yamp.writer.WriterConfiguration;
 import nl.uva.yamp.writer.console.ConsoleWriter;
 import nl.uva.yamp.writer.csv.CsvWriter;
@@ -45,13 +53,15 @@ public class Main {
         }
 
         CoverageReader coverageReader = wireCoverageReader(args[0], args.length >= 2 ? args[1] : null);
+        CallGraphReader callGraphReader = wireCallGraphReader(args[0], args.length >= 2 ? args[1] : null);
         MutationReader mutationReader = wireMutationReader(args[0], args.length >= 2 ? args[1] : null);
+        Validator validator = new CallGraphValidator();
         DatasetCombinator datasetCombinator = new DefaultDatasetCombinator();
         List<Filter> filters = List.of();
         List<MetricCollector> metricCollectors = wireMetricCollectors();
         List<Writer> writers = wireWriters(args[0], args.length >= 3 ? args[2] : null);
 
-        new MetricCalculation(coverageReader, mutationReader, datasetCombinator, filters, metricCollectors, writers).calculate();
+        new MetricCalculation(coverageReader, callGraphReader, mutationReader, validator, datasetCombinator, filters, metricCollectors, writers).calculate();
     }
 
     private static CoverageReader wireCoverageReader(String configurationFile, String override) {
@@ -67,12 +77,26 @@ public class Main {
             .orElseThrow(() -> new IllegalArgumentException("Required coverage configuration missing."));
     }
 
+    private static CallGraphReader wireCallGraphReader(String configurationFile, String override) {
+        CallGraphConfiguration callGraphConfiguration = loadConfiguration(configurationFile, CallGraphConfiguration.class);
+        Optional.ofNullable(override).ifPresent(v -> callGraphConfiguration.getCallGraph().setProjectDirectory(v));
+        return Optional.ofNullable(callGraphConfiguration)
+            .map(CallGraphConfiguration::getCallGraph)
+            .map(configuration -> {
+                ResultMapper resultMapper = new ResultMapper();
+                return (CallGraphReader) new JavassistCallGraphReader(configuration, resultMapper);
+            })
+            .orElseGet(DisabledCallGraphReader::new);
+    }
+
     private static MutationReader wireMutationReader(String configurationFile, String override) {
         MutationConfiguration mutationConfiguration = loadConfiguration(configurationFile, MutationConfiguration.class);
         Optional.ofNullable(override).ifPresent(v -> mutationConfiguration.getMutation().getPitest().setProjectDirectory(v));
-        return Optional.ofNullable(mutationConfiguration.getMutation().getPitest())
-            .map(jacocoReaderConfiguration -> new PitestMutationReader(mutationConfiguration.getMutation().getPitest()))
-            .orElseThrow(() -> new IllegalArgumentException("Required mutation configuration missing."));
+        return Optional.ofNullable(mutationConfiguration)
+            .map(MutationConfiguration::getMutation)
+            .map(MutationConfiguration.NestedMutationConfiguration::getPitest)
+            .map(jacocoReaderConfiguration -> (MutationReader) new PitestMutationReader(mutationConfiguration.getMutation().getPitest()))
+            .orElseGet(DisabledMutationReader::new);
     }
 
     private static List<MetricCollector> wireMetricCollectors() {
@@ -87,8 +111,14 @@ public class Main {
         WriterConfiguration writerConfiguration = loadConfiguration(configurationFile, WriterConfiguration.class);
         Optional.ofNullable(override).ifPresent(v -> writerConfiguration.getWriter().getCsv().setOutputFile(v));
         return Stream.of(
-                Optional.ofNullable(writerConfiguration.getWriter().getCsv()).map(CsvWriter::new),
-                Optional.ofNullable(writerConfiguration.getWriter().getConsole()).map(configuration -> new ConsoleWriter()))
+                Optional.ofNullable(writerConfiguration)
+                    .map(configuration -> writerConfiguration.getWriter())
+                    .map(WriterConfiguration.NestedWriterConfiguration::getCsv)
+                    .map(CsvWriter::new),
+                Optional.ofNullable(writerConfiguration)
+                    .map(configuration -> writerConfiguration.getWriter())
+                    .map(WriterConfiguration.NestedWriterConfiguration::getConsole)
+                    .map(configuration -> new ConsoleWriter()))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toList());
