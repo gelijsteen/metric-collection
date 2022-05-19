@@ -6,6 +6,7 @@ import nl.uva.yamp.core.model.CallGraphConstructor;
 import nl.uva.yamp.core.model.CallGraphMethod;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TestCase;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -14,9 +15,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(onConstructor = @__(@Inject))
 public class ResultMapper {
 
-    CallGraph map(CallGraphNode root) {
+    CallGraph map(TestCase testCase, CallGraphNode root) {
         return CallGraph.builder()
-            .testMethod(mapMethod(root))
+            .testCase(testCase)
             .constructors(mapConstructors(root))
             .methods(mapMethods(root))
             .build();

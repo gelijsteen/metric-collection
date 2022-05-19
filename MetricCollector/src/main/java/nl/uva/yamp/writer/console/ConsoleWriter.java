@@ -19,7 +19,7 @@ public class ConsoleWriter implements Writer {
 
     private void writeRow(TestMetrics testMetrics) {
         List<String> list = new LinkedList<>();
-        list.add(testMetrics.getTestMethod().getFullyQualifiedMethodName());
+        list.add(testMetrics.getTestCase().getFullyQualifiedMethodName());
         list.addAll(testMetrics.getMetrics()
             .stream()
             .map(metric -> metric.getIdentifier() + "=" + metric.getStringValue())

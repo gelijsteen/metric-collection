@@ -25,13 +25,13 @@ public class CsvWriter implements Writer {
     public void write(Collection<TestMetrics> testMetrics) {
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(configuration.getOutputFile())))) {
             writeHeaderRow(testMetrics, printWriter);
-            testMetrics.forEach(metrics -> writeTestMethodRow(metrics, printWriter));
+            testMetrics.forEach(metrics -> writeTestCaseRow(metrics, printWriter));
         }
     }
 
     private void writeHeaderRow(Collection<TestMetrics> testMetrics, PrintWriter printWriter) {
         List<String> list = new LinkedList<>();
-        list.add("TestMethod");
+        list.add("TestCase");
         list.addAll(testMetrics.stream()
             .findFirst()
             .map(TestMetrics::getMetrics)
@@ -44,9 +44,9 @@ public class CsvWriter implements Writer {
     }
 
     @SneakyThrows
-    private void writeTestMethodRow(TestMetrics testMetrics, PrintWriter printWriter) {
+    private void writeTestCaseRow(TestMetrics testMetrics, PrintWriter printWriter) {
         List<String> list = new LinkedList<>();
-        list.add(testMetrics.getTestMethod()
+        list.add(testMetrics.getTestCase()
             .getFullyQualifiedMethodName()
             .replace(',', ';')
             .replace('\n', ';'));

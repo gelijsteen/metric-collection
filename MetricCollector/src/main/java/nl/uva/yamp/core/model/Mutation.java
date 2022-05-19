@@ -13,7 +13,7 @@ import lombok.ToString;
 public class Mutation {
 
     @NonNull
-    private final Method testMethod;
+    private final TestCase testCase;
     @NonNull
     private final Integer mutationScore;
 }

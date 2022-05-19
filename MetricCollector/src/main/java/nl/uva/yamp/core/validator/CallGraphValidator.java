@@ -11,6 +11,7 @@ import nl.uva.yamp.core.model.CallGraphMethod;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TestCase;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -23,15 +24,15 @@ public class CallGraphValidator implements Validator {
     @Override
     public void validate(Set<Coverage> coverages, Set<CallGraph> callGraphs) {
         coverages.forEach(coverage -> callGraphs.stream()
-            .filter(callGraph -> coverage.getTestMethod().equals(callGraph.getTestMethod()))
+            .filter(callGraph -> coverage.getTestCase().equals(callGraph.getTestCase()))
             .findFirst()
             .map(callGraph -> Holder.builder()
-                .testMethod(callGraph.getTestMethod())
+                .testCase(callGraph.getTestCase())
                 .coverage(coverage.getConstructors().size() + coverage.getMethods().size())
                 .callGraph(countUniqueCallGraphNodes(callGraph))
                 .build())
             .filter(holder -> holder.getCallGraph() != holder.getCoverage())
-            .ifPresent(holder -> log.debug("Callgraph/coverage ratio for {}: {}/{}", holder.getTestMethod().getFullyQualifiedMethodName(), holder.getCallGraph(), holder.getCoverage())));
+            .ifPresent(holder -> log.debug("Callgraph/coverage ratio for {}: {}/{}", holder.getTestCase().getFullyQualifiedMethodName(), holder.getCallGraph(), holder.getCoverage())));
     }
 
     private int countUniqueCallGraphNodes(CallGraph callGraph) {
@@ -86,7 +87,7 @@ public class CallGraphValidator implements Validator {
     private static class Holder {
 
         @NonNull
-        private final Method testMethod;
+        private final TestCase testCase;
         private final int coverage;
         private final int callGraph;
     }

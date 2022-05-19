@@ -10,6 +10,7 @@ import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.Mutation;
+import nl.uva.yamp.core.model.TestCase;
 
 import java.util.Set;
 
@@ -23,14 +24,14 @@ public class CoreTestData {
 
     public static Coverage.CoverageBuilder coverageBuilder() {
         return Coverage.builder()
-            .testMethod(methodBuilder().build())
+            .testCase(testCaseBuilder().build())
             .constructors(Set.of(constructorBuilder().build()))
             .methods(Set.of(methodBuilder().build()));
     }
 
     public static CallGraph.CallGraphBuilder callGraphBuilder() {
         return CallGraph.builder()
-            .testMethod(methodBuilder().build())
+            .testCase(testCaseBuilder().build())
             .constructors(Set.of(callGraphConstructorBuilder().build()))
             .methods(Set.of(callGraphMethodBuilder().build()));
     }
@@ -51,16 +52,23 @@ public class CoreTestData {
 
     public static Mutation.MutationBuilder mutationBuilder() {
         return Mutation.builder()
-            .testMethod(methodBuilder().build())
+            .testCase(testCaseBuilder().build())
             .mutationScore(MUTATION_SCORE);
     }
 
     public static CombinedData.CombinedDataBuilder combinedDataBuilder() {
         return CombinedData.builder()
-            .testMethod(methodBuilder().build())
+            .testCase(testCaseBuilder().build())
             .constructors(Set.of(constructorBuilder().build()))
             .methods(Set.of(methodBuilder().build()))
             .mutationScore(MUTATION_SCORE);
+    }
+
+    public static TestCase.TestCaseBuilder testCaseBuilder() {
+        return TestCase.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .methodName(METHOD_NAME);
     }
 
     public static Constructor.ConstructorBuilder constructorBuilder() {

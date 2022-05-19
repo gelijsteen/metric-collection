@@ -11,6 +11,7 @@ import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TestCase;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IClassCoverage;
@@ -57,7 +58,7 @@ public class JacocoCoverageCollector implements CoverageCollector {
 
         return (configuration.getParallel() ? jacocoData.entrySet().parallelStream() : jacocoData.entrySet().stream())
             .filter(pair -> isValidSessionId(pair.getKey()))
-            .map(pair -> collectTestMethodData(pair.getKey(), pair.getValue(), classFiles))
+            .map(pair -> collectTestCaseData(pair.getKey(), pair.getValue(), classFiles))
             .collect(Collectors.toSet());
     }
 
@@ -65,12 +66,12 @@ public class JacocoCoverageCollector implements CoverageCollector {
         return sessionId != null && sessionId.contains("#");
     }
 
-    private Coverage collectTestMethodData(String sessionId, ExecutionDataStore executionDataStore, Set<Path> classFiles) {
+    private Coverage collectTestCaseData(String sessionId, ExecutionDataStore executionDataStore, Set<Path> classFiles) {
         CoverageBuilder coverageBuilder = getCoverageBuilder(executionDataStore, classFiles);
-        Method testMethod = getTestMethod(sessionId);
+        TestCase testCase = getTestCase(sessionId);
         Set<JacocoMethod> coveredMethods = getCoveredMethods(coverageBuilder);
         return Coverage.builder()
-            .testMethod(testMethod)
+            .testCase(testCase)
             .constructors(filterConstructors(coveredMethods))
             .methods(filterMethods(coveredMethods))
             .build();
@@ -88,9 +89,9 @@ public class JacocoCoverageCollector implements CoverageCollector {
         return coverageBuilder;
     }
 
-    private Method getTestMethod(String sessionId) {
+    private TestCase getTestCase(String sessionId) {
         String fullyQualifiedClassName = sessionId.split("#")[0];
-        return Method.builder()
+        return TestCase.builder()
             .packageName(getPackageName(fullyQualifiedClassName))
             .className(getClassName(fullyQualifiedClassName))
             .methodName(sessionId.split("#")[1])

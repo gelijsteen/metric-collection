@@ -35,10 +35,10 @@ public class JavassistCallGraphCollector implements CallGraphCollector {
         classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
         classPool.insertClassPath(projectDirectory.resolve("target").resolve("test-classes").toString());
 
-        CtClass testClass = classPool.get(coverage.getTestMethod().getFullyQualifiedClassName());
+        CtClass testClass = classPool.get(coverage.getTestCase().getFullyQualifiedClassName());
 
         CtBehavior testMethod = Arrays.stream(testClass.getDeclaredMethods())
-            .filter(ctMethod -> ctMethod.getMethodInfo().getName().equals(coverage.getTestMethod().getMethodName()))
+            .filter(ctMethod -> ctMethod.getMethodInfo().getName().equals(coverage.getTestCase().getMethodName()))
             .findFirst()
             .orElseThrow();
 
@@ -48,7 +48,7 @@ public class JavassistCallGraphCollector implements CallGraphCollector {
 
         buildCallGraph(coverage, root);
 
-        return resultMapper.map(root);
+        return resultMapper.map(coverage.getTestCase(), root);
     }
 
     @SneakyThrows

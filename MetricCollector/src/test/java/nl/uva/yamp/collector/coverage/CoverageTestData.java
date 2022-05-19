@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TestCase;
 
 import java.util.Set;
 
@@ -17,9 +18,16 @@ public class CoverageTestData {
 
     public static Coverage.CoverageBuilder coverageBuilder() {
         return Coverage.builder()
-            .testMethod(methodBuilder().build())
+            .testCase(testCaseBuilder().build())
             .constructors(Set.of(constructorBuilder().build()))
             .methods(Set.of(methodBuilder().build()));
+    }
+
+    public static TestCase.TestCaseBuilder testCaseBuilder() {
+        return TestCase.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .methodName(METHOD_NAME);
     }
 
     public static Constructor.ConstructorBuilder constructorBuilder() {

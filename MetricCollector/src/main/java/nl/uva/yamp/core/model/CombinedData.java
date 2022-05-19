@@ -15,7 +15,7 @@ import java.util.Set;
 public class CombinedData {
 
     @NonNull
-    private final Method testMethod;
+    private final TestCase testCase;
     @NonNull
     private final Set<Constructor> constructors;
     @NonNull

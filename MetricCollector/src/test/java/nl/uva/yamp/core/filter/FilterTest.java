@@ -25,17 +25,17 @@ class FilterTest {
     void whenAndThenCalled_expectApplyCalledInOrder() {
         Filter sut = firstFilter.andThen(secondFilter);
         CombinedData combinedData1 = CoreTestData.combinedDataBuilder()
-            .testMethod(CoreTestData.methodBuilder()
+            .testCase(CoreTestData.testCaseBuilder()
                 .methodName("coverage1")
                 .build())
             .build();
         CombinedData combinedData2 = CoreTestData.combinedDataBuilder()
-            .testMethod(CoreTestData.methodBuilder()
+            .testCase(CoreTestData.testCaseBuilder()
                 .methodName("coverage2")
                 .build())
             .build();
         CombinedData combinedData3 = CoreTestData.combinedDataBuilder()
-            .testMethod(CoreTestData.methodBuilder()
+            .testCase(CoreTestData.testCaseBuilder()
                 .methodName("coverage3")
                 .build())
             .build();

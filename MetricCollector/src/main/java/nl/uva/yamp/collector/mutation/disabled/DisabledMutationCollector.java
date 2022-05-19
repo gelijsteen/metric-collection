@@ -13,7 +13,7 @@ public class DisabledMutationCollector implements MutationCollector {
     @Override
     public Mutation collect(Coverage coverage) {
         return Mutation.builder()
-            .testMethod(coverage.getTestMethod())
+            .testCase(coverage.getTestCase())
             .mutationScore(0)
             .build();
     }

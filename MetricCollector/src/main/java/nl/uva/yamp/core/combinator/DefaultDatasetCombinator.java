@@ -3,8 +3,8 @@ package nl.uva.yamp.core.combinator;
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CombinedData;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.Mutation;
+import nl.uva.yamp.core.model.TestCase;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -16,13 +16,13 @@ public class DefaultDatasetCombinator implements DatasetCombinator {
 
     @Override
     public Set<CombinedData> combine(Set<Coverage> coverageData, Set<Mutation> mutationData) {
-        Map<Method, Coverage> coverageMap = coverageData.stream()
-            .collect(Collectors.toMap(Coverage::getTestMethod, coverage -> coverage));
+        Map<TestCase, Coverage> coverageMap = coverageData.stream()
+            .collect(Collectors.toMap(Coverage::getTestCase, coverage -> coverage));
         return mutationData.stream()
             .map(mutation -> CombinedData.builder()
-                .testMethod(mutation.getTestMethod())
-                .constructors(coverageMap.get(mutation.getTestMethod()).getConstructors())
-                .methods(coverageMap.get(mutation.getTestMethod()).getMethods())
+                .testCase(mutation.getTestCase())
+                .constructors(coverageMap.get(mutation.getTestCase()).getConstructors())
+                .methods(coverageMap.get(mutation.getTestCase()).getMethods())
                 .mutationScore(mutation.getMutationScore())
                 .build())
             .collect(Collectors.toSet());

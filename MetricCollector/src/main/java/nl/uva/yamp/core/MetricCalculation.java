@@ -73,7 +73,7 @@ public class MetricCalculation {
 
     private TestMetrics collectMetrics(CombinedData combinedData) {
         return TestMetrics.builder()
-            .testMethod(combinedData.getTestMethod())
+            .testCase(combinedData.getTestCase())
             .metrics(metricCollectors.stream()
                 .map(metricCollector -> metricCollector.collect(combinedData))
                 .collect(Collectors.toList()))

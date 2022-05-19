@@ -35,7 +35,7 @@ public class PitestMutationCollector implements MutationCollector {
 
     @SneakyThrows
     public Mutation collect(Coverage coverage) {
-        log.debug("Calculating mutation score for: {}", coverage.getTestMethod().getFullyQualifiedMethodName());
+        log.debug("Calculating mutation score for: {}", coverage.getTestCase().getFullyQualifiedMethodName());
         Path pomFile = Files.createTempFile(projectDirectory, "yamp-", ".xml");
         Path reportDirectory = Files.createTempDirectory(projectDirectory, "yamp-");
         try {
@@ -56,8 +56,8 @@ public class PitestMutationCollector implements MutationCollector {
             String pomContents = Files.readString(pomFile);
             Files.writeString(pomFile, pomContents
                 .replace("${targetClasses}", classCoverage)
-                .replace("${targetTests}", "<param>" + coverage.getTestMethod().getFullyQualifiedClassName() + "</param>")
-                .replace("${includedTestMethods}", "<param>" + coverage.getTestMethod().getMethodName() + "</param>")
+                .replace("${targetTests}", "<param>" + coverage.getTestCase().getFullyQualifiedClassName() + "</param>")
+                .replace("${includedTestMethods}", "<param>" + coverage.getTestCase().getMethodName() + "</param>")
                 .replace("${reportsDirectory}", reportDirectory.subpath(reportDirectory.getNameCount() - 1, reportDirectory.getNameCount()).toString()));
 
             InvocationRequest request = new DefaultInvocationRequest();
@@ -83,7 +83,7 @@ public class PitestMutationCollector implements MutationCollector {
             }
 
             return Mutation.builder()
-                .testMethod(coverage.getTestMethod())
+                .testCase(coverage.getTestCase())
                 .mutationScore(mutationScore.get())
                 .build();
         } finally {

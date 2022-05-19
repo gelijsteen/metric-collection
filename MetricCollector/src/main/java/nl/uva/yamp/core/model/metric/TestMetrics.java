@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TestCase;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 public class TestMetrics {
 
     @NonNull
-    private final Method testMethod;
+    private final TestCase testCase;
     @NonNull
     private final List<Metric> metrics;
 }

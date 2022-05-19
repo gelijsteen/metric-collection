@@ -1,7 +1,7 @@
 package nl.uva.yamp.collector.coverage.jacoco;
 
-import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.collector.coverage.CoverageTestData;
+import nl.uva.yamp.core.model.Coverage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +29,7 @@ class JacocoCoverageCollectorIntegrationTest {
 
         assertThat(result).containsExactlyInAnyOrder(
             CoverageTestData.coverageBuilder()
-                .testMethod(CoverageTestData.methodBuilder()
+                .testCase(CoverageTestData.testCaseBuilder()
                     .className("UnitTest")
                     .methodName("test1")
                     .build())
@@ -53,7 +53,7 @@ class JacocoCoverageCollectorIntegrationTest {
                 ))
                 .build(),
             CoverageTestData.coverageBuilder()
-                .testMethod(CoverageTestData.methodBuilder()
+                .testCase(CoverageTestData.testCaseBuilder()
                     .className("UnitTest")
                     .methodName("test2")
                     .build())
@@ -77,7 +77,7 @@ class JacocoCoverageCollectorIntegrationTest {
                 ))
                 .build(),
             CoverageTestData.coverageBuilder()
-                .testMethod(CoverageTestData.methodBuilder()
+                .testCase(CoverageTestData.testCaseBuilder()
                     .className("UnitTest")
                     .methodName("test3")
                     .build())
