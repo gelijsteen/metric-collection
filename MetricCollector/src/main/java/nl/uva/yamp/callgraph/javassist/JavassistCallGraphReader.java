@@ -8,6 +8,7 @@ import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.callgraph.CallGraphReader;
@@ -17,21 +18,15 @@ import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.nio.file.Path;
 import java.util.Arrays;
 
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class JavassistCallGraphReader implements CallGraphReader {
 
     private final Path projectDirectory;
     private final ResultMapper resultMapper;
-
-    @Inject
-    public JavassistCallGraphReader(@Named("projectDirectory") Path projectDirectory, ResultMapper resultMapper) {
-        this.projectDirectory = projectDirectory;
-        this.resultMapper = resultMapper;
-    }
 
     @Override
     @SneakyThrows

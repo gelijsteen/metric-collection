@@ -30,10 +30,11 @@ import nl.uva.yamp.writer.csv.CsvWriter;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
-import javax.inject.Named;
 import java.io.BufferedReader;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,8 +44,8 @@ import java.util.stream.Stream;
 interface ApplicationModule {
 
     @Provides
-    static JacocoCoverageConfiguration jacocoCoverageConfiguration(@Named("configurationFile") Path configurationFile) {
-        CoverageConfiguration coverageConfiguration = loadConfiguration(configurationFile, CoverageConfiguration.class);
+    static JacocoCoverageConfiguration jacocoCoverageConfiguration() {
+        CoverageConfiguration coverageConfiguration = loadConfiguration(CoverageConfiguration.class);
         return Optional.ofNullable(coverageConfiguration)
             .map(CoverageConfiguration::getCoverage)
             .map(CoverageConfiguration.NestedCoverageConfiguration::getJacoco)
@@ -84,8 +85,8 @@ interface ApplicationModule {
     }
 
     @Provides
-    static List<Writer> writers(@Named("configurationFile") Path configurationFile) {
-        WriterConfiguration writerConfiguration = loadConfiguration(configurationFile, WriterConfiguration.class);
+    static List<Writer> writers() {
+        WriterConfiguration writerConfiguration = loadConfiguration(WriterConfiguration.class);
         Optional<NestedWriterConfiguration> nestedWriterConfiguration = Optional.ofNullable(writerConfiguration)
             .map(WriterConfiguration::getWriter);
 
@@ -97,8 +98,24 @@ interface ApplicationModule {
             .collect(Collectors.toList());
     }
 
+    private static Path getPath(String fileName) {
+        return Optional.ofNullable(ApplicationModule.class.getClassLoader().getResource(fileName))
+            .map(url -> {
+                try {
+                    return url.toURI();
+                } catch (URISyntaxException e) {
+                    return null;
+                }
+            })
+            .map(Path::of)
+            .orElseThrow();
+    }
+
     @SneakyThrows
-    private static <T> T loadConfiguration(Path path, Class<T> clazz) {
+    private static <T> T loadConfiguration(Class<T> clazz) {
+        Path configInWorkingDirectory = Paths.get("application.yml");
+        Path configInJar = getPath("application.yml");
+        Path path = configInWorkingDirectory.toFile().exists() ? configInWorkingDirectory : configInJar;
         try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
             Representer representer = new Representer();
             representer.getPropertyUtils().setSkipMissingProperties(true);

@@ -1,5 +1,6 @@
 package nl.uva.yamp.mutation.pitest;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.model.Coverage;
@@ -13,7 +14,6 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -26,16 +26,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class PitestMutationReader implements MutationReader {
 
     private static final Pattern PATTERN = Pattern.compile(".* Test strength (\\d+)%");
     private final AtomicInteger mutationScore = new AtomicInteger(0);
     private final Path projectDirectory;
-
-    @Inject
-    public PitestMutationReader(@Named("projectDirectory") Path projectDirectory) {
-        this.projectDirectory = projectDirectory;
-    }
 
     @SneakyThrows
     public Mutation read(Coverage coverage) {

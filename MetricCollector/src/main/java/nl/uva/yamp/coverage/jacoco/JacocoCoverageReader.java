@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.coverage.CoverageReader;
@@ -17,7 +18,6 @@ import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class JacocoCoverageReader implements CoverageReader {
 
     private static final String CONSTRUCTOR_NAME = "<init>";
@@ -36,19 +37,6 @@ public class JacocoCoverageReader implements CoverageReader {
     private final JacocoFileParser jacocoFileParser;
     private final TargetDirectoryLocator targetDirectoryLocator;
     private final ClassFileLoader classFileLoader;
-
-    @Inject
-    public JacocoCoverageReader(@Named("projectDirectory") Path projectDirectory,
-                                JacocoCoverageConfiguration configuration,
-                                JacocoFileParser jacocoFileParser,
-                                TargetDirectoryLocator targetDirectoryLocator,
-                                ClassFileLoader classFileLoader) {
-        this.projectDirectory = projectDirectory;
-        this.configuration = configuration;
-        this.jacocoFileParser = jacocoFileParser;
-        this.targetDirectoryLocator = targetDirectoryLocator;
-        this.classFileLoader = classFileLoader;
-    }
 
     @Override
     @SneakyThrows
