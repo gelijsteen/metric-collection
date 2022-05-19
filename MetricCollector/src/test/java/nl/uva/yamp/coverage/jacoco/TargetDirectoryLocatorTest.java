@@ -13,7 +13,7 @@ class TargetDirectoryLocatorTest {
 
     @Test
     void happyFlow() {
-        Set<TargetDirectory> result = sut.findTargetDirectories("src/test/resources");
+        Set<TargetDirectory> result = sut.findTargetDirectories(Paths.get("src/test/resources"));
 
         assertThat(result).containsExactly(TargetDirectory.builder()
             .path(Paths.get("src/test/resources/jacoco/target"))

@@ -1,7 +1,9 @@
 package nl.uva.yamp.coverage.jacoco;
 
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
+import javax.inject.Inject;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -9,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@NoArgsConstructor(onConstructor = @__(@Inject))
 public class ClassFileLoader {
 
     @SneakyThrows

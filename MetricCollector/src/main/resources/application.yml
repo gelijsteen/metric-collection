@@ -1,17 +1,9 @@
 coverage:
   jacoco:
-    projectDirectory: SystemTest
-    #projectDirectory: /home/tegel/Courses/Thesis/Bears/repositories/webfirmframework-wff-453188520-453188718/wffweb
+    #/home/tegel/Courses/Thesis/Bears/repositories/webfirmframework-wff-453188520-453188718/wffweb
     parallel: true
 
-callGraph:
-  projectDirectory: SystemTest
-
-#mutation:
-#  pitest:
-#    projectDirectory: SystemTest
-
-#writer:
+writer:
 #  csv:
 #    outputFile: MetricCollector/target/output.csv
-#  console: {}
+  console: {}

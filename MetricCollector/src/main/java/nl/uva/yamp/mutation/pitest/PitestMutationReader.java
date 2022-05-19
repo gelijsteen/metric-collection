@@ -1,6 +1,5 @@
 package nl.uva.yamp.mutation.pitest;
 
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.model.Coverage;
@@ -13,6 +12,8 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -25,21 +26,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-@RequiredArgsConstructor
 public class PitestMutationReader implements MutationReader {
 
     private static final Pattern PATTERN = Pattern.compile(".* Test strength (\\d+)%");
     private final AtomicInteger mutationScore = new AtomicInteger(0);
-    private final PitestMutationConfiguration configuration;
+    private final Path projectDirectory;
+
+    @Inject
+    public PitestMutationReader(@Named("projectDirectory") Path projectDirectory) {
+        this.projectDirectory = projectDirectory;
+    }
 
     @SneakyThrows
     public Mutation read(Coverage coverage) {
         log.debug("Calculating mutation score for: {}", coverage.getTestMethod().getFullyQualifiedMethodName());
-        Path rootPath = Paths.get(configuration.getProjectDirectory());
-        Path pomFile = Files.createTempFile(rootPath, "yamp-", ".xml");
-        Path reportDirectory = Files.createTempDirectory(rootPath, "yamp-");
+        Path pomFile = Files.createTempFile(projectDirectory, "yamp-", ".xml");
+        Path reportDirectory = Files.createTempDirectory(projectDirectory, "yamp-");
         try {
-            Path originalPom = Paths.get(configuration.getProjectDirectory(), "pom.xml");
+            Path originalPom = projectDirectory.resolve("pom.xml");
 
             try (BufferedReader bufferedReader = Files.newBufferedReader(originalPom); BufferedWriter bufferedWriter = Files.newBufferedWriter(pomFile)) {
                 bufferedReader.transferTo(bufferedWriter);

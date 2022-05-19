@@ -5,6 +5,7 @@ import nl.uva.yamp.coverage.CoverageTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,11 +16,10 @@ class JacocoCoverageReaderIntegrationTest {
     private final JacocoFileParser jacocoFileParser = new JacocoFileParser();
     private final TargetDirectoryLocator targetDirectoryLocator = new TargetDirectoryLocator();
     private final ClassFileLoader classFileLoader = new ClassFileLoader();
-    private final JacocoCoverageReader sut = new JacocoCoverageReader(configuration, jacocoFileParser, targetDirectoryLocator, classFileLoader);
+    private final JacocoCoverageReader sut = new JacocoCoverageReader(Paths.get("src/test/resources"), configuration, jacocoFileParser, targetDirectoryLocator, classFileLoader);
 
     @BeforeEach
     void setUp() {
-        configuration.setProjectDirectory("src/test/resources");
         configuration.setParallel(false);
     }
 

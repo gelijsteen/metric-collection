@@ -8,32 +8,37 @@ import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nl.uva.yamp.callgraph.CallGraphConfiguration.NestedCallGraphConfiguration;
 import nl.uva.yamp.core.callgraph.CallGraphReader;
 import nl.uva.yamp.core.model.CallGraph;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 
-import java.nio.file.Paths;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 @Slf4j
-@RequiredArgsConstructor
 public class JavassistCallGraphReader implements CallGraphReader {
 
-    private final NestedCallGraphConfiguration configuration;
+    private final Path projectDirectory;
     private final ResultMapper resultMapper;
+
+    @Inject
+    public JavassistCallGraphReader(@Named("projectDirectory") Path projectDirectory, ResultMapper resultMapper) {
+        this.projectDirectory = projectDirectory;
+        this.resultMapper = resultMapper;
+    }
 
     @Override
     @SneakyThrows
     public CallGraph read(Coverage coverage) {
         ClassPool classPool = new ClassPool();
-        classPool.insertClassPath(Paths.get(configuration.getProjectDirectory()).resolve("target").resolve("classes").toString());
-        classPool.insertClassPath(Paths.get(configuration.getProjectDirectory()).resolve("target").resolve("test-classes").toString());
+        classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
+        classPool.insertClassPath(projectDirectory.resolve("target").resolve("test-classes").toString());
 
         CtClass testClass = classPool.get(coverage.getTestMethod().getFullyQualifiedClassName());
 
@@ -92,7 +97,7 @@ public class JavassistCallGraphReader implements CallGraphReader {
 
         // Filter non-test class.
         ClassPool classPool = new ClassPool();
-        classPool.insertClassPath(Paths.get(configuration.getProjectDirectory()).resolve("target").resolve("classes").toString());
+        classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
         try {
             classPool.get(callee.getBehavior().getDeclaringClass().getName());
         } catch (NotFoundException e) {

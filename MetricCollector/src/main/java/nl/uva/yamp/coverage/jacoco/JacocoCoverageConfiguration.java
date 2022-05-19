@@ -9,7 +9,5 @@ import lombok.Setter;
 public class JacocoCoverageConfiguration {
 
     @NonNull
-    private String projectDirectory;
-    @NonNull
     private Boolean parallel;
 }

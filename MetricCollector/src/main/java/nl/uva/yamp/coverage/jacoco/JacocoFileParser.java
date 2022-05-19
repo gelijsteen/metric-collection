@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
 
+import javax.inject.Inject;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -12,7 +13,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class JacocoFileParser {
 
     private ExecutionDataStore executionDataStore;

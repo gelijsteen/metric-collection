@@ -1,12 +1,15 @@
 package nl.uva.yamp.callgraph.javassist;
 
+import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CallGraph;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Method;
 
+import javax.inject.Inject;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(onConstructor = @__(@Inject))
 public class ResultMapper {
 
     CallGraph map(CallGraphNode root) {

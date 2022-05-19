@@ -16,12 +16,13 @@ import nl.uva.yamp.core.mutation.MutationReader;
 import nl.uva.yamp.core.validator.Validator;
 import nl.uva.yamp.core.writer.Writer;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class MetricCalculation {
 
     private final CoverageReader coverageReader;

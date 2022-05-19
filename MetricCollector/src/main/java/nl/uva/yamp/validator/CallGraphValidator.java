@@ -2,6 +2,7 @@ package nl.uva.yamp.validator;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.model.CallGraph;
@@ -10,10 +11,12 @@ import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.validator.Validator;
 
+import javax.inject.Inject;
 import java.util.Set;
 import java.util.stream.Stream;
 
 @Slf4j
+@NoArgsConstructor(onConstructor = @__(@Inject))
 public class CallGraphValidator implements Validator {
 
     @Override
