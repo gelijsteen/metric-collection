@@ -12,10 +12,10 @@ import java.util.Set;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class CallGraph {
+public class CallGraphConstructor {
 
     @NonNull
-    private final Method testMethod;
+    private final Constructor constructor;
     @NonNull
     private final Set<CallGraphConstructor> constructors;
     @NonNull

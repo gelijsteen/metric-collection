@@ -2,6 +2,8 @@ package nl.uva.yamp.collector.callgraph.javassist;
 
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CallGraph;
+import nl.uva.yamp.core.model.CallGraphConstructor;
+import nl.uva.yamp.core.model.CallGraphMethod;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Method;
 
@@ -15,19 +17,19 @@ public class ResultMapper {
     CallGraph map(CallGraphNode root) {
         return CallGraph.builder()
             .testMethod(mapMethod(root))
-            .constructorNodes(mapConstructors(root))
-            .methodNodes(mapMethods(root))
+            .constructors(mapConstructors(root))
+            .methods(mapMethods(root))
             .build();
     }
 
-    private Set<CallGraph.ConstructorNode> mapConstructors(CallGraphNode root) {
+    private Set<CallGraphConstructor> mapConstructors(CallGraphNode root) {
         return root.getNodes().stream()
             .filter(this::isConstructor)
             .map(this::mapConstructorNode)
             .collect(Collectors.toSet());
     }
 
-    private Set<CallGraph.MethodNode> mapMethods(CallGraphNode root) {
+    private Set<CallGraphMethod> mapMethods(CallGraphNode root) {
         return root.getNodes().stream()
             .filter(this::isMethod)
             .map(this::mapMethodNode)
@@ -42,19 +44,19 @@ public class ResultMapper {
         return node.getBehavior().getMethodInfo().isMethod();
     }
 
-    private CallGraph.ConstructorNode mapConstructorNode(CallGraphNode node) {
-        return CallGraph.ConstructorNode.builder()
+    private CallGraphConstructor mapConstructorNode(CallGraphNode node) {
+        return CallGraphConstructor.builder()
             .constructor(mapConstructor(node))
-            .constructorNodes(mapConstructors(node))
-            .methodNodes(mapMethods(node))
+            .constructors(mapConstructors(node))
+            .methods(mapMethods(node))
             .build();
     }
 
-    private CallGraph.MethodNode mapMethodNode(CallGraphNode node) {
-        return CallGraph.MethodNode.builder()
+    private CallGraphMethod mapMethodNode(CallGraphNode node) {
+        return CallGraphMethod.builder()
             .method(mapMethod(node))
-            .constructorNodes(mapConstructors(node))
-            .methodNodes(mapMethods(node))
+            .constructors(mapConstructors(node))
+            .methods(mapMethods(node))
             .build();
     }
 

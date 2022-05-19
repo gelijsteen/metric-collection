@@ -2,6 +2,9 @@ package nl.uva.yamp.core;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import nl.uva.yamp.core.model.CallGraph;
+import nl.uva.yamp.core.model.CallGraphConstructor;
+import nl.uva.yamp.core.model.CallGraphMethod;
 import nl.uva.yamp.core.model.CombinedData;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
@@ -23,6 +26,27 @@ public class CoreTestData {
             .testMethod(methodBuilder().build())
             .constructors(Set.of(constructorBuilder().build()))
             .methods(Set.of(methodBuilder().build()));
+    }
+
+    public static CallGraph.CallGraphBuilder callGraphBuilder() {
+        return CallGraph.builder()
+            .testMethod(methodBuilder().build())
+            .constructors(Set.of(callGraphConstructorBuilder().build()))
+            .methods(Set.of(callGraphMethodBuilder().build()));
+    }
+
+    public static CallGraphConstructor.CallGraphConstructorBuilder callGraphConstructorBuilder() {
+        return CallGraphConstructor.builder()
+            .constructor(constructorBuilder().build())
+            .constructors(Set.of())
+            .methods(Set.of());
+    }
+
+    public static CallGraphMethod.CallGraphMethodBuilder callGraphMethodBuilder() {
+        return CallGraphMethod.builder()
+            .method(methodBuilder().build())
+            .constructors(Set.of())
+            .methods(Set.of());
     }
 
     public static Mutation.MutationBuilder mutationBuilder() {

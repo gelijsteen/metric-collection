@@ -23,7 +23,7 @@ import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageCollector;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageConfiguration;
 import nl.uva.yamp.collector.mutation.pitest.PitestMutationCollector;
 import nl.uva.yamp.util.PathResolver;
-import nl.uva.yamp.validator.CallGraphValidator;
+import nl.uva.yamp.core.validator.CallGraphValidator;
 import nl.uva.yamp.writer.WriterConfiguration;
 import nl.uva.yamp.writer.WriterConfiguration.NestedWriterConfiguration;
 import nl.uva.yamp.writer.console.ConsoleWriter;

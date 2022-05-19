@@ -15,8 +15,8 @@ public class DisabledCallGraphCollector implements CallGraphCollector {
     public CallGraph collect(Coverage coverage) {
         return CallGraph.builder()
             .testMethod(coverage.getTestMethod())
-            .constructorNodes(Set.of())
-            .methodNodes(Set.of())
+            .constructors(Set.of())
+            .methods(Set.of())
             .build();
     }
 }
