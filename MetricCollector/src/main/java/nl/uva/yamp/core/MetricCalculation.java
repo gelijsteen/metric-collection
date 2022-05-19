@@ -2,9 +2,10 @@ package nl.uva.yamp.core;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.uva.yamp.core.callgraph.CallGraphReader;
+import nl.uva.yamp.core.collector.CallGraphCollector;
+import nl.uva.yamp.core.collector.CoverageCollector;
+import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.combinator.DatasetCombinator;
-import nl.uva.yamp.core.coverage.CoverageReader;
 import nl.uva.yamp.core.filter.Filter;
 import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.model.CallGraph;
@@ -12,7 +13,6 @@ import nl.uva.yamp.core.model.CombinedData;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.metric.TestMetrics;
-import nl.uva.yamp.core.mutation.MutationReader;
 import nl.uva.yamp.core.validator.Validator;
 import nl.uva.yamp.core.writer.Writer;
 
@@ -25,27 +25,27 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class MetricCalculation {
 
-    private final CoverageReader coverageReader;
-    private final CallGraphReader callGraphReader;
-    private final MutationReader pitestReader;
+    private final CoverageCollector coverageCollector;
+    private final CallGraphCollector callGraphCollector;
+    private final MutationCollector mutationCollector;
     private final Validator validator;
     private final DatasetCombinator datasetCombinator;
-    private final List<Filter> coverageFilters;
+    private final List<Filter> filters;
     private final List<MetricCollector> metricCollectors;
     private final List<Writer> writers;
 
     public void calculate() {
         log.info("Collecting coverage data.");
-        Set<Coverage> coverages = coverageReader.read();
+        Set<Coverage> coverages = coverageCollector.collect();
 
         log.info("Collecting call graph data.");
         Set<CallGraph> callGraphs = coverages.stream()
-            .map(callGraphReader::read)
+            .map(callGraphCollector::collect)
             .collect(Collectors.toSet());
 
         log.info("Collecting mutation data.");
         Set<Mutation> mutations = coverages.stream()
-            .map(pitestReader::read)
+            .map(mutationCollector::collect)
             .collect(Collectors.toSet());
 
         log.info("Applying validator(s).");
@@ -55,7 +55,7 @@ public class MetricCalculation {
         Set<CombinedData> combinedData = datasetCombinator.combine(coverages, mutations);
 
         log.info("Applying filter(s).");
-        Filter aggregatedFilters = coverageFilters.stream().reduce(Filter.identity(), Filter::andThen);
+        Filter aggregatedFilters = filters.stream().reduce(Filter.identity(), Filter::andThen);
         Set<CombinedData> filteredData = combinedData.stream()
             .map(aggregatedFilters::apply)
             .collect(Collectors.toSet());

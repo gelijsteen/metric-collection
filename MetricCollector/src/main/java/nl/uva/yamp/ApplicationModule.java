@@ -4,24 +4,24 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import lombok.SneakyThrows;
-import nl.uva.yamp.callgraph.javassist.JavassistCallGraphReader;
-import nl.uva.yamp.core.callgraph.CallGraphReader;
+import nl.uva.yamp.collector.callgraph.javassist.JavassistCallGraphCollector;
+import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.combinator.DatasetCombinator;
 import nl.uva.yamp.core.combinator.DefaultDatasetCombinator;
-import nl.uva.yamp.core.coverage.CoverageReader;
+import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.filter.Filter;
 import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.metric.MutationScoreMetricCollector;
 import nl.uva.yamp.core.metric.UniqueClassesMetricCollector;
 import nl.uva.yamp.core.metric.UniqueMethodsMetricCollector;
 import nl.uva.yamp.core.metric.UniquePackagesMetricCollector;
-import nl.uva.yamp.core.mutation.MutationReader;
+import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.validator.Validator;
 import nl.uva.yamp.core.writer.Writer;
-import nl.uva.yamp.coverage.CoverageConfiguration;
-import nl.uva.yamp.coverage.jacoco.JacocoCoverageConfiguration;
-import nl.uva.yamp.coverage.jacoco.JacocoCoverageReader;
-import nl.uva.yamp.mutation.pitest.PitestMutationReader;
+import nl.uva.yamp.collector.coverage.CoverageConfiguration;
+import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageCollector;
+import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageConfiguration;
+import nl.uva.yamp.collector.mutation.pitest.PitestMutationCollector;
 import nl.uva.yamp.util.PathResolver;
 import nl.uva.yamp.validator.CallGraphValidator;
 import nl.uva.yamp.writer.WriterConfiguration;
@@ -52,13 +52,13 @@ interface ApplicationModule {
     }
 
     @Binds
-    CoverageReader defaultCoverageReader(JacocoCoverageReader impl);
+    CoverageCollector defaultCoverageCollector(JacocoCoverageCollector impl);
 
     @Binds
-    CallGraphReader defaultCallGraphReader(JavassistCallGraphReader impl);
+    CallGraphCollector defaultCallGraphCollector(JavassistCallGraphCollector impl);
 
     @Binds
-    MutationReader defaultMutationReader(PitestMutationReader impl);
+    MutationCollector defaultMutationCollector(PitestMutationCollector impl);
 
     @Binds
     Validator defaultValidator(CallGraphValidator impl);
