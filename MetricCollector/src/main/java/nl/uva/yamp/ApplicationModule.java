@@ -22,6 +22,7 @@ import nl.uva.yamp.coverage.CoverageConfiguration;
 import nl.uva.yamp.coverage.jacoco.JacocoCoverageConfiguration;
 import nl.uva.yamp.coverage.jacoco.JacocoCoverageReader;
 import nl.uva.yamp.mutation.pitest.PitestMutationReader;
+import nl.uva.yamp.util.PathResolver;
 import nl.uva.yamp.validator.CallGraphValidator;
 import nl.uva.yamp.writer.WriterConfiguration;
 import nl.uva.yamp.writer.WriterConfiguration.NestedWriterConfiguration;
@@ -31,10 +32,8 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.BufferedReader;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -98,24 +97,9 @@ interface ApplicationModule {
             .collect(Collectors.toList());
     }
 
-    private static Path getPath(String fileName) {
-        return Optional.ofNullable(ApplicationModule.class.getClassLoader().getResource(fileName))
-            .map(url -> {
-                try {
-                    return url.toURI();
-                } catch (URISyntaxException e) {
-                    return null;
-                }
-            })
-            .map(Path::of)
-            .orElseThrow();
-    }
-
     @SneakyThrows
     private static <T> T loadConfiguration(Class<T> clazz) {
-        Path configInWorkingDirectory = Paths.get("application.yml");
-        Path configInJar = getPath("application.yml");
-        Path path = configInWorkingDirectory.toFile().exists() ? configInWorkingDirectory : configInJar;
+        Path path = PathResolver.getPath("application.yml");
         try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
             Representer representer = new Representer();
             representer.getPropertyUtils().setSkipMissingProperties(true);

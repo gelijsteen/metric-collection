@@ -7,6 +7,7 @@ import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.mutation.MutationReader;
+import nl.uva.yamp.util.PathResolver;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -46,7 +47,7 @@ public class PitestMutationReader implements MutationReader {
             }
 
             MavenProfileAppender processor = new MavenProfileAppender();
-            processor.append(pomFile, Paths.get("MetricCollector/src/main/resources/pitest.xml"));
+            processor.append(pomFile, PathResolver.getPath("pitest-template.xml"));
 
             StringBuilder classCoverage = coverage.getMethods().stream()
                 .map(Method::getFullyQualifiedClassName)
