@@ -32,7 +32,7 @@ public class MetricCalculation {
     private final DatasetCombinator datasetCombinator;
     private final List<Filter> filters;
     private final List<MetricCollector> metricCollectors;
-    private final List<Writer> writers;
+    private final Writer writer;
 
     public void calculate() {
         log.info("Collecting coverage data.");
@@ -65,8 +65,8 @@ public class MetricCalculation {
             .map(this::collectMetrics)
             .collect(Collectors.toList());
 
-        log.info("Applying writer(s).");
-        writers.forEach(writer -> writer.write(testMetrics));
+        log.info("Applying writer.");
+        writer.write(testMetrics);
 
         log.info("Metric collection finished.");
     }

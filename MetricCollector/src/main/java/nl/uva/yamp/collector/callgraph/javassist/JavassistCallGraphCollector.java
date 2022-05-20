@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class JavassistCallGraphCollector implements CallGraphCollector {
+class JavassistCallGraphCollector implements CallGraphCollector {
 
     private final Path projectDirectory;
     private final ResultMapper resultMapper;

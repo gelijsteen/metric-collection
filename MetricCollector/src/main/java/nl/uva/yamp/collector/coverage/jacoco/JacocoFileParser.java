@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class JacocoFileParser {
+class JacocoFileParser {
 
     private ExecutionDataStore executionDataStore;
 

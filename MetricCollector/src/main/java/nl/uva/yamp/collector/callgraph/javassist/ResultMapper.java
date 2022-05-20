@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
-public class ResultMapper {
+class ResultMapper {
 
     CallGraph map(TestCase testCase, CallGraphNode root) {
         return CallGraph.builder()

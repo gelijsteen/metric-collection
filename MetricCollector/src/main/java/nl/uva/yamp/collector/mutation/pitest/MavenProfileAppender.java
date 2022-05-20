@@ -10,10 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class MavenProfileAppender {
+class MavenProfileAppender {
 
     @SneakyThrows
-    public void append(Path pomFile, Path profileFile) {
+    void append(Path pomFile, Path profileFile) {
         SAXReader saxReader = new SAXReader();
 
         Document pomDocument = saxReader.read(pomFile.toFile());

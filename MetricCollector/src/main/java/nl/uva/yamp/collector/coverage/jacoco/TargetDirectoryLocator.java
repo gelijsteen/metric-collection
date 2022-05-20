@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
-public class TargetDirectoryLocator {
+class TargetDirectoryLocator {
 
     @SneakyThrows
     Set<TargetDirectory> findTargetDirectories(Path rootDirectory) {

@@ -1,16 +1,19 @@
 package nl.uva.yamp.writer.console;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.uva.yamp.core.writer.Writer;
 import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.writer.Writer;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class ConsoleWriter implements Writer {
+@NoArgsConstructor(onConstructor = @__(@Inject))
+class ConsoleWriter implements Writer {
 
     @Override
     public void write(Collection<TestMetrics> testMetrics) {

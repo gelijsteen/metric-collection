@@ -2,10 +2,11 @@ package nl.uva.yamp.writer.csv;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import nl.uva.yamp.core.writer.Writer;
 import nl.uva.yamp.core.model.metric.Metric;
 import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.writer.Writer;
 
+import javax.inject.Inject;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -15,8 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-public class CsvWriter implements Writer {
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
+class CsvWriter implements Writer {
 
     private final CsvWriterConfiguration configuration;
 

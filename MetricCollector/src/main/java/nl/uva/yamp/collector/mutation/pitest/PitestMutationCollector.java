@@ -3,10 +3,10 @@ package nl.uva.yamp.collector.mutation.pitest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.Mutation;
-import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.util.PathResolver;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class PitestMutationCollector implements MutationCollector {
+class PitestMutationCollector implements MutationCollector {
 
     private static final Pattern PATTERN = Pattern.compile(".* Test strength (\\d+)%");
     private final AtomicInteger mutationScore = new AtomicInteger(0);

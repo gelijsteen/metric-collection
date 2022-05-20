@@ -92,6 +92,12 @@
                 <version>${dagger.version}</version>
                 <scope>compile</scope>
             </dependency>
+            <dependency>
+                <groupId>com.google.dagger</groupId>
+                <artifactId>dagger-compiler</artifactId>
+                <version>${dagger.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
             <dependency>
                 <groupId>junit</groupId>

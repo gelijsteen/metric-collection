@@ -1,10 +1,15 @@
 package nl.uva.yamp.collector.coverage.jacoco;
 
+import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import nl.uva.yamp.collector.coverage.CoverageTestData;
 import nl.uva.yamp.core.model.Coverage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 
@@ -12,15 +17,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class JacocoCoverageCollectorIntegrationTest {
 
-    private final JacocoCoverageConfiguration configuration = new JacocoCoverageConfiguration();
-    private final JacocoFileParser jacocoFileParser = new JacocoFileParser();
-    private final TargetDirectoryLocator targetDirectoryLocator = new TargetDirectoryLocator();
-    private final ClassFileLoader classFileLoader = new ClassFileLoader();
-    private final JacocoCoverageCollector sut = new JacocoCoverageCollector(Paths.get("src/test/resources"), configuration, jacocoFileParser, targetDirectoryLocator, classFileLoader);
+    @Inject
+    public JacocoCoverageCollector sut;
 
     @BeforeEach
     void setUp() {
-        configuration.setParallel(false);
+        DaggerJacocoCoverageCollectorIntegrationTest_TestComponent.create().inject(this);
     }
 
     @Test
@@ -101,5 +103,23 @@ class JacocoCoverageCollectorIntegrationTest {
                 ))
                 .build()
         );
+    }
+
+    @Component(modules = {
+        JacocoCoverageModule.class,
+        ProjectDirectoryModule.class
+    })
+    public interface TestComponent {
+
+        void inject(JacocoCoverageCollectorIntegrationTest jacocoCoverageCollectorIntegrationTest);
+    }
+
+    @Module
+    public interface ProjectDirectoryModule {
+
+        @Provides
+        static Path path() {
+            return Paths.get("src/test/resources");
+        }
     }
 }

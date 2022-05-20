@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
-public class ClassFileLoader {
+class ClassFileLoader {
 
     @SneakyThrows
     Set<Path> getClassFiles(Path directory) {

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class JacocoCoverageCollector implements CoverageCollector {
+class JacocoCoverageCollector implements CoverageCollector {
 
     private static final String CONSTRUCTOR_NAME = "<init>";
     private final Path projectDirectory;

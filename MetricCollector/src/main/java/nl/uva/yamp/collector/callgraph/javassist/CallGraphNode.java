@@ -19,7 +19,7 @@ class CallGraphNode {
     @NonNull
     private final Set<CallGraphNode> nodes = new HashSet<>();
 
-    public String getFullyQualifiedMethodName() {
+    String getFullyQualifiedMethodName() {
         return behavior.getDeclaringClass().getName() + "." + behavior.getName();
     }
 
