@@ -1,11 +1,11 @@
-package nl.uva.yamp.collector.mutation.pitest;
+package nl.uva.yamp.collector.callgraph.javassist;
 
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
-import nl.uva.yamp.core.model.Mutation;
+import nl.uva.yamp.core.model.CallGraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,19 +16,19 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PitestMutationCollectorIntegrationTest {
+class JavassistCallGraphCollectorIntegrationTest {
 
     @Inject
-    public PitestMutationCollector sut;
+    public JavassistCallGraphCollector sut;
 
     @BeforeEach
     void setUp() {
-        DaggerPitestMutationCollectorIntegrationTest_TestComponent.create().inject(this);
+        DaggerJavassistCallGraphCollectorIntegrationTest_TestComponent.create().inject(this);
     }
 
     @Test
     void happyFlow() {
-        Mutation result = sut.collect(CollectorTestData.coverageBuilder()
+        CallGraph result = sut.collect(CollectorTestData.coverageBuilder()
             .testCase(CollectorTestData.testCaseBuilder().build())
             .constructors(Set.of(
                 CollectorTestData.constructorBuilder()
@@ -50,8 +50,25 @@ class PitestMutationCollectorIntegrationTest {
             ))
             .build());
 
-        assertThat(result).isEqualTo(CollectorTestData.mutationBuilder()
-            .mutationScore(33)
+        assertThat(result).isEqualTo(CollectorTestData.callGraphBuilder()
+            .constructors(Set.of())
+            .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
+                .method(CollectorTestData.methodBuilder()
+                    .className("Direct")
+                    .methodName("call")
+                    .build())
+                .constructors(Set.of(CollectorTestData.callGraphConstructorBuilder()
+                    .constructor(CollectorTestData.constructorBuilder()
+                        .className("Indirect")
+                        .build())
+                    .build()))
+                .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
+                    .method(CollectorTestData.methodBuilder()
+                        .className("Indirect")
+                        .methodName("call")
+                        .build())
+                    .build()))
+                .build()))
             .build());
     }
 
@@ -61,7 +78,7 @@ class PitestMutationCollectorIntegrationTest {
     })
     public interface TestComponent {
 
-        void inject(PitestMutationCollectorIntegrationTest pitestMutationCollectorIntegrationTest);
+        void inject(JavassistCallGraphCollectorIntegrationTest javassistCallGraphCollectorIntegrationTest);
     }
 
     @Module

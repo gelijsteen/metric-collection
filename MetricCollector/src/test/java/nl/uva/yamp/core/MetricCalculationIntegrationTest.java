@@ -3,7 +3,6 @@ package nl.uva.yamp.core;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
-import nl.uva.yamp.ApplicationModule;
 import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.collector.MutationCollector;
@@ -73,7 +72,7 @@ class MetricCalculationIntegrationTest {
 
     @Singleton
     @Component(modules = {
-        ApplicationModule.class,
+        CoreModule.class,
         FakeCoverageModule.class,
         FakeCallGraphModule.class,
         FakeMutationModule.class,

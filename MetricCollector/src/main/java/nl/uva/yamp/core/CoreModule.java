@@ -1,4 +1,4 @@
-package nl.uva.yamp;
+package nl.uva.yamp.core;
 
 import dagger.Binds;
 import dagger.Module;
@@ -17,7 +17,7 @@ import nl.uva.yamp.core.validator.Validator;
 import java.util.List;
 
 @Module
-public interface ApplicationModule {
+public interface CoreModule {
 
     @Binds
     Validator defaultValidator(CallGraphValidator impl);

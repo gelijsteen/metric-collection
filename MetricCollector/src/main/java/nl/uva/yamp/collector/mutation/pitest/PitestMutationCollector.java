@@ -31,6 +31,7 @@ class PitestMutationCollector implements MutationCollector {
     private static final Pattern PATTERN = Pattern.compile(".* Test strength (\\d+)%");
     private static final String PITEST_RESULT_FILE = "mutations.csv";
     private static final String PITEST_TEMPLATE_FILE = "pitest-template.xml";
+
     private final Path projectDirectory;
     private final MavenProfileAppender mavenProfileAppender;
 
