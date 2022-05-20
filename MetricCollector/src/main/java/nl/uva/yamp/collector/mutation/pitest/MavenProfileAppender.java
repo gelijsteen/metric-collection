@@ -1,25 +1,27 @@
 package nl.uva.yamp.collector.mutation.pitest;
 
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import java.io.BufferedWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import javax.inject.Inject;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Optional;
 
+@NoArgsConstructor(onConstructor = @__(@Inject))
 class MavenProfileAppender {
 
     @SneakyThrows
-    void append(Path pomFile, Path profileFile) {
+    String addProfileToPomFile(String pom, String profile) {
         SAXReader saxReader = new SAXReader();
 
-        Document pomDocument = saxReader.read(pomFile.toFile());
+        Document pomDocument = saxReader.read(new StringReader(pom));
         Element pomRootElement = pomDocument.getRootElement();
 
-        Document profileDocument = saxReader.read(profileFile.toFile());
+        Document profileDocument = saxReader.read(new StringReader(profile));
         Element profileRootElement = profileDocument.getRootElement();
 
         Element profilesElement = getProfilesElement(pomRootElement);
@@ -28,9 +30,9 @@ class MavenProfileAppender {
         removeExistingProfileByProfileId(profilesElement, profileId);
         profilesElement.add(profileRootElement);
 
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(pomFile)) {
-            pomDocument.write(bufferedWriter);
-        }
+        StringWriter stringWriter = new StringWriter();
+        pomDocument.write(stringWriter);
+        return stringWriter.toString();
     }
 
     private Element getProfilesElement(Element rootElement) {

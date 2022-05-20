@@ -1,9 +1,7 @@
 coverage:
   jacoco:
-    #/home/tegel/Courses/Thesis/Bears/repositories/webfirmframework-wff-453188520-453188718/wffweb
     parallel: true
 
 writer:
-#  csv:
-#    outputFile: MetricCollector/target/output.csv
-  console: {}
+  csv:
+    outputFile: MetricCollector/target/output.csv

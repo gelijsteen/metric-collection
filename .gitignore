@@ -3,4 +3,5 @@ JacocoListener/target
 MavenPreparation/target
 MetricCollector/target
 SystemTest/target
+Temporary
 *-reduced-pom.xml

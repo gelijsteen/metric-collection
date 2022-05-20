@@ -3,7 +3,7 @@ package nl.uva.yamp.collector.coverage.jacoco;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
-import nl.uva.yamp.collector.coverage.CoverageTestData;
+import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.core.model.Coverage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,73 +30,68 @@ class JacocoCoverageCollectorIntegrationTest {
         Set<Coverage> result = sut.collect();
 
         assertThat(result).containsExactlyInAnyOrder(
-            CoverageTestData.coverageBuilder()
-                .testCase(CoverageTestData.testCaseBuilder()
-                    .className("UnitTest")
-                    .methodName("test1")
-                    .build())
+            CollectorTestData.coverageBuilder()
+                .testCase(CollectorTestData.testCaseBuilder().build())
                 .constructors(Set.of(
-                    CoverageTestData.constructorBuilder()
+                    CollectorTestData.constructorBuilder()
                         .className("Direct")
                         .build(),
-                    CoverageTestData.constructorBuilder()
+                    CollectorTestData.constructorBuilder()
                         .className("Indirect")
                         .build()
                 ))
                 .methods(Set.of(
-                    CoverageTestData.methodBuilder()
+                    CollectorTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
-                    CoverageTestData.methodBuilder()
+                    CollectorTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
                         .build()
                 ))
                 .build(),
-            CoverageTestData.coverageBuilder()
-                .testCase(CoverageTestData.testCaseBuilder()
-                    .className("UnitTest")
+            CollectorTestData.coverageBuilder()
+                .testCase(CollectorTestData.testCaseBuilder()
                     .methodName("test2")
                     .build())
                 .constructors(Set.of(
-                    CoverageTestData.constructorBuilder()
+                    CollectorTestData.constructorBuilder()
                         .className("Direct")
                         .build(),
-                    CoverageTestData.constructorBuilder()
+                    CollectorTestData.constructorBuilder()
                         .className("Indirect")
                         .build()
                 ))
                 .methods(Set.of(
-                    CoverageTestData.methodBuilder()
+                    CollectorTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
-                    CoverageTestData.methodBuilder()
+                    CollectorTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
                         .build()
                 ))
                 .build(),
-            CoverageTestData.coverageBuilder()
-                .testCase(CoverageTestData.testCaseBuilder()
-                    .className("UnitTest")
+            CollectorTestData.coverageBuilder()
+                .testCase(CollectorTestData.testCaseBuilder()
                     .methodName("test3")
                     .build())
                 .constructors(Set.of(
-                    CoverageTestData.constructorBuilder()
+                    CollectorTestData.constructorBuilder()
                         .className("Direct")
                         .build(),
-                    CoverageTestData.constructorBuilder()
+                    CollectorTestData.constructorBuilder()
                         .className("Indirect")
                         .build()
                 ))
                 .methods(Set.of(
-                    CoverageTestData.methodBuilder()
+                    CollectorTestData.methodBuilder()
                         .className("Direct")
                         .methodName("call")
                         .build(),
-                    CoverageTestData.methodBuilder()
+                    CollectorTestData.methodBuilder()
                         .className("Indirect")
                         .methodName("call")
                         .build()
@@ -119,7 +114,7 @@ class JacocoCoverageCollectorIntegrationTest {
 
         @Provides
         static Path path() {
-            return Paths.get("src/test/resources");
+            return Paths.get("src/test/resources/reference");
         }
     }
 }
