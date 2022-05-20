@@ -1,6 +1,5 @@
 package nl.uva.yamp.collector.coverage.jacoco;
 
-import nl.uva.yamp.collector.coverage.jacoco.JacocoFileParser;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ class JacocoFileParserTest {
 
     @Test
     void happyFlow() {
-        Map<String, ExecutionDataStore> result = sut.readJacocoExec(Paths.get("src/test/resources/jacoco/target"));
+        Map<String, ExecutionDataStore> result = sut.readJacocoExec(Paths.get("src/test/resources/reference/target"));
 
         assertThat(result)
             .containsKey("test.pkg.UnitTest#test1")

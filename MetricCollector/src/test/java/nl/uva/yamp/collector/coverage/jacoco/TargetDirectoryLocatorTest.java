@@ -1,7 +1,5 @@
 package nl.uva.yamp.collector.coverage.jacoco;
 
-import nl.uva.yamp.collector.coverage.jacoco.TargetDirectory;
-import nl.uva.yamp.collector.coverage.jacoco.TargetDirectoryLocator;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
@@ -18,8 +16,8 @@ class TargetDirectoryLocatorTest {
         Set<TargetDirectory> result = sut.findTargetDirectories(Paths.get("src/test/resources"));
 
         assertThat(result).containsExactly(TargetDirectory.builder()
-            .path(Paths.get("src/test/resources/jacoco/target"))
-            .moduleName("jacoco")
+            .path(Paths.get("src/test/resources/reference/target"))
+            .moduleName("reference")
             .build());
     }
 }
