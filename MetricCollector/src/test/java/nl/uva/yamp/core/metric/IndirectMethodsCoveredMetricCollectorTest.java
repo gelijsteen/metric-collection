@@ -45,8 +45,8 @@ class IndirectMethodsCoveredMetricCollectorTest {
     void whenTwoDistinctMethods_expectTwo() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .methods(Set.of(
-                CoreTestData.coverageMethodBuilder().build(),
-                CoreTestData.coverageMethodBuilder()
+                CoreTestData.combinedMethodBuilder().build(),
+                CoreTestData.combinedMethodBuilder()
                     .methodName("Unique")
                     .build()
             ))

@@ -52,7 +52,7 @@ public class MetricCalculation {
         validator.validate(coverages, callGraphs);
 
         log.info("Combining datasets.");
-        Set<CombinedData> combinedData = datasetCombinator.combine(coverages, mutations);
+        Set<CombinedData> combinedData = datasetCombinator.combine(coverages, callGraphs, mutations);
 
         log.info("Applying filter(s).");
         Filter aggregatedFilters = filters.stream().reduce(Filter.identity(), Filter::andThen);

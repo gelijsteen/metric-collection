@@ -34,16 +34,22 @@ public class CallGraphValidator implements Validator {
     }
 
     private int countUniqueCallGraphNodes(CallGraph callGraph) {
-        int count1 = (int) Stream.concat(
-            callGraph.getConstructors().stream().flatMap(this::collectConstructors),
-            callGraph.getMethods().stream().flatMap(this::collectConstructors)
-        ).distinct().count();
-        int count2 = (int) Stream.concat(
-            callGraph.getConstructors().stream().flatMap(this::collectMethods),
-            callGraph.getMethods().stream().flatMap(this::collectMethods)
-        ).distinct().count();
+        int distinctConstructors = (int) Stream.concat(
+                callGraph.getConstructors().stream().flatMap(this::collectConstructors),
+                callGraph.getMethods().stream().flatMap(this::collectConstructors)
+            )
+            .map(CallGraphConstructor::getFullyQualifiedClassName)
+            .distinct()
+            .count();
+        int distinctMethods = (int) Stream.concat(
+                callGraph.getConstructors().stream().flatMap(this::collectMethods),
+                callGraph.getMethods().stream().flatMap(this::collectMethods)
+            )
+            .map(CallGraphMethod::getFullyQualifiedMethodName)
+            .distinct()
+            .count();
 
-        return count1 + count2;
+        return distinctConstructors + distinctMethods;
     }
 
     private Stream<CallGraphConstructor> collectConstructors(CallGraphConstructor constructorNode) {

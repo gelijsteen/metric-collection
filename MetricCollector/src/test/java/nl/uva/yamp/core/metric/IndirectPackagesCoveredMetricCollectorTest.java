@@ -45,8 +45,8 @@ class IndirectPackagesCoveredMetricCollectorTest {
     void whenMultipleMethodsInPackage_expectOne() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .methods(Set.of(
-                CoreTestData.coverageMethodBuilder().build(),
-                CoreTestData.coverageMethodBuilder()
+                CoreTestData.combinedMethodBuilder().build(),
+                CoreTestData.combinedMethodBuilder()
                     .methodName("unique")
                     .build()
             ))
@@ -64,8 +64,8 @@ class IndirectPackagesCoveredMetricCollectorTest {
     void whenTwoDistinctPackages_expectTwo() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .methods(Set.of(
-                CoreTestData.coverageMethodBuilder().build(),
-                CoreTestData.coverageMethodBuilder()
+                CoreTestData.combinedMethodBuilder().build(),
+                CoreTestData.combinedMethodBuilder()
                     .packageName("Unique")
                     .build()
             ))

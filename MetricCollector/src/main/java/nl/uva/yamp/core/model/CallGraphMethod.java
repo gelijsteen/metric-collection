@@ -1,6 +1,7 @@
 package nl.uva.yamp.core.model;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -8,7 +9,8 @@ import lombok.ToString;
 import java.util.Set;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class CallGraphMethod extends Method {
 
     @NonNull

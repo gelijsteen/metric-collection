@@ -16,6 +16,7 @@ class DefaultDatasetCombinatorTest {
     void happyFlow() {
         Set<CombinedData> result = sut.combine(
             Set.of(CoreTestData.coverageBuilder().build()),
+            Set.of(CoreTestData.callGraphBuilder().build()),
             Set.of(CoreTestData.mutationBuilder().build())
         );
 

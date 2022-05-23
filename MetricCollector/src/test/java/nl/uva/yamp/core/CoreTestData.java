@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CallGraph;
 import nl.uva.yamp.core.model.CallGraphConstructor;
 import nl.uva.yamp.core.model.CallGraphMethod;
+import nl.uva.yamp.core.model.CombinedConstructor;
 import nl.uva.yamp.core.model.CombinedData;
+import nl.uva.yamp.core.model.CombinedMethod;
 import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.CoverageConstructor;
 import nl.uva.yamp.core.model.CoverageMethod;
@@ -68,9 +70,28 @@ public class CoreTestData {
     public static CombinedData.CombinedDataBuilder combinedDataBuilder() {
         return CombinedData.builder()
             .testCase(testCaseBuilder().build())
-            .constructors(Set.of(coverageConstructorBuilder().build()))
-            .methods(Set.of(coverageMethodBuilder().build()))
+            .constructors(Set.of(combinedConstructorBuilder().build()))
+            .methods(Set.of(combinedMethodBuilder().build()))
             .mutationScore(MUTATION_SCORE);
+    }
+
+    public static CombinedConstructor.CombinedConstructorBuilder combinedConstructorBuilder() {
+        return CombinedConstructor.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .constructors(Set.of())
+            .methods(Set.of())
+            .loc(COVERAGE_LOC);
+    }
+
+    public static CombinedMethod.CombinedMethodBuilder combinedMethodBuilder() {
+        return CombinedMethod.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .methodName(METHOD_NAME)
+            .constructors(Set.of())
+            .methods(Set.of())
+            .loc(COVERAGE_LOC);
     }
 
     public static TestCase.TestCaseBuilder testCaseBuilder() {
