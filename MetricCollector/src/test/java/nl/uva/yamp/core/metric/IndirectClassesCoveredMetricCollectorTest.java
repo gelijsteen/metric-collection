@@ -11,9 +11,9 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UniqueClassesMetricCollectorTest {
+class IndirectClassesCoveredMetricCollectorTest {
 
-    private final UniqueClassesMetricCollector sut = new UniqueClassesMetricCollector();
+    private final IndirectClassesCoveredMetricCollector sut = new IndirectClassesCoveredMetricCollector();
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {

@@ -11,9 +11,9 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UniqueMethodsMetricCollectorTest {
+class IndirectPackagesCoveredMetricCollectorTest {
 
-    private final UniqueMethodsMetricCollector sut = new UniqueMethodsMetricCollector();
+    private final IndirectPackagesCoveredMetricCollector sut = new IndirectPackagesCoveredMetricCollector();
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {
@@ -24,7 +24,7 @@ class UniqueMethodsMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UMC")
+            .identifier("UPC")
             .value(0)
             .build());
     }
@@ -36,18 +36,18 @@ class UniqueMethodsMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UMC")
+            .identifier("UPC")
             .value(1)
             .build());
     }
 
     @Test
-    void whenTwoDistinctMethods_expectTwo() {
+    void whenMultipleMethodsInPackage_expectOne() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .methods(Set.of(
                 CoreTestData.methodBuilder().build(),
                 CoreTestData.methodBuilder()
-                    .methodName("Unique")
+                    .methodName("unique")
                     .build()
             ))
             .build();
@@ -55,7 +55,26 @@ class UniqueMethodsMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UMC")
+            .identifier("UPC")
+            .value(1)
+            .build());
+    }
+
+    @Test
+    void whenTwoDistinctPackages_expectTwo() {
+        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+            .methods(Set.of(
+                CoreTestData.methodBuilder().build(),
+                CoreTestData.methodBuilder()
+                    .packageName("Unique")
+                    .build()
+            ))
+            .build();
+
+        Metric result = sut.collect(combinedData);
+
+        assertThat(result).isEqualTo(IntegerMetric.builder()
+            .identifier("UPC")
             .value(2)
             .build());
     }

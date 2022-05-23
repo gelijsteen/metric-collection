@@ -10,12 +10,12 @@ import javax.inject.Inject;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
-public class UniqueMethodsMetricCollector implements MetricCollector {
+public class IndirectMethodsCoveredMetricCollector implements MetricCollector {
 
     @Override
     public Metric collect(CombinedData combinedData) {
         return IntegerMetric.builder()
-            .identifier("UMC")
+            .identifier("IMC")
             .value(calculate(combinedData))
             .build();
     }

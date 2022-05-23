@@ -6,11 +6,11 @@ import dagger.Provides;
 import nl.uva.yamp.core.combinator.DatasetCombinator;
 import nl.uva.yamp.core.combinator.DefaultDatasetCombinator;
 import nl.uva.yamp.core.filter.Filter;
+import nl.uva.yamp.core.metric.IndirectClassesCoveredMetricCollector;
+import nl.uva.yamp.core.metric.IndirectMethodsCoveredMetricCollector;
 import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.metric.MutationScoreMetricCollector;
-import nl.uva.yamp.core.metric.UniqueClassesMetricCollector;
-import nl.uva.yamp.core.metric.UniqueMethodsMetricCollector;
-import nl.uva.yamp.core.metric.UniquePackagesMetricCollector;
+import nl.uva.yamp.core.metric.IndirectPackagesCoveredMetricCollector;
 import nl.uva.yamp.core.validator.CallGraphValidator;
 import nl.uva.yamp.core.validator.Validator;
 
@@ -26,14 +26,14 @@ public interface CoreModule {
     DatasetCombinator defaultDatasetCombinator(DefaultDatasetCombinator impl);
 
     @Provides
-    static List<MetricCollector> metricCollector(UniquePackagesMetricCollector uniquePackagesMetricCollector,
-                                                 UniqueClassesMetricCollector uniqueClassesMetricCollector,
-                                                 UniqueMethodsMetricCollector uniqueMethodsMetricCollector,
+    static List<MetricCollector> metricCollector(IndirectPackagesCoveredMetricCollector indirectPackagesCoveredMetricCollector,
+                                                 IndirectClassesCoveredMetricCollector indirectClassesCoveredMetricCollector,
+                                                 IndirectMethodsCoveredMetricCollector indirectMethodsCoveredMetricCollector,
                                                  MutationScoreMetricCollector mutationScoreMetricCollector) {
         return List.of(
-            uniquePackagesMetricCollector,
-            uniqueClassesMetricCollector,
-            uniqueMethodsMetricCollector,
+            indirectPackagesCoveredMetricCollector,
+            indirectClassesCoveredMetricCollector,
+            indirectMethodsCoveredMetricCollector,
             mutationScoreMetricCollector);
     }
 

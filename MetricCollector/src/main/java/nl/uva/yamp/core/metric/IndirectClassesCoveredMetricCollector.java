@@ -10,12 +10,12 @@ import javax.inject.Inject;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
-public class UniquePackagesMetricCollector implements MetricCollector {
+public class IndirectClassesCoveredMetricCollector implements MetricCollector {
 
     @Override
     public Metric collect(CombinedData combinedData) {
         return IntegerMetric.builder()
-            .identifier("UPC")
+            .identifier("ICC")
             .value(calculate(combinedData))
             .build();
     }
@@ -23,7 +23,7 @@ public class UniquePackagesMetricCollector implements MetricCollector {
     private int calculate(CombinedData combinedData) {
         return combinedData.getMethods()
             .stream()
-            .map(Method::getPackageName)
+            .map(Method::getFullyQualifiedClassName)
             .collect(Collectors.toSet())
             .size();
     }
