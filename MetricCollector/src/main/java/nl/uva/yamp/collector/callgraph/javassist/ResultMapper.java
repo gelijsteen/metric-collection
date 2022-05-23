@@ -4,8 +4,6 @@ import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CallGraph;
 import nl.uva.yamp.core.model.CallGraphConstructor;
 import nl.uva.yamp.core.model.CallGraphMethod;
-import nl.uva.yamp.core.model.Constructor;
-import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.TestCase;
 
 import javax.inject.Inject;
@@ -47,7 +45,8 @@ class ResultMapper {
 
     private CallGraphConstructor mapConstructorNode(CallGraphNode node) {
         return CallGraphConstructor.builder()
-            .constructor(mapConstructor(node))
+            .packageName(node.getBehavior().getDeclaringClass().getPackageName())
+            .className(node.getBehavior().getDeclaringClass().getSimpleName())
             .constructors(mapConstructors(node))
             .methods(mapMethods(node))
             .build();
@@ -55,24 +54,11 @@ class ResultMapper {
 
     private CallGraphMethod mapMethodNode(CallGraphNode node) {
         return CallGraphMethod.builder()
-            .method(mapMethod(node))
-            .constructors(mapConstructors(node))
-            .methods(mapMethods(node))
-            .build();
-    }
-
-    private Constructor mapConstructor(CallGraphNode node) {
-        return Constructor.builder()
-            .packageName(node.getBehavior().getDeclaringClass().getPackageName())
-            .className(node.getBehavior().getDeclaringClass().getSimpleName())
-            .build();
-    }
-
-    private Method mapMethod(CallGraphNode node) {
-        return Method.builder()
             .packageName(node.getBehavior().getDeclaringClass().getPackageName())
             .className(node.getBehavior().getDeclaringClass().getSimpleName())
             .methodName(node.getBehavior().getName())
+            .constructors(mapConstructors(node))
+            .methods(mapMethods(node))
             .build();
     }
 }

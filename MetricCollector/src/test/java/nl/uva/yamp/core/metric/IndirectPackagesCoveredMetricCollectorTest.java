@@ -24,7 +24,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UPC")
+            .identifier("IPC")
             .value(0)
             .build());
     }
@@ -36,7 +36,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UPC")
+            .identifier("IPC")
             .value(1)
             .build());
     }
@@ -45,8 +45,8 @@ class IndirectPackagesCoveredMetricCollectorTest {
     void whenMultipleMethodsInPackage_expectOne() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .methods(Set.of(
-                CoreTestData.methodBuilder().build(),
-                CoreTestData.methodBuilder()
+                CoreTestData.coverageMethodBuilder().build(),
+                CoreTestData.coverageMethodBuilder()
                     .methodName("unique")
                     .build()
             ))
@@ -55,7 +55,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UPC")
+            .identifier("IPC")
             .value(1)
             .build());
     }
@@ -64,8 +64,8 @@ class IndirectPackagesCoveredMetricCollectorTest {
     void whenTwoDistinctPackages_expectTwo() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .methods(Set.of(
-                CoreTestData.methodBuilder().build(),
-                CoreTestData.methodBuilder()
+                CoreTestData.coverageMethodBuilder().build(),
+                CoreTestData.coverageMethodBuilder()
                     .packageName("Unique")
                     .build()
             ))
@@ -74,7 +74,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UPC")
+            .identifier("IPC")
             .value(2)
             .build());
     }

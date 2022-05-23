@@ -24,7 +24,7 @@ class IndirectMethodsCoveredMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UMC")
+            .identifier("IMC")
             .value(0)
             .build());
     }
@@ -36,7 +36,7 @@ class IndirectMethodsCoveredMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UMC")
+            .identifier("IMC")
             .value(1)
             .build());
     }
@@ -45,8 +45,8 @@ class IndirectMethodsCoveredMetricCollectorTest {
     void whenTwoDistinctMethods_expectTwo() {
         CombinedData combinedData = CoreTestData.combinedDataBuilder()
             .methods(Set.of(
-                CoreTestData.methodBuilder().build(),
-                CoreTestData.methodBuilder()
+                CoreTestData.coverageMethodBuilder().build(),
+                CoreTestData.coverageMethodBuilder()
                     .methodName("Unique")
                     .build()
             ))
@@ -55,7 +55,7 @@ class IndirectMethodsCoveredMetricCollectorTest {
         Metric result = sut.collect(combinedData);
 
         assertThat(result).isEqualTo(IntegerMetric.builder()
-            .identifier("UMC")
+            .identifier("IMC")
             .value(2)
             .build());
     }

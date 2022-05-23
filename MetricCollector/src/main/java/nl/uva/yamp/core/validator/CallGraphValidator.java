@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.model.CallGraph;
 import nl.uva.yamp.core.model.CallGraphConstructor;
 import nl.uva.yamp.core.model.CallGraphMethod;
-import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.TestCase;
 
 import javax.inject.Inject;
@@ -48,9 +46,9 @@ public class CallGraphValidator implements Validator {
         return count1 + count2;
     }
 
-    private Stream<Constructor> collectConstructors(CallGraphConstructor constructorNode) {
+    private Stream<CallGraphConstructor> collectConstructors(CallGraphConstructor constructorNode) {
         return Stream.concat(
-            Stream.of(constructorNode.getConstructor()),
+            Stream.of(constructorNode),
             Stream.concat(
                 constructorNode.getConstructors().stream().flatMap(this::collectConstructors),
                 constructorNode.getMethods().stream().flatMap(this::collectConstructors)
@@ -58,23 +56,23 @@ public class CallGraphValidator implements Validator {
         );
     }
 
-    private Stream<Constructor> collectConstructors(CallGraphMethod methodNode) {
+    private Stream<CallGraphConstructor> collectConstructors(CallGraphMethod methodNode) {
         return Stream.concat(
             methodNode.getConstructors().stream().flatMap(this::collectConstructors),
             methodNode.getMethods().stream().flatMap(this::collectConstructors)
         );
     }
 
-    private Stream<Method> collectMethods(CallGraphConstructor constructorNode) {
+    private Stream<CallGraphMethod> collectMethods(CallGraphConstructor constructorNode) {
         return Stream.concat(
             constructorNode.getConstructors().stream().flatMap(this::collectMethods),
             constructorNode.getMethods().stream().flatMap(this::collectMethods)
         );
     }
 
-    private Stream<Method> collectMethods(CallGraphMethod methodNode) {
+    private Stream<CallGraphMethod> collectMethods(CallGraphMethod methodNode) {
         return Stream.concat(
-            Stream.of(methodNode.getMethod()),
+            Stream.of(methodNode),
             Stream.concat(
                 methodNode.getConstructors().stream().flatMap(this::collectMethods),
                 methodNode.getMethods().stream().flatMap(this::collectMethods)

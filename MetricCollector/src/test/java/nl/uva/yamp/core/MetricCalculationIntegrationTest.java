@@ -52,15 +52,15 @@ class MetricCalculationIntegrationTest {
             CoreTestData.testMetricsBuilder()
                 .metrics(List.of(
                     CoreTestData.integerMetricBuilder()
-                        .identifier("UPC")
+                        .identifier("IPC")
                         .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()
-                        .identifier("UCC")
+                        .identifier("ICC")
                         .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()
-                        .identifier("UMC")
+                        .identifier("IMC")
                         .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()

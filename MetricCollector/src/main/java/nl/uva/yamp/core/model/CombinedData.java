@@ -17,9 +17,9 @@ public class CombinedData {
     @NonNull
     private final TestCase testCase;
     @NonNull
-    private final Set<Constructor> constructors;
+    private final Set<CoverageConstructor> constructors;
     @NonNull
-    private final Set<Method> methods;
+    private final Set<CoverageMethod> methods;
     @NonNull
     private final Integer mutationScore;
 }

@@ -2,7 +2,7 @@ package nl.uva.yamp.core.metric;
 
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CombinedData;
-import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.CoverageMethod;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 
@@ -23,7 +23,7 @@ public class IndirectMethodsCoveredMetricCollector implements MetricCollector {
     private int calculate(CombinedData combinedData) {
         return combinedData.getMethods()
             .stream()
-            .map(Method::getFullyQualifiedMethodName)
+            .map(CoverageMethod::getFullyQualifiedMethodName)
             .collect(Collectors.toSet())
             .size();
     }

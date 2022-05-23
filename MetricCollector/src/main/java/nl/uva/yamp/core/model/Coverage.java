@@ -17,7 +17,7 @@ public class Coverage {
     @NonNull
     private final TestCase testCase;
     @NonNull
-    private final Set<Constructor> constructors;
+    private final Set<CoverageConstructor> constructors;
     @NonNull
-    private final Set<Method> methods;
+    private final Set<CoverageMethod> methods;
 }

@@ -13,9 +13,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.model.CallGraph;
-import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.CoverageConstructor;
+import nl.uva.yamp.core.model.CoverageMethod;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
@@ -104,11 +104,11 @@ class JavassistCallGraphCollector implements CallGraphCollector {
         boolean b;
         if (callee.getBehavior().getMethodInfo().isMethod()) {
             b = coverage.getMethods().stream()
-                .map(Method::getFullyQualifiedMethodName)
+                .map(CoverageMethod::getFullyQualifiedMethodName)
                 .anyMatch(name -> name.equals(callee.getFullyQualifiedMethodName()));
         } else if (callee.getBehavior().getMethodInfo().isConstructor()) {
             b = coverage.getConstructors().stream()
-                .map(Constructor::getFullyQualifiedClassName)
+                .map(CoverageConstructor::getFullyQualifiedClassName)
                 .anyMatch(name -> name.equals(callee.getBehavior().getDeclaringClass().getName()));
         } else {
             b = false;

@@ -1,7 +1,6 @@
 package nl.uva.yamp.core.model;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -9,15 +8,20 @@ import lombok.ToString;
 import java.util.Set;
 
 @Getter
-@Builder
 @ToString
-@EqualsAndHashCode
-public class CallGraphConstructor {
+public class CallGraphConstructor extends Constructor {
 
-    @NonNull
-    private final Constructor constructor;
     @NonNull
     private final Set<CallGraphConstructor> constructors;
     @NonNull
     private final Set<CallGraphMethod> methods;
+
+    @Builder
+    public CallGraphConstructor(String packageName, String className,
+                                @NonNull Set<CallGraphConstructor> constructors,
+                                @NonNull Set<CallGraphMethod> methods) {
+        super(packageName, className);
+        this.constructors = constructors;
+        this.methods = methods;
+    }
 }

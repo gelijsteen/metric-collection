@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.CoverageMethod;
 import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.util.PathResolver;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
@@ -69,7 +69,7 @@ class PitestMutationCollector implements MutationCollector {
     @NotNull
     private String replaceTemplatePlaceholders(Coverage coverage, Path reportDirectory, String profileTemplate) {
         StringBuilder targetClasses = coverage.getMethods().stream()
-            .map(Method::getFullyQualifiedClassName)
+            .map(CoverageMethod::getFullyQualifiedClassName)
             .distinct()
             .reduce(new StringBuilder(), (stringBuilder, fqn) -> stringBuilder.append("<param>").append(fqn).append("</param>"), StringBuilder::append);
 

@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.CallGraph;
 import nl.uva.yamp.core.model.CallGraphConstructor;
 import nl.uva.yamp.core.model.CallGraphMethod;
-import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.CoverageConstructor;
+import nl.uva.yamp.core.model.CoverageMethod;
 import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.TestCase;
 
@@ -20,12 +20,13 @@ public class CollectorTestData {
     public static final String PACKAGE_NAME = "test.pkg";
     public static final String CLASS_NAME = "UnitTest";
     public static final String METHOD_NAME = "test1";
+    public static final int COVERAGE_LOC = 0;
 
     public static Coverage.CoverageBuilder coverageBuilder() {
         return Coverage.builder()
             .testCase(testCaseBuilder().build())
-            .constructors(Set.of(constructorBuilder().build()))
-            .methods(Set.of(methodBuilder().build()));
+            .constructors(Set.of(coverageConstructorBuilder().build()))
+            .methods(Set.of(coverageMethodBuilder().build()));
     }
 
     public static CallGraph.CallGraphBuilder callGraphBuilder() {
@@ -37,14 +38,17 @@ public class CollectorTestData {
 
     public static CallGraphConstructor.CallGraphConstructorBuilder callGraphConstructorBuilder() {
         return CallGraphConstructor.builder()
-            .constructor(constructorBuilder().build())
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
             .constructors(Set.of())
             .methods(Set.of());
     }
 
     public static CallGraphMethod.CallGraphMethodBuilder callGraphMethodBuilder() {
         return CallGraphMethod.builder()
-            .method(methodBuilder().build())
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .methodName(METHOD_NAME)
             .constructors(Set.of())
             .methods(Set.of());
     }
@@ -62,16 +66,18 @@ public class CollectorTestData {
             .methodName(METHOD_NAME);
     }
 
-    public static Constructor.ConstructorBuilder constructorBuilder() {
-        return Constructor.builder()
-            .packageName(PACKAGE_NAME)
-            .className(CLASS_NAME);
-    }
-
-    public static Method.MethodBuilder methodBuilder() {
-        return Method.builder()
+    public static CoverageConstructor.CoverageConstructorBuilder coverageConstructorBuilder() {
+        return CoverageConstructor.builder()
             .packageName(PACKAGE_NAME)
             .className(CLASS_NAME)
-            .methodName(METHOD_NAME);
+            .loc(COVERAGE_LOC);
+    }
+
+    public static CoverageMethod.CoverageMethodBuilder coverageMethodBuilder() {
+        return CoverageMethod.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .methodName(METHOD_NAME)
+            .loc(COVERAGE_LOC);
     }
 }

@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.CoverageCollector;
-import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.CoverageConstructor;
+import nl.uva.yamp.core.model.CoverageMethod;
 import nl.uva.yamp.core.model.TestCase;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -125,30 +125,34 @@ class JacocoCoverageCollector implements CoverageCollector {
         String packageName = classCoverage.getPackageName().replace("/", ".");
         String className = classCoverage.getName().replace(classCoverage.getPackageName() + "/", "");
         String methodName = methodCoverage.getName();
+        int loc = methodCoverage.getLineCounter().getTotalCount();
         return JacocoMethod.builder()
             .packageName(packageName)
             .className(className)
             .methodName(methodName)
+            .loc(loc)
             .build();
     }
 
-    private Set<Constructor> filterConstructors(Set<JacocoMethod> coveredMethods) {
+    private Set<CoverageConstructor> filterConstructors(Set<JacocoMethod> coveredMethods) {
         return coveredMethods.stream()
             .filter(method -> method.getMethodName().equals(CONSTRUCTOR_NAME))
-            .map(method -> Constructor.builder()
+            .map(method -> CoverageConstructor.builder()
                 .packageName(method.getPackageName())
                 .className(method.getClassName())
+                .loc(method.getLoc())
                 .build())
             .collect(Collectors.toSet());
     }
 
-    private Set<Method> filterMethods(Set<JacocoMethod> coveredMethods) {
+    private Set<CoverageMethod> filterMethods(Set<JacocoMethod> coveredMethods) {
         return coveredMethods.stream()
             .filter(method -> !method.getMethodName().equals(CONSTRUCTOR_NAME))
-            .map(method -> Method.builder()
+            .map(method -> CoverageMethod.builder()
                 .packageName(method.getPackageName())
                 .className(method.getClassName())
                 .methodName(method.getMethodName())
+                .loc(method.getLoc())
                 .build())
             .collect(Collectors.toSet());
     }
@@ -164,5 +168,7 @@ class JacocoCoverageCollector implements CoverageCollector {
         private final String className;
         @NonNull
         private final String methodName;
+        @NonNull
+        private final Integer loc;
     }
 }

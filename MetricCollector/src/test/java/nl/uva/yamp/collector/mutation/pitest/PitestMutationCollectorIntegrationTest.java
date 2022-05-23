@@ -31,19 +31,19 @@ class PitestMutationCollectorIntegrationTest {
         Mutation result = sut.collect(CollectorTestData.coverageBuilder()
             .testCase(CollectorTestData.testCaseBuilder().build())
             .constructors(Set.of(
-                CollectorTestData.constructorBuilder()
+                CollectorTestData.coverageConstructorBuilder()
                     .className("Direct")
                     .build(),
-                CollectorTestData.constructorBuilder()
+                CollectorTestData.coverageConstructorBuilder()
                     .className("Indirect")
                     .build()
             ))
             .methods(Set.of(
-                CollectorTestData.methodBuilder()
+                CollectorTestData.coverageMethodBuilder()
                     .className("Direct")
                     .methodName("call")
                     .build(),
-                CollectorTestData.methodBuilder()
+                CollectorTestData.coverageMethodBuilder()
                     .className("Indirect")
                     .methodName("call")
                     .build()
