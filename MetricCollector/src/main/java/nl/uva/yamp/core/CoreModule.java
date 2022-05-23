@@ -6,11 +6,14 @@ import dagger.Provides;
 import nl.uva.yamp.core.combinator.DatasetCombinator;
 import nl.uva.yamp.core.combinator.DefaultDatasetCombinator;
 import nl.uva.yamp.core.filter.Filter;
+import nl.uva.yamp.core.metric.DistinctPackageHierarchiesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectClassesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectMethodsCoveredMetricCollector;
+import nl.uva.yamp.core.metric.IndirectPackagesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.metric.MutationScoreMetricCollector;
-import nl.uva.yamp.core.metric.IndirectPackagesCoveredMetricCollector;
+import nl.uva.yamp.core.metric.RecursiveDirectnessMetricCalculator;
+import nl.uva.yamp.core.metric.RecursiveTdataMetricCollector;
 import nl.uva.yamp.core.validator.CallGraphValidator;
 import nl.uva.yamp.core.validator.Validator;
 
@@ -26,14 +29,20 @@ public interface CoreModule {
     DatasetCombinator defaultDatasetCombinator(DefaultDatasetCombinator impl);
 
     @Provides
-    static List<MetricCollector> metricCollector(IndirectPackagesCoveredMetricCollector indirectPackagesCoveredMetricCollector,
-                                                 IndirectClassesCoveredMetricCollector indirectClassesCoveredMetricCollector,
+    static List<MetricCollector> metricCollector(RecursiveTdataMetricCollector recursiveTdataMetricCollector,
                                                  IndirectMethodsCoveredMetricCollector indirectMethodsCoveredMetricCollector,
+                                                 IndirectClassesCoveredMetricCollector indirectClassesCoveredMetricCollector,
+                                                 IndirectPackagesCoveredMetricCollector indirectPackagesCoveredMetricCollector,
+                                                 DistinctPackageHierarchiesCoveredMetricCollector distinctPackageHierarchiesCoveredMetricCollector,
+                                                 RecursiveDirectnessMetricCalculator recursiveDirectnessMetricCalculator,
                                                  MutationScoreMetricCollector mutationScoreMetricCollector) {
         return List.of(
-            indirectPackagesCoveredMetricCollector,
-            indirectClassesCoveredMetricCollector,
+            recursiveTdataMetricCollector,
             indirectMethodsCoveredMetricCollector,
+            indirectClassesCoveredMetricCollector,
+            indirectPackagesCoveredMetricCollector,
+            distinctPackageHierarchiesCoveredMetricCollector,
+            recursiveDirectnessMetricCalculator,
             mutationScoreMetricCollector);
     }
 

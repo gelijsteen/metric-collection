@@ -52,7 +52,11 @@ class MetricCalculationIntegrationTest {
             CoreTestData.testMetricsBuilder()
                 .metrics(List.of(
                     CoreTestData.integerMetricBuilder()
-                        .identifier("IPC")
+                        .identifier("rTDATA")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("IMC")
                         .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()
@@ -60,8 +64,16 @@ class MetricCalculationIntegrationTest {
                         .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()
-                        .identifier("IMC")
+                        .identifier("IPC")
                         .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("DPHC")
+                        .value(1)
+                        .build(),
+                    CoreTestData.doubleMetricBuilder()
+                        .identifier("rDirectness")
+                        .value(0.0)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("MutationScore")

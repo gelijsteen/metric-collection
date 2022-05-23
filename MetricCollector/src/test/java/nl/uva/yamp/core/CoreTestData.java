@@ -13,6 +13,7 @@ import nl.uva.yamp.core.model.CoverageConstructor;
 import nl.uva.yamp.core.model.CoverageMethod;
 import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.TestCase;
+import nl.uva.yamp.core.model.metric.DoubleMetric;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.TestMetrics;
 
@@ -27,8 +28,9 @@ public class CoreTestData {
     public static final String CLASS_NAME = "D";
     public static final String METHOD_NAME = "e";
     public static final String METRIC_IDENTIFIER = "identifier";
-    public static final int METRIC_VALUE = 0;
+    public static final int METRIC_VALUE_INTEGER = 0;
     public static final int COVERAGE_LOC = 0;
+    private static final double METRIC_VALUE_DOUBLE = 0d;
 
     public static Coverage.CoverageBuilder coverageBuilder() {
         return Coverage.builder()
@@ -125,6 +127,12 @@ public class CoreTestData {
     public static IntegerMetric.IntegerMetricBuilder integerMetricBuilder() {
         return IntegerMetric.builder()
             .identifier(METRIC_IDENTIFIER)
-            .value(METRIC_VALUE);
+            .value(METRIC_VALUE_INTEGER);
+    }
+
+    public static DoubleMetric.DoubleMetricBuilder doubleMetricBuilder() {
+        return DoubleMetric.builder()
+            .identifier(METRIC_IDENTIFIER)
+            .value(METRIC_VALUE_DOUBLE);
     }
 }
