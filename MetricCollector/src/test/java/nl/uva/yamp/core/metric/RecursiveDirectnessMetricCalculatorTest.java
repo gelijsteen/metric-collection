@@ -2,7 +2,6 @@ package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
 import nl.uva.yamp.core.model.CombinedData;
-import nl.uva.yamp.core.model.metric.DoubleMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,7 @@ class RecursiveDirectnessMetricCalculatorTest {
 
         Metric result = sut.collect(combinedData);
 
-        assertThat(result).isEqualTo(DoubleMetric.builder()
+        assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")
             .value(0d)
             .build());
@@ -39,7 +38,7 @@ class RecursiveDirectnessMetricCalculatorTest {
 
         Metric result = sut.collect(combinedData);
 
-        assertThat(result).isEqualTo(DoubleMetric.builder()
+        assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")
             .value(1d)
             .build());
@@ -58,7 +57,7 @@ class RecursiveDirectnessMetricCalculatorTest {
 
         Metric result = sut.collect(combinedData);
 
-        assertThat(result).isEqualTo(DoubleMetric.builder()
+        assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")
             .value(1d / 3)
             .build());

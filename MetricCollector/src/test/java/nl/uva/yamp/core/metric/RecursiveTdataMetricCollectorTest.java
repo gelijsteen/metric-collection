@@ -2,7 +2,6 @@ package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
 import nl.uva.yamp.core.model.CombinedData;
-import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,7 @@ class RecursiveTdataMetricCollectorTest {
 
         Metric result = sut.collect(combinedData);
 
-        assertThat(result).isEqualTo(IntegerMetric.builder()
+        assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")
             .value(0)
             .build());
@@ -35,7 +34,7 @@ class RecursiveTdataMetricCollectorTest {
 
         Metric result = sut.collect(combinedData);
 
-        assertThat(result).isEqualTo(IntegerMetric.builder()
+        assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")
             .value(1)
             .build());
@@ -54,7 +53,7 @@ class RecursiveTdataMetricCollectorTest {
 
         Metric result = sut.collect(combinedData);
 
-        assertThat(result).isEqualTo(IntegerMetric.builder()
+        assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")
             .value(2)
             .build());
