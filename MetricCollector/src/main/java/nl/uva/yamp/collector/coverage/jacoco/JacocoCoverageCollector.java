@@ -144,6 +144,7 @@ class JacocoCoverageCollector implements CoverageCollector {
             .packageName(packageName)
             .className(className)
             .methodName(methodName)
+            .descriptor(methodCoverage.getDesc())
             .loc(loc)
             .build();
     }
@@ -154,6 +155,7 @@ class JacocoCoverageCollector implements CoverageCollector {
             .map(method -> CoverageConstructor.builder()
                 .packageName(method.getPackageName())
                 .className(method.getClassName())
+                .descriptor(method.getDescriptor())
                 .loc(method.getLoc())
                 .build())
             .collect(Collectors.toSet());
@@ -166,6 +168,7 @@ class JacocoCoverageCollector implements CoverageCollector {
                 .packageName(method.getPackageName())
                 .className(method.getClassName())
                 .methodName(method.getMethodName())
+                .descriptor(method.getDescriptor())
                 .loc(method.getLoc())
                 .build())
             .collect(Collectors.toSet());
@@ -182,6 +185,8 @@ class JacocoCoverageCollector implements CoverageCollector {
         private final String className;
         @NonNull
         private final String methodName;
+        @NonNull
+        private final String descriptor;
         @NonNull
         private final Integer loc;
     }

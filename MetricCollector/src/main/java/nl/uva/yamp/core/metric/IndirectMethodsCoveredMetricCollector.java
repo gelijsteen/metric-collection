@@ -23,7 +23,7 @@ public class IndirectMethodsCoveredMetricCollector implements MetricCollector {
     private int calculate(CombinedData combinedData) {
         return combinedData.getIndirectMethods()
             .stream()
-            .map(CombinedMethod::getFullyQualifiedMethodName)
+            .map(CombinedMethod::getSignature)
             .collect(Collectors.toSet())
             .size();
     }

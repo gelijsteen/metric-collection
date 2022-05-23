@@ -38,14 +38,14 @@ public class CallGraphValidator implements Validator {
                 callGraph.getConstructors().stream().flatMap(this::collectConstructors),
                 callGraph.getMethods().stream().flatMap(this::collectConstructors)
             )
-            .map(CallGraphConstructor::getFullyQualifiedClassName)
+            .map(CallGraphConstructor::getSignature)
             .distinct()
             .count();
         int distinctMethods = (int) Stream.concat(
                 callGraph.getConstructors().stream().flatMap(this::collectMethods),
                 callGraph.getMethods().stream().flatMap(this::collectMethods)
             )
-            .map(CallGraphMethod::getFullyQualifiedMethodName)
+            .map(CallGraphMethod::getSignature)
             .distinct()
             .count();
 

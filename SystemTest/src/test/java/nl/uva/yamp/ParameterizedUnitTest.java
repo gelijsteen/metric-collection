@@ -18,7 +18,6 @@ public class ParameterizedUnitTest {
     }
 
     private final int i;
-
     private final int j;
 
     public ParameterizedUnitTest(int i, int j) {
@@ -33,9 +32,5 @@ public class ParameterizedUnitTest {
         int result = sut.call2();
 
         assertThat(result).isEqualTo(1);
-    }
-
-    private void assertUtil(int i) {
-        assertThat(i).isNotZero();
     }
 }

@@ -47,6 +47,7 @@ class ResultMapper {
         return CallGraphConstructor.builder()
             .packageName(node.getBehavior().getDeclaringClass().getPackageName())
             .className(node.getBehavior().getDeclaringClass().getSimpleName())
+            .descriptor(node.getBehavior().getMethodInfo().getDescriptor())
             .constructors(mapConstructors(node))
             .methods(mapMethods(node))
             .build();
@@ -57,6 +58,7 @@ class ResultMapper {
             .packageName(node.getBehavior().getDeclaringClass().getPackageName())
             .className(node.getBehavior().getDeclaringClass().getSimpleName())
             .methodName(node.getBehavior().getName())
+            .descriptor(node.getBehavior().getMethodInfo().getDescriptor())
             .constructors(mapConstructors(node))
             .methods(mapMethods(node))
             .build();

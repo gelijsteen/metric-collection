@@ -19,24 +19,32 @@ class CallGraphNode {
     @NonNull
     private final Set<CallGraphNode> nodes = new HashSet<>();
 
-    String getFullyQualifiedMethodName() {
-        return behavior.getDeclaringClass().getName() + "." + behavior.getName();
+    String getSignature() {
+        if (behavior.getMethodInfo().isConstructor()) {
+            return behavior.getDeclaringClass().getName() + " " + behavior.getMethodInfo().getDescriptor();
+        }
+
+        if (behavior.getMethodInfo().isMethod()) {
+            return behavior.getDeclaringClass().getName() + "." + behavior.getMethodInfo().getName() + " " + behavior.getMethodInfo().getDescriptor();
+        }
+
+        throw new IllegalStateException("Static initializers not supported.");
     }
 
     @Override
     public String toString() {
-        return getFullyQualifiedMethodName() + " -> " + nodes;
+        return behavior.getDeclaringClass().getName() + "." + behavior.getName() + " -> " + nodes;
     }
 
     @Override
     public boolean equals(Object that) {
         if (this == that) return true;
         if (that == null || getClass() != that.getClass()) return false;
-        return getFullyQualifiedMethodName().equals(((CallGraphNode) that).getFullyQualifiedMethodName());
+        return getSignature().equals(((CallGraphNode) that).getSignature());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFullyQualifiedMethodName());
+        return Objects.hash(getSignature());
     }
 }

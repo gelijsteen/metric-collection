@@ -42,10 +42,12 @@ class JavassistCallGraphCollectorIntegrationTest {
                 CollectorTestData.coverageMethodBuilder()
                     .className("Direct")
                     .methodName("call")
+                    .descriptor("(I)I")
                     .build(),
                 CollectorTestData.coverageMethodBuilder()
                     .className("Indirect")
                     .methodName("call")
+                    .descriptor("(I)I")
                     .build()
             ))
             .build());
@@ -55,12 +57,14 @@ class JavassistCallGraphCollectorIntegrationTest {
             .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
                 .className("Direct")
                 .methodName("call")
+                .descriptor("(I)I")
                 .constructors(Set.of(CollectorTestData.callGraphConstructorBuilder()
                     .className("Indirect")
                     .build()))
                 .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
                     .className("Indirect")
                     .methodName("call")
+                    .descriptor("(I)I")
                     .build()))
                 .build()))
             .build());

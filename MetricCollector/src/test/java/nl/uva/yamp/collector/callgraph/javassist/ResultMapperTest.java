@@ -20,13 +20,13 @@ class ResultMapperTest {
     @Test
     void happyFlow() {
         CallGraphNode build = CallGraphNode.builder()
-            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "test1"))
+            .behavior(FakeCtBehavior.create("", "", ""))
             .build();
         build.getNodes().add(CallGraphNode.builder()
-            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "<init>"))
+            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "<init>", "()V"))
             .build());
         build.getNodes().add(CallGraphNode.builder()
-            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "test1"))
+            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "test1", "()V"))
             .build());
 
         CallGraph result = sut.map(CollectorTestData.testCaseBuilder().build(), build);
@@ -40,8 +40,8 @@ class ResultMapperTest {
             super(clazz, minfo);
         }
 
-        private static FakeCtBehavior create(String fullyQualifiedClassName, String methodName) {
-            return new FakeCtBehavior(new FakeCtClass(fullyQualifiedClassName), new FakeMethodInfo(methodName));
+        private static FakeCtBehavior create(String fullyQualifiedClassName, String methodName, String descriptor) {
+            return new FakeCtBehavior(new FakeCtClass(fullyQualifiedClassName), new FakeMethodInfo(methodName, descriptor));
         }
 
         @Override
@@ -74,8 +74,8 @@ class ResultMapperTest {
 
     private static class FakeMethodInfo extends MethodInfo {
 
-        private FakeMethodInfo(String methodname) {
-            super(new ConstPool(""), methodname, "");
+        private FakeMethodInfo(String methodname, String descriptor) {
+            super(new ConstPool(""), methodname, descriptor);
         }
     }
 }

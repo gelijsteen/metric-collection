@@ -15,8 +15,8 @@ public class CoverageMethod extends Method {
     private final Integer loc;
 
     @Builder
-    private CoverageMethod(String packageName, String className, String methodName, @NonNull Integer loc) {
-        super(packageName, className, methodName);
+    private CoverageMethod(String packageName, String className, String methodName, String descriptor, @NonNull Integer loc) {
+        super(packageName, className, methodName, descriptor);
         this.loc = loc;
     }
 }

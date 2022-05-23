@@ -27,16 +27,41 @@ public class CoreTestData {
     public static final String PACKAGE_NAME = "a.b.c";
     public static final String CLASS_NAME = "D";
     public static final String METHOD_NAME = "e";
+    public static final String DESCRIPTOR = "()V";
     public static final String METRIC_IDENTIFIER = "identifier";
     public static final int METRIC_VALUE_INTEGER = 0;
     public static final int COVERAGE_LOC = 0;
     private static final double METRIC_VALUE_DOUBLE = 0d;
+
+    public static TestCase.TestCaseBuilder testCaseBuilder() {
+        return TestCase.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .methodName(METHOD_NAME);
+    }
 
     public static Coverage.CoverageBuilder coverageBuilder() {
         return Coverage.builder()
             .testCase(testCaseBuilder().build())
             .constructors(Set.of(coverageConstructorBuilder().build()))
             .methods(Set.of(coverageMethodBuilder().build()));
+    }
+
+    public static CoverageConstructor.CoverageConstructorBuilder coverageConstructorBuilder() {
+        return CoverageConstructor.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .descriptor(DESCRIPTOR)
+            .loc(COVERAGE_LOC);
+    }
+
+    public static CoverageMethod.CoverageMethodBuilder coverageMethodBuilder() {
+        return CoverageMethod.builder()
+            .packageName(PACKAGE_NAME)
+            .className(CLASS_NAME)
+            .methodName(METHOD_NAME)
+            .descriptor(DESCRIPTOR)
+            .loc(COVERAGE_LOC);
     }
 
     public static CallGraph.CallGraphBuilder callGraphBuilder() {
@@ -50,6 +75,7 @@ public class CoreTestData {
         return CallGraphConstructor.builder()
             .packageName(PACKAGE_NAME)
             .className(CLASS_NAME)
+            .descriptor(DESCRIPTOR)
             .constructors(Set.of())
             .methods(Set.of());
     }
@@ -59,6 +85,7 @@ public class CoreTestData {
             .packageName(PACKAGE_NAME)
             .className(CLASS_NAME)
             .methodName(METHOD_NAME)
+            .descriptor(DESCRIPTOR)
             .constructors(Set.of())
             .methods(Set.of());
     }
@@ -81,6 +108,7 @@ public class CoreTestData {
         return CombinedConstructor.builder()
             .packageName(PACKAGE_NAME)
             .className(CLASS_NAME)
+            .descriptor(DESCRIPTOR)
             .constructors(Set.of())
             .methods(Set.of())
             .loc(COVERAGE_LOC);
@@ -91,30 +119,9 @@ public class CoreTestData {
             .packageName(PACKAGE_NAME)
             .className(CLASS_NAME)
             .methodName(METHOD_NAME)
+            .descriptor(DESCRIPTOR)
             .constructors(Set.of())
             .methods(Set.of())
-            .loc(COVERAGE_LOC);
-    }
-
-    public static TestCase.TestCaseBuilder testCaseBuilder() {
-        return TestCase.builder()
-            .packageName(PACKAGE_NAME)
-            .className(CLASS_NAME)
-            .methodName(METHOD_NAME);
-    }
-
-    public static CoverageConstructor.CoverageConstructorBuilder coverageConstructorBuilder() {
-        return CoverageConstructor.builder()
-            .packageName(PACKAGE_NAME)
-            .className(CLASS_NAME)
-            .loc(COVERAGE_LOC);
-    }
-
-    public static CoverageMethod.CoverageMethodBuilder coverageMethodBuilder() {
-        return CoverageMethod.builder()
-            .packageName(PACKAGE_NAME)
-            .className(CLASS_NAME)
-            .methodName(METHOD_NAME)
             .loc(COVERAGE_LOC);
     }
 

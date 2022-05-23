@@ -21,11 +21,11 @@ public class CombinedMethod extends Method {
     private final Integer loc;
 
     @Builder
-    public CombinedMethod(String packageName, String className, String methodName,
+    public CombinedMethod(String packageName, String className, String methodName, String descriptor,
                           @NonNull Set<CombinedConstructor> constructors,
                           @NonNull Set<CombinedMethod> methods,
                           @NonNull Integer loc) {
-        super(packageName, className, methodName);
+        super(packageName, className, methodName, descriptor);
         this.constructors = constructors;
         this.methods = methods;
         this.loc = loc;

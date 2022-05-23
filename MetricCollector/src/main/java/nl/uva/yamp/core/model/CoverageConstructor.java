@@ -15,8 +15,8 @@ public class CoverageConstructor extends Constructor {
     private final Integer loc;
 
     @Builder
-    private CoverageConstructor(String packageName, String className, @NonNull Integer loc) {
-        super(packageName, className);
+    private CoverageConstructor(String packageName, String className, String descriptor, @NonNull Integer loc) {
+        super(packageName, className, descriptor);
         this.loc = loc;
     }
 }

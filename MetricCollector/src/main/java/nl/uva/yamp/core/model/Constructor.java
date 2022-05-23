@@ -17,8 +17,10 @@ abstract class Constructor {
     private final String packageName;
     @NonNull
     private final String className;
+    @NonNull
+    private final String descriptor; // Used to distinguish between overloaded methods.
 
-    public String getFullyQualifiedClassName() {
-        return packageName + "." + className;
+    public String getSignature() {
+        return packageName + "." + className + " " + descriptor;
     }
 }

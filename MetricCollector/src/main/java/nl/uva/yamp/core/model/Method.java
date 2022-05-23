@@ -19,6 +19,8 @@ abstract class Method {
     private final String className;
     @NonNull
     private final String methodName;
+    @NonNull
+    private final String descriptor; // Used to distinguish between overloaded methods.
 
     public String getFullyQualifiedClassName() {
         return packageName + "." + className;
@@ -26,5 +28,9 @@ abstract class Method {
 
     public String getFullyQualifiedMethodName() {
         return packageName + "." + className + "." + methodName;
+    }
+
+    public String getSignature() {
+        return getFullyQualifiedMethodName() + " " + descriptor;
     }
 }

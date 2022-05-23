@@ -39,9 +39,9 @@ public class DefaultDatasetCombinator implements DatasetCombinator {
 
     private CombinedData combine(Coverage coverage, CallGraph callGraph, Mutation mutation) {
         Map<String, CoverageConstructor> constructors = coverage.getConstructors().stream()
-            .collect(Collectors.toMap(CoverageConstructor::getFullyQualifiedClassName, constructor -> constructor));
+            .collect(Collectors.toMap(CoverageConstructor::getSignature, constructor -> constructor));
         Map<String, CoverageMethod> methods = coverage.getMethods().stream()
-            .collect(Collectors.toMap(CoverageMethod::getFullyQualifiedMethodName, method -> method));
+            .collect(Collectors.toMap(CoverageMethod::getSignature, method -> method));
 
         return CombinedData.builder()
             .testCase(callGraph.getTestCase())
@@ -73,9 +73,10 @@ public class DefaultDatasetCombinator implements DatasetCombinator {
         return CombinedConstructor.builder()
             .packageName(callGraphConstructor.getPackageName())
             .className(callGraphConstructor.getClassName())
+            .descriptor(callGraphConstructor.getDescriptor())
             .constructors(getConstructors(callGraphConstructor.getConstructors(), constructorMap, methodMap))
             .methods(getMethods(callGraphConstructor.getMethods(), constructorMap, methodMap))
-            .loc(constructorMap.get(callGraphConstructor.getFullyQualifiedClassName()).getLoc())
+            .loc(constructorMap.get(callGraphConstructor.getSignature()).getLoc())
             .build();
     }
 
@@ -86,9 +87,10 @@ public class DefaultDatasetCombinator implements DatasetCombinator {
             .packageName(callGraphMethod.getPackageName())
             .className(callGraphMethod.getClassName())
             .methodName(callGraphMethod.getMethodName())
+            .descriptor(callGraphMethod.getDescriptor())
             .constructors(getConstructors(callGraphMethod.getConstructors(), constructorMap, methodMap))
             .methods(getMethods(callGraphMethod.getMethods(), constructorMap, methodMap))
-            .loc(methodMap.get(callGraphMethod.getFullyQualifiedMethodName()).getLoc())
+            .loc(methodMap.get(callGraphMethod.getSignature()).getLoc())
             .build();
     }
 }

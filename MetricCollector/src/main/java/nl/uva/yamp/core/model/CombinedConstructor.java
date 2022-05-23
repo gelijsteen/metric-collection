@@ -21,11 +21,11 @@ public class CombinedConstructor extends Constructor {
     private final Integer loc;
 
     @Builder
-    public CombinedConstructor(String packageName, String className,
+    public CombinedConstructor(String packageName, String className, String descriptor,
                                @NonNull Set<CombinedConstructor> constructors,
                                @NonNull Set<CombinedMethod> methods,
                                @NonNull Integer loc) {
-        super(packageName, className);
+        super(packageName, className, descriptor);
         this.constructors = constructors;
         this.methods = methods;
         this.loc = loc;

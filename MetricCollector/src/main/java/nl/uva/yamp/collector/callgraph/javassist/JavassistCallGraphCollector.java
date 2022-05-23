@@ -104,12 +104,12 @@ class JavassistCallGraphCollector implements CallGraphCollector {
         boolean b;
         if (callee.getBehavior().getMethodInfo().isMethod()) {
             b = coverage.getMethods().stream()
-                .map(CoverageMethod::getFullyQualifiedMethodName)
-                .anyMatch(name -> name.equals(callee.getFullyQualifiedMethodName()));
+                .map(CoverageMethod::getSignature)
+                .anyMatch(name -> name.equals(callee.getSignature()));
         } else if (callee.getBehavior().getMethodInfo().isConstructor()) {
             b = coverage.getConstructors().stream()
-                .map(CoverageConstructor::getFullyQualifiedClassName)
-                .anyMatch(name -> name.equals(callee.getBehavior().getDeclaringClass().getName()));
+                .map(CoverageConstructor::getSignature)
+                .anyMatch(name -> name.equals(callee.getSignature()));
         } else {
             b = false;
         }

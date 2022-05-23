@@ -23,7 +23,7 @@ public class RecursiveTdataMetricCollector implements MetricCollector {
     private int calculate(CombinedData combinedData) {
         return combinedData.getConstructors()
             .stream()
-            .map(CombinedConstructor::getFullyQualifiedClassName)
+            .map(CombinedConstructor::getSignature)
             .collect(Collectors.toSet())
             .size();
     }

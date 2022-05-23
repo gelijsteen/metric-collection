@@ -19,10 +19,10 @@ public class CallGraphMethod extends Method {
     private final Set<CallGraphMethod> methods;
 
     @Builder
-    public CallGraphMethod(String packageName, String className, String methodName,
+    public CallGraphMethod(String packageName, String className, String methodName, String descriptor,
                            @NonNull Set<CallGraphConstructor> constructors,
                            @NonNull Set<CallGraphMethod> methods) {
-        super(packageName, className, methodName);
+        super(packageName, className, methodName, descriptor);
         this.constructors = constructors;
         this.methods = methods;
     }
