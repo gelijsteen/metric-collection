@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +34,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 class JacocoCoverageCollector implements CoverageCollector {
 
+    private static final Pattern PATTERN = Pattern.compile("(.*)(\\[.*])");
     private static final String CONSTRUCTOR_NAME = "<init>";
     private final Path projectDirectory;
     private final JacocoCoverageConfiguration configuration;
@@ -91,11 +94,22 @@ class JacocoCoverageCollector implements CoverageCollector {
 
     private TestCase getTestCase(String sessionId) {
         String fullyQualifiedClassName = sessionId.split("#")[0];
-        return TestCase.builder()
-            .packageName(getPackageName(fullyQualifiedClassName))
-            .className(getClassName(fullyQualifiedClassName))
-            .methodName(sessionId.split("#")[1])
-            .build();
+        String methodName = sessionId.split("#")[1];
+        Matcher matcher = PATTERN.matcher(methodName);
+        if (matcher.find()) {
+            return TestCase.builder()
+                .packageName(getPackageName(fullyQualifiedClassName))
+                .className(getClassName(fullyQualifiedClassName))
+                .methodName(matcher.group(1))
+                .identifier(matcher.group(2))
+                .build();
+        } else {
+            return TestCase.builder()
+                .packageName(getPackageName(fullyQualifiedClassName))
+                .className(getClassName(fullyQualifiedClassName))
+                .methodName(methodName)
+                .build();
+        }
     }
 
     private String getPackageName(String fullyQualifiedClassName) {

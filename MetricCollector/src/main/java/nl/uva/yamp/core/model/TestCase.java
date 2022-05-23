@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
+import java.util.Optional;
+
 @Getter
 @Builder
 @ToString
@@ -18,12 +20,13 @@ public class TestCase {
     private final String className;
     @NonNull
     private final String methodName;
+    private final String identifier; // Used to distinguish between parameterized tests.
 
     public String getFullyQualifiedClassName() {
         return packageName + "." + className;
     }
 
     public String getFullyQualifiedMethodName() {
-        return packageName + "." + className + "." + methodName;
+        return packageName + "." + className + "." + methodName + Optional.ofNullable(identifier).orElse("");
     }
 }

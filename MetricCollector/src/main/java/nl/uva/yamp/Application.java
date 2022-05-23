@@ -36,7 +36,7 @@ public class Application {
 
     private final MetricCalculation metricCalculation;
 
-    private void run() {
+    void run() {
         metricCalculation.calculate();
     }
 }
