@@ -61,7 +61,7 @@ class SystemTest {
                 .metrics(List.of(
                     CoreTestData.integerMetricBuilder()
                         .identifier("rTDATA")
-                        .value(0)
+                        .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("IMC")

@@ -4,6 +4,7 @@ import dagger.BindsInstance;
 import dagger.Component;
 import nl.uva.yamp.collector.callgraph.javassist.JavassistCallGraphModule;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
+import nl.uva.yamp.collector.mutation.disabled.DisabledMutationModule;
 import nl.uva.yamp.collector.mutation.pitest.PitestMutationModule;
 import nl.uva.yamp.core.CoreModule;
 import nl.uva.yamp.writer.console.ConsoleWriterModule;
@@ -14,7 +15,7 @@ import java.nio.file.Path;
     CoreModule.class,
     JacocoCoverageModule.class,
     JavassistCallGraphModule.class,
-    PitestMutationModule.class,
+    DisabledMutationModule.class,
     ConsoleWriterModule.class
 })
 public interface ApplicationComponent {

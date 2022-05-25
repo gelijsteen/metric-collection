@@ -13,6 +13,7 @@ import nl.uva.yamp.core.model.TestCase;
 
 import javax.inject.Inject;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -34,20 +35,20 @@ public class CallGraphValidator implements Validator {
     }
 
     private int countUniqueCallGraphNodes(CallGraph callGraph) {
-        int distinctConstructors = (int) Stream.concat(
+        Set<String> constructors = Stream.concat(
                 callGraph.getConstructors().stream().flatMap(this::collectConstructors),
                 callGraph.getMethods().stream().flatMap(this::collectConstructors)
             )
             .map(CallGraphConstructor::getSignature)
-            .distinct()
-            .count();
-        int distinctMethods = (int) Stream.concat(
+            .collect(Collectors.toSet());
+        Set<String> methods = Stream.concat(
                 callGraph.getConstructors().stream().flatMap(this::collectMethods),
                 callGraph.getMethods().stream().flatMap(this::collectMethods)
             )
             .map(CallGraphMethod::getSignature)
-            .distinct()
-            .count();
+            .collect(Collectors.toSet());
+        int distinctConstructors = constructors.size();
+        int distinctMethods = methods.size();
 
         return distinctConstructors + distinctMethods;
     }

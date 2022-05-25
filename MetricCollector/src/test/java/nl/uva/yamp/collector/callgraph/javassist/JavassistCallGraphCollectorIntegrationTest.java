@@ -53,7 +53,9 @@ class JavassistCallGraphCollectorIntegrationTest {
             .build());
 
         assertThat(result).isEqualTo(CollectorTestData.callGraphBuilder()
-            .constructors(Set.of())
+            .constructors(Set.of(CollectorTestData.callGraphConstructorBuilder()
+                .className("Direct")
+                .build()))
             .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
                 .className("Direct")
                 .methodName("call")

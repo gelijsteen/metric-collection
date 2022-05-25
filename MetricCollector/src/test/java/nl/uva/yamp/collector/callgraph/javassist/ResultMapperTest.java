@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -19,19 +21,32 @@ class ResultMapperTest {
 
     @Test
     void happyFlow() {
-        CallGraphNode build = CallGraphNode.builder()
+        CallGraphNode constructorRoot = CallGraphNode.builder()
             .behavior(FakeCtBehavior.create("", "", ""))
             .build();
-        build.getNodes().add(CallGraphNode.builder()
-            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "<init>", "()V"))
-            .build());
-        build.getNodes().add(CallGraphNode.builder()
+        constructorRoot.getNodes().add(CallGraphNode.builder()
             .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "test1", "()V"))
             .build());
+        CallGraphNode methodRoot = CallGraphNode.builder()
+            .behavior(FakeCtBehavior.create("", "", ""))
+            .build();
+        methodRoot.getNodes().add(CallGraphNode.builder()
+            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "<init>", "()V"))
+            .build());
+        methodRoot.getNodes().add(CallGraphNode.builder()
+            .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "test1", "(I)I"))
+            .build());
 
-        CallGraph result = sut.map(CollectorTestData.testCaseBuilder().build(), build);
+        CallGraph result = sut.map(CollectorTestData.testCaseBuilder().build(), constructorRoot, methodRoot);
 
-        assertThat(result).isEqualTo(CollectorTestData.callGraphBuilder().build());
+        assertThat(result).isEqualTo(CollectorTestData.callGraphBuilder()
+            .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
+                    .descriptor("()V")
+                    .build(),
+                CollectorTestData.callGraphMethodBuilder()
+                    .descriptor("(I)I")
+                    .build()))
+            .build());
     }
 
     private static class FakeCtBehavior extends CtBehavior {

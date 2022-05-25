@@ -20,6 +20,7 @@ import nl.uva.yamp.core.model.CoverageMethod;
 import javax.inject.Inject;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -37,29 +38,39 @@ class JavassistCallGraphCollector implements CallGraphCollector {
 
         CtClass testClass = classPool.get(coverage.getTestCase().getFullyQualifiedClassName());
 
+        CtBehavior testConstructor = Arrays.stream(testClass.getDeclaredConstructors())
+            .filter(ctConstructor -> ctConstructor.getDeclaringClass().getName().equals(coverage.getTestCase().getFullyQualifiedClassName()))
+            .findFirst()
+            .orElseThrow();
+
         CtBehavior testMethod = Arrays.stream(testClass.getDeclaredMethods())
             .filter(ctMethod -> ctMethod.getMethodInfo().getName().equals(coverage.getTestCase().getMethodName()))
             .findFirst()
             .orElseThrow();
 
-        CallGraphNode root = CallGraphNode.builder()
+        CallGraphNode constructorRoot = CallGraphNode.builder()
+            .behavior(testConstructor)
+            .build();
+
+        CallGraphNode methodRoot = CallGraphNode.builder()
             .behavior(testMethod)
             .build();
 
-        buildCallGraph(coverage, root);
+        buildCallGraph(coverage, constructorRoot, constructorRoot.getBehavior());
+        buildCallGraph(coverage, methodRoot, methodRoot.getBehavior());
 
-        return resultMapper.map(coverage.getTestCase(), root);
+        return resultMapper.map(coverage.getTestCase(), constructorRoot, methodRoot);
     }
 
     @SneakyThrows
-    private void buildCallGraph(Coverage coverage, CallGraphNode caller) {
-        caller.getBehavior().instrument(new ExprEditor() {
+    private void buildCallGraph(Coverage coverage, CallGraphNode caller, CtBehavior behavior) {
+        behavior.instrument(new ExprEditor() {
             @Override
             public void edit(MethodCall methodCall) {
                 try {
                     addCallToCallGraph(coverage, caller, methodCall.getMethod());
                 } catch (NotFoundException e) {
-                    log.debug("Method not found.", e);
+                    // log.debug("Method not found.", e);
                 }
             }
 
@@ -68,7 +79,7 @@ class JavassistCallGraphCollector implements CallGraphCollector {
                 try {
                     addCallToCallGraph(coverage, caller, newExpr.getConstructor());
                 } catch (NotFoundException e) {
-                    log.debug("Constructor not found.", e);
+                    // log.debug("Constructor not found.", e);
                 }
             }
 
@@ -77,52 +88,51 @@ class JavassistCallGraphCollector implements CallGraphCollector {
                 try {
                     addCallToCallGraph(coverage, caller, constructorCall.getConstructor());
                 } catch (NotFoundException e) {
-                    log.debug("Constructor not found.", e);
+                    // log.debug("Constructor not found.", e);
                 }
             }
         });
     }
 
     @SneakyThrows
-    private void addCallToCallGraph(Coverage coverage, CallGraphNode caller, CtBehavior ctBehavior) {
+    private void addCallToCallGraph(Coverage coverage, CallGraphNode caller, CtBehavior behavior) {
         CallGraphNode callee = CallGraphNode.builder()
             .parent(caller)
-            .behavior(ctBehavior)
+            .behavior(behavior)
             .build();
-
-        // Filter non-test class.
-        ClassPool classPool = new ClassPool();
-        classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
-        try {
-            classPool.get(callee.getBehavior().getDeclaringClass().getName());
-        } catch (NotFoundException e) {
-            log.debug("{} is a test class.", ctBehavior.getLongName());
-            return;
-        }
 
         // filter non-covered class.
         boolean b;
         if (callee.getBehavior().getMethodInfo().isMethod()) {
-            b = coverage.getMethods().stream()
+            b = Stream.concat(coverage.getMethods().stream(), coverage.getTestMethods().stream())
                 .map(CoverageMethod::getSignature)
                 .anyMatch(name -> name.equals(callee.getSignature()));
         } else if (callee.getBehavior().getMethodInfo().isConstructor()) {
-            b = coverage.getConstructors().stream()
+            b = Stream.concat(coverage.getConstructors().stream(), coverage.getTestConstructors().stream())
                 .map(CoverageConstructor::getSignature)
                 .anyMatch(name -> name.equals(callee.getSignature()));
         } else {
             b = false;
         }
         if (!b) {
-            log.debug("{} not covered.", ctBehavior.getLongName());
+            log.debug("{} not covered.", behavior.getLongName());
             return;
         }
 
         if (isPresentInHierarchy(caller, callee)) {
-            log.debug("{} called recursively.", ctBehavior.getLongName());
+            log.debug("{} called recursively.", behavior.getLongName());
         } else {
-            caller.getNodes().add(callee);
-            buildCallGraph(coverage, callee);
+            // Filter non-test class.
+            ClassPool classPool = new ClassPool();
+            classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
+            try {
+                classPool.get(callee.getBehavior().getDeclaringClass().getName());
+                caller.getNodes().add(callee);
+                buildCallGraph(coverage, callee, callee.getBehavior());
+            } catch (NotFoundException e) {
+                log.debug("{} is a test class.", behavior.getLongName());
+                buildCallGraph(coverage, caller, callee.getBehavior());
+            }
         }
     }
 

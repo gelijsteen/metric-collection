@@ -23,6 +23,8 @@ public class OverloadUnitTest {
 
         int result = sut.call(1);
 
+        new TestUtil().callClass1(new Class1());
+
         assertThat(result).isEqualTo(3);
     }
 
