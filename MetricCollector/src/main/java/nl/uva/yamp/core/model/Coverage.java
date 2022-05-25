@@ -20,4 +20,8 @@ public class Coverage {
     private final Set<CoverageConstructor> constructors;
     @NonNull
     private final Set<CoverageMethod> methods;
+    @NonNull
+    private final Set<CoverageConstructor> testConstructors;
+    @NonNull
+    private final Set<CoverageMethod> testMethods;
 }

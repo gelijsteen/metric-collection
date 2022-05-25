@@ -57,11 +57,12 @@ class JacocoCoverageCollector implements CoverageCollector {
 
         Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec(targetDirectory.getPath());
 
-        Set<Path> classFiles = classFileLoader.getClassFiles(targetDirectory.getPath().resolve("classes"));
+        Set<Path> classes = classFileLoader.getClassFiles(targetDirectory.getPath().resolve("classes"));
+        Set<Path> testClasses = classFileLoader.getClassFiles(targetDirectory.getPath().resolve("test-classes"));
 
         return (configuration.getParallel() ? jacocoData.entrySet().parallelStream() : jacocoData.entrySet().stream())
             .filter(pair -> isValidSessionId(pair.getKey()))
-            .map(pair -> collectTestCaseData(pair.getKey(), pair.getValue(), classFiles))
+            .map(pair -> collectTestCaseData(pair.getKey(), pair.getValue(), classes, testClasses))
             .collect(Collectors.toSet());
     }
 
@@ -69,22 +70,29 @@ class JacocoCoverageCollector implements CoverageCollector {
         return sessionId != null && sessionId.contains("#");
     }
 
-    private Coverage collectTestCaseData(String sessionId, ExecutionDataStore executionDataStore, Set<Path> classFiles) {
-        CoverageBuilder coverageBuilder = getCoverageBuilder(executionDataStore, classFiles);
+    private Coverage collectTestCaseData(String sessionId,
+                                         ExecutionDataStore executionDataStore,
+                                         Set<Path> classes,
+                                         Set<Path> testClasses) {
+        CoverageBuilder coverageBuilder = getCoverageBuilder(executionDataStore, classes);
+        CoverageBuilder testCoverageBuilder = getCoverageBuilder(executionDataStore, testClasses);
         TestCase testCase = getTestCase(sessionId);
         Set<JacocoMethod> coveredMethods = getCoveredMethods(coverageBuilder);
+        Set<JacocoMethod> testCoverageMethods = getCoveredMethods(testCoverageBuilder);
         return Coverage.builder()
             .testCase(testCase)
             .constructors(filterConstructors(coveredMethods))
             .methods(filterMethods(coveredMethods))
+            .testConstructors(filterConstructors(testCoverageMethods))
+            .testMethods(filterMethods(testCoverageMethods))
             .build();
     }
 
     @SneakyThrows
-    private CoverageBuilder getCoverageBuilder(ExecutionDataStore executionDataStore, Set<Path> classFiles) {
+    private CoverageBuilder getCoverageBuilder(ExecutionDataStore executionDataStore, Set<Path> classes) {
         CoverageBuilder coverageBuilder = new CoverageBuilder();
         Analyzer analyzer = new Analyzer(executionDataStore, coverageBuilder);
-        for (Path classFile : classFiles) {
+        for (Path classFile : classes) {
             try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(classFile))) {
                 analyzer.analyzeClass(inputStream, classFile.toFile().getPath());
             }

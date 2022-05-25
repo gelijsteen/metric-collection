@@ -34,7 +34,9 @@ public class CollectorTestData {
         return Coverage.builder()
             .testCase(testCaseBuilder().build())
             .constructors(Set.of(coverageConstructorBuilder().build()))
-            .methods(Set.of(coverageMethodBuilder().build()));
+            .methods(Set.of(coverageMethodBuilder().build()))
+            .testConstructors(Set.of(coverageConstructorBuilder().build()))
+            .testMethods(Set.of(coverageMethodBuilder().build()));
     }
 
     public static CoverageConstructor.CoverageConstructorBuilder coverageConstructorBuilder() {
