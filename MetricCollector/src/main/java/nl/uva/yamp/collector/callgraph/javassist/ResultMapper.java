@@ -9,28 +9,31 @@ import nl.uva.yamp.core.model.TestCase;
 import javax.inject.Inject;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
 class ResultMapper {
 
-    CallGraph map(TestCase testCase, CallGraphNode constructorRoot, CallGraphNode methodRoot) {
+    CallGraph map(TestCase testCase, Set<CallGraphNode> callGraphNodes) {
+        Set<CallGraphNode> collect = callGraphNodes.stream()
+            .flatMap(callGraphNode -> callGraphNode.getNodes().stream())
+            .collect(Collectors.toSet());
+
         return CallGraph.builder()
             .testCase(testCase)
-            .constructors(mapConstructors(Stream.concat(constructorRoot.getNodes().stream(), methodRoot.getNodes().stream())))
-            .methods(mapMethods(Stream.concat(constructorRoot.getNodes().stream(), methodRoot.getNodes().stream())))
+            .constructors(mapConstructors(collect))
+            .methods(mapMethods(collect))
             .build();
     }
 
-    private Set<CallGraphConstructor> mapConstructors(Stream<CallGraphNode> root) {
-        return root
+    private Set<CallGraphConstructor> mapConstructors(Set<CallGraphNode> root) {
+        return root.stream()
             .filter(this::isConstructor)
             .map(this::mapConstructorNode)
             .collect(Collectors.toSet());
     }
 
-    private Set<CallGraphMethod> mapMethods(Stream<CallGraphNode> root) {
-        return root
+    private Set<CallGraphMethod> mapMethods(Set<CallGraphNode> root) {
+        return root.stream()
             .filter(this::isMethod)
             .map(this::mapMethodNode)
             .collect(Collectors.toSet());
@@ -49,8 +52,8 @@ class ResultMapper {
             .packageName(node.getBehavior().getDeclaringClass().getPackageName())
             .className(node.getBehavior().getDeclaringClass().getSimpleName())
             .descriptor(node.getBehavior().getMethodInfo().getDescriptor())
-            .constructors(mapConstructors(node.getNodes().stream()))
-            .methods(mapMethods(node.getNodes().stream()))
+            .constructors(mapConstructors(node.getNodes()))
+            .methods(mapMethods(node.getNodes()))
             .build();
     }
 
@@ -60,8 +63,8 @@ class ResultMapper {
             .className(node.getBehavior().getDeclaringClass().getSimpleName())
             .methodName(node.getBehavior().getName())
             .descriptor(node.getBehavior().getMethodInfo().getDescriptor())
-            .constructors(mapConstructors(node.getNodes().stream()))
-            .methods(mapMethods(node.getNodes().stream()))
+            .constructors(mapConstructors(node.getNodes()))
+            .methods(mapMethods(node.getNodes()))
             .build();
     }
 }

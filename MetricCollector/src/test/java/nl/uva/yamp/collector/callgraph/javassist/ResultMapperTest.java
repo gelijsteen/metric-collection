@@ -22,13 +22,13 @@ class ResultMapperTest {
     @Test
     void happyFlow() {
         CallGraphNode constructorRoot = CallGraphNode.builder()
-            .behavior(FakeCtBehavior.create("", "", ""))
+            .behavior(FakeCtBehavior.create("", "<init>", ""))
             .build();
         constructorRoot.getNodes().add(CallGraphNode.builder()
             .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "test1", "()V"))
             .build());
         CallGraphNode methodRoot = CallGraphNode.builder()
-            .behavior(FakeCtBehavior.create("", "", ""))
+            .behavior(FakeCtBehavior.create("", "method", ""))
             .build();
         methodRoot.getNodes().add(CallGraphNode.builder()
             .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "<init>", "()V"))
@@ -37,7 +37,7 @@ class ResultMapperTest {
             .behavior(FakeCtBehavior.create("test.pkg.UnitTest", "test1", "(I)I"))
             .build());
 
-        CallGraph result = sut.map(CollectorTestData.testCaseBuilder().build(), constructorRoot, methodRoot);
+        CallGraph result = sut.map(CollectorTestData.testCaseBuilder().build(), Set.of(constructorRoot, methodRoot));
 
         assertThat(result).isEqualTo(CollectorTestData.callGraphBuilder()
             .methods(Set.of(CollectorTestData.callGraphMethodBuilder()

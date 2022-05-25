@@ -20,6 +20,8 @@ import nl.uva.yamp.core.model.CoverageMethod;
 import javax.inject.Inject;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -38,28 +40,30 @@ class JavassistCallGraphCollector implements CallGraphCollector {
 
         CtClass testClass = classPool.get(coverage.getTestCase().getFullyQualifiedClassName());
 
-        CtBehavior testConstructor = Arrays.stream(testClass.getDeclaredConstructors())
-            .filter(ctConstructor -> ctConstructor.getDeclaringClass().getName().equals(coverage.getTestCase().getFullyQualifiedClassName()))
+        CallGraphNode constructorRoot = Arrays.stream(testClass.getDeclaredConstructors())
+            .map(ctMethod -> CallGraphNode.builder()
+                .behavior(ctMethod)
+                .build())
             .findFirst()
+            .map(callGraphNode -> {
+                buildCallGraph(coverage, callGraphNode, callGraphNode.getBehavior());
+                return callGraphNode;
+            })
             .orElseThrow();
 
-        CtBehavior testMethod = Arrays.stream(testClass.getDeclaredMethods())
-            .filter(ctMethod -> ctMethod.getMethodInfo().getName().equals(coverage.getTestCase().getMethodName()))
-            .findFirst()
-            .orElseThrow();
+        Set<CallGraphNode> methods = Arrays.stream(testClass.getDeclaredMethods())
+            .map(ctMethod -> CallGraphNode.builder()
+                .behavior(ctMethod)
+                .build())
+            .filter(ctMethod -> coverage.getTestMethods().stream()
+                .anyMatch(coverageMethod -> coverageMethod.getSignature().equals(ctMethod.getSignature())))
+            .map(callGraphNode -> {
+                buildCallGraph(coverage, callGraphNode, callGraphNode.getBehavior());
+                return callGraphNode;
+            })
+            .collect(Collectors.toSet());
 
-        CallGraphNode constructorRoot = CallGraphNode.builder()
-            .behavior(testConstructor)
-            .build();
-
-        CallGraphNode methodRoot = CallGraphNode.builder()
-            .behavior(testMethod)
-            .build();
-
-        buildCallGraph(coverage, constructorRoot, constructorRoot.getBehavior());
-        buildCallGraph(coverage, methodRoot, methodRoot.getBehavior());
-
-        return resultMapper.map(coverage.getTestCase(), constructorRoot, methodRoot);
+        return resultMapper.map(coverage.getTestCase(), Stream.concat(Stream.of(constructorRoot), methods.stream()).collect(Collectors.toSet()));
     }
 
     @SneakyThrows
@@ -101,14 +105,32 @@ class JavassistCallGraphCollector implements CallGraphCollector {
             .behavior(behavior)
             .build();
 
-        // filter non-covered class.
-        boolean b;
+        boolean t;
         if (callee.getBehavior().getMethodInfo().isMethod()) {
-            b = Stream.concat(coverage.getMethods().stream(), coverage.getTestMethods().stream())
+            t = coverage.getTestMethods().stream()
                 .map(CoverageMethod::getSignature)
                 .anyMatch(name -> name.equals(callee.getSignature()));
         } else if (callee.getBehavior().getMethodInfo().isConstructor()) {
-            b = Stream.concat(coverage.getConstructors().stream(), coverage.getTestConstructors().stream())
+            t = coverage.getTestConstructors().stream()
+                .map(CoverageConstructor::getSignature)
+                .anyMatch(name -> name.equals(callee.getSignature()));
+        } else {
+            t = false;
+        }
+        if (t) {
+            log.debug("{} is a test class.", behavior.getLongName());
+            buildCallGraph(coverage, caller, callee.getBehavior());
+            return;
+        }
+
+        // filter non-covered class.
+        boolean b;
+        if (callee.getBehavior().getMethodInfo().isMethod()) {
+            b = coverage.getMethods().stream()
+                .map(CoverageMethod::getSignature)
+                .anyMatch(name -> name.equals(callee.getSignature()));
+        } else if (callee.getBehavior().getMethodInfo().isConstructor()) {
+            b = coverage.getConstructors().stream()
                 .map(CoverageConstructor::getSignature)
                 .anyMatch(name -> name.equals(callee.getSignature()));
         } else {
@@ -122,17 +144,8 @@ class JavassistCallGraphCollector implements CallGraphCollector {
         if (isPresentInHierarchy(caller, callee)) {
             log.debug("{} called recursively.", behavior.getLongName());
         } else {
-            // Filter non-test class.
-            ClassPool classPool = new ClassPool();
-            classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
-            try {
-                classPool.get(callee.getBehavior().getDeclaringClass().getName());
-                caller.getNodes().add(callee);
-                buildCallGraph(coverage, callee, callee.getBehavior());
-            } catch (NotFoundException e) {
-                log.debug("{} is a test class.", behavior.getLongName());
-                buildCallGraph(coverage, caller, callee.getBehavior());
-            }
+            caller.getNodes().add(callee);
+            buildCallGraph(coverage, callee, callee.getBehavior());
         }
     }
 
