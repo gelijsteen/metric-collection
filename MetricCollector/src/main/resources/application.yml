@@ -4,4 +4,4 @@ coverage:
 
 writer:
   csv:
-    outputFile: MetricCollector/target/output.csv
+    outputFile: output.csv

@@ -7,7 +7,7 @@ import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
 import nl.uva.yamp.collector.module.maven.MavenTargetModule;
 import nl.uva.yamp.collector.mutation.pitest.PitestMutationModule;
 import nl.uva.yamp.core.CoreModule;
-import nl.uva.yamp.writer.console.ConsoleWriterModule;
+import nl.uva.yamp.writer.csv.CsvWriterModule;
 
 import java.nio.file.Path;
 
@@ -17,7 +17,7 @@ import java.nio.file.Path;
     JacocoCoverageModule.class,
     JavassistCallGraphModule.class,
     PitestMutationModule.class,
-    ConsoleWriterModule.class
+    CsvWriterModule.class
 })
 public interface ApplicationComponent {
 

@@ -2,6 +2,7 @@ package nl.uva.yamp.writer.csv;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.model.metric.Metric;
 import nl.uva.yamp.core.writer.Writer;
@@ -16,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 class CsvWriter implements Writer {
 
@@ -28,6 +30,7 @@ class CsvWriter implements Writer {
             writeHeaderRow(metricSets, printWriter);
             metricSets.forEach(metrics -> writeTestCaseRow(metrics, printWriter));
         }
+        log.info("Wrote output to {}", configuration.getOutputFile());
     }
 
     private void writeHeaderRow(Collection<MetricSet> metricSets, PrintWriter printWriter) {
