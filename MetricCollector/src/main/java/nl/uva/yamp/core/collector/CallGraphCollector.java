@@ -1,8 +1,8 @@
 package nl.uva.yamp.core.collector;
 
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 
 public interface CallGraphCollector {
 
-    Coverage collect(Coverage coverage);
+    DataSet collect(DataSet dataSet);
 }

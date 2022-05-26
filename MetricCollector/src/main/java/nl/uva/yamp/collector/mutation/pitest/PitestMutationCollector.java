@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.MutationCollector;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.util.PathResolver;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
@@ -35,16 +35,16 @@ class PitestMutationCollector implements MutationCollector {
     private final MavenProfileAppender mavenProfileAppender;
 
     @SneakyThrows
-    public Coverage collect(Coverage coverage) {
-        log.debug("Calculating mutation score for: {}", coverage.getTestCase().getFullyQualifiedMethodName());
+    public DataSet collect(DataSet dataSet) {
+        log.debug("Calculating mutation score for: {}", dataSet.getTestCase().getFullyQualifiedMethodName());
         Path pomFile = Files.createTempFile(projectDirectory, "temp-", ".xml");
         Path reportDirectory = Files.createTempDirectory(projectDirectory, "temp-");
         try {
-            addPitestProfileToPomFile(coverage, pomFile, reportDirectory);
+            addPitestProfileToPomFile(dataSet, pomFile, reportDirectory);
 
             int mutationScore = invokePitestProfile(pomFile);
 
-            return coverage.withMutationScore(mutationScore);
+            return dataSet.withMutationScore(mutationScore);
         } finally {
             Files.deleteIfExists(pomFile);
             Files.deleteIfExists(reportDirectory.resolve(PITEST_RESULT_FILE));
@@ -53,25 +53,25 @@ class PitestMutationCollector implements MutationCollector {
     }
 
     @SneakyThrows
-    private void addPitestProfileToPomFile(Coverage coverage, Path pomFile, Path reportDirectory) {
+    private void addPitestProfileToPomFile(DataSet dataSet, Path pomFile, Path reportDirectory) {
         String originalPom = Files.readString(projectDirectory.resolve("pom.xml"));
         String profileTemplate = Files.readString(PathResolver.getPath(PITEST_TEMPLATE_FILE));
 
-        String pitestProfile = replaceTemplatePlaceholders(coverage, reportDirectory, profileTemplate);
+        String pitestProfile = replaceTemplatePlaceholders(dataSet, reportDirectory, profileTemplate);
 
         Files.writeString(pomFile, mavenProfileAppender.addProfileToPomFile(originalPom, pitestProfile));
     }
 
     @NotNull
-    private String replaceTemplatePlaceholders(Coverage coverage, Path reportDirectory, String profileTemplate) {
-        StringBuilder targetClasses = coverage.getMethods().stream()
+    private String replaceTemplatePlaceholders(DataSet dataSet, Path reportDirectory, String profileTemplate) {
+        StringBuilder targetClasses = dataSet.getMethods().stream()
             .map(Method::getFullyQualifiedClassName)
             .distinct()
             .reduce(new StringBuilder(), (stringBuilder, fqn) -> stringBuilder.append("<param>").append(fqn).append("</param>"), StringBuilder::append);
 
         return profileTemplate.replace("${targetClasses}", targetClasses)
-            .replace("${targetTests}", "<param>" + coverage.getTestCase().getFullyQualifiedClassName() + "</param>")
-            .replace("${includedTestMethods}", "<param>" + coverage.getTestCase().getMethodName() + "</param>")
+            .replace("${targetTests}", "<param>" + dataSet.getTestCase().getFullyQualifiedClassName() + "</param>")
+            .replace("${includedTestMethods}", "<param>" + dataSet.getTestCase().getMethodName() + "</param>")
             .replace("${reportsDirectory}", reportDirectory.subpath(reportDirectory.getNameCount() - 1, reportDirectory.getNameCount()).toString());
     }
 

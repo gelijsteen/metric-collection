@@ -2,7 +2,7 @@ package nl.uva.yamp.core.metric;
 
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.Constructor;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 
@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 public class RecursiveTdataMetricCollector implements MetricCollector {
 
     @Override
-    public Metric collect(Coverage combinedData) {
+    public Metric collect(DataSet dataSet) {
         return IntegerMetric.builder()
             .identifier("rTDATA")
-            .value(calculate(combinedData))
+            .value(calculate(dataSet))
             .build();
     }
 
-    private int calculate(Coverage combinedData) {
-        return combinedData.getConstructors()
+    private int calculate(DataSet dataSet) {
+        return dataSet.getConstructors()
             .stream()
             .filter(Constructor::getDirect)
             .map(Constructor::getSignature)

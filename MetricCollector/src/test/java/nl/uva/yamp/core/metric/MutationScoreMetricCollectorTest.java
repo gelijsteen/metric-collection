@@ -12,7 +12,7 @@ class MutationScoreMetricCollectorTest {
 
     @Test
     void happyFlow() {
-        Metric result = sut.collect(CoreTestData.coverageBuilder().build());
+        Metric result = sut.collect(CoreTestData.dataSetBuilder().build());
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("MutationScore")

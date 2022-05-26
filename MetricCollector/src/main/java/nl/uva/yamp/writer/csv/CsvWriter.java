@@ -2,8 +2,8 @@ package nl.uva.yamp.writer.csv;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.model.metric.Metric;
-import nl.uva.yamp.core.model.metric.TestMetrics;
 import nl.uva.yamp.core.writer.Writer;
 
 import javax.inject.Inject;
@@ -23,19 +23,19 @@ class CsvWriter implements Writer {
 
     @Override
     @SneakyThrows
-    public void write(Collection<TestMetrics> testMetrics) {
+    public void write(Collection<MetricSet> metricSets) {
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(configuration.getOutputFile())))) {
-            writeHeaderRow(testMetrics, printWriter);
-            testMetrics.forEach(metrics -> writeTestCaseRow(metrics, printWriter));
+            writeHeaderRow(metricSets, printWriter);
+            metricSets.forEach(metrics -> writeTestCaseRow(metrics, printWriter));
         }
     }
 
-    private void writeHeaderRow(Collection<TestMetrics> testMetrics, PrintWriter printWriter) {
+    private void writeHeaderRow(Collection<MetricSet> metricSets, PrintWriter printWriter) {
         List<String> list = new LinkedList<>();
         list.add("TestCase");
-        list.addAll(testMetrics.stream()
+        list.addAll(metricSets.stream()
             .findFirst()
-            .map(TestMetrics::getMetrics)
+            .map(MetricSet::getMetrics)
             .map(metrics -> metrics
                 .stream()
                 .map(Metric::getIdentifier)
@@ -45,13 +45,13 @@ class CsvWriter implements Writer {
     }
 
     @SneakyThrows
-    private void writeTestCaseRow(TestMetrics testMetrics, PrintWriter printWriter) {
+    private void writeTestCaseRow(MetricSet metricSet, PrintWriter printWriter) {
         List<String> list = new LinkedList<>();
-        list.add(testMetrics.getTestCase()
+        list.add(metricSet.getTestCase()
             .getFullyQualifiedMethodName()
             .replace(',', ';')
             .replace('\n', ';'));
-        list.addAll(testMetrics.getMetrics()
+        list.addAll(metricSet.getMetrics()
             .stream()
             .map(Metric::getStringValue)
             .collect(Collectors.toList()));

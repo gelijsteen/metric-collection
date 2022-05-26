@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class IndirectPackagesCoveredMetricCollectorTest {
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .methods(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("IPC")
@@ -30,9 +30,9 @@ class IndirectPackagesCoveredMetricCollectorTest {
 
     @Test
     void whenSingleCoveredMethod_expectOne() {
-        Coverage coverage = CoreTestData.coverageBuilder().build();
+        DataSet dataSet = CoreTestData.dataSetBuilder().build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("IPC")
@@ -42,7 +42,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
 
     @Test
     void whenMultipleMethodsInPackage_expectOne() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .methods(Set.of(
                 CoreTestData.methodBuilder().build(),
                 CoreTestData.methodBuilder()
@@ -51,7 +51,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("IPC")
@@ -61,7 +61,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
 
     @Test
     void whenTwoDistinctPackages_expectTwo() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .methods(Set.of(
                 CoreTestData.methodBuilder().build(),
                 CoreTestData.methodBuilder()
@@ -70,7 +70,7 @@ class IndirectPackagesCoveredMetricCollectorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("IPC")

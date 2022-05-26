@@ -15,7 +15,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.model.Constructor;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,58 +35,54 @@ class JavassistCallGraphCollector implements CallGraphCollector {
 
     @Override
     @SneakyThrows
-    public Coverage collect(Coverage coverage) {
+    public DataSet collect(DataSet dataSet) {
         ClassPool classPool = new ClassPool();
         classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
         classPool.insertClassPath(projectDirectory.resolve("target").resolve("test-classes").toString());
 
-        Set<CtBehavior> behaviors = getBehaviors(coverage, classPool);
+        Set<CtBehavior> behaviors = getBehaviors(dataSet, classPool);
 
         Set<Constructor> directConstructors = getDirectConstructors(behaviors);
         Set<Method> directMethods = getDirectMethods(behaviors);
 
-        Set<Constructor> constructors = coverage.getConstructors().stream()
-            .map(constructor -> directConstructors.contains(constructor) ? constructor.withDirect(true) : constructor)
-            .collect(Collectors.toSet());
-        Set<Method> methods = coverage.getMethods().stream()
-            .map(method -> directMethods.contains(method) ? method.withDirect(true) : method)
-            .collect(Collectors.toSet());
+        Set<Constructor> constructors = getConstructors(dataSet, directConstructors);
+        Set<Method> methods = getMethods(dataSet, directMethods);
 
-        return Coverage.builder()
-            .testCase(coverage.getTestCase())
-            .mutationScore(coverage.getMutationScore())
+        return DataSet.builder()
+            .testCase(dataSet.getTestCase())
+            .mutationScore(dataSet.getMutationScore())
             .constructors(constructors)
             .methods(methods)
-            .testConstructors(coverage.getTestConstructors())
-            .testMethods(coverage.getTestMethods())
+            .testConstructors(dataSet.getTestConstructors())
+            .testMethods(dataSet.getTestMethods())
             .build();
     }
 
     @NotNull
-    private Set<CtBehavior> getBehaviors(Coverage coverage, ClassPool classPool) {
-        Set<CtBehavior> constructorBehaviors = coverage.getTestConstructors().stream()
-            .map(coverageConstructor -> getBehaviors(coverage, classPool, coverageConstructor))
+    private Set<CtBehavior> getBehaviors(DataSet dataSet, ClassPool classPool) {
+        Set<CtBehavior> constructorBehaviors = dataSet.getTestConstructors().stream()
+            .map(constructor -> getBehaviors(dataSet, classPool, constructor))
             .flatMap(Set::stream)
             .collect(Collectors.toSet());
-        Set<CtBehavior> constructorMethods = coverage.getTestMethods().stream()
-            .map(coverageMethod -> getBehaviors(coverage, classPool, coverageMethod))
+        Set<CtBehavior> constructorMethods = dataSet.getTestMethods().stream()
+            .map(method -> getBehaviors(dataSet, classPool, method))
             .flatMap(Set::stream)
             .collect(Collectors.toSet());
         return Stream.concat(constructorBehaviors.stream(), constructorMethods.stream()).collect(Collectors.toSet());
     }
 
     @SneakyThrows
-    private Set<CtBehavior> getBehaviors(Coverage coverage, ClassPool classPool, Constructor constructor) {
+    private Set<CtBehavior> getBehaviors(DataSet dataSet, ClassPool classPool, Constructor constructor) {
         CtClass ctClass = classPool.get(constructor.getFullyQualifiedClassName());
         return Arrays.stream(ctClass.getDeclaredConstructors())
-            .filter(ctConstructor -> isCoveredConstructor(coverage, ctConstructor))
+            .filter(ctConstructor -> isCoveredConstructor(dataSet, ctConstructor))
             .map(this::buildCallGraph)
             .flatMap(Set::stream)
             .collect(Collectors.toSet());
     }
 
-    private boolean isCoveredConstructor(Coverage coverage, CtConstructor ctConstructor) {
-        return coverage.getTestConstructors().stream()
+    private boolean isCoveredConstructor(DataSet dataSet, CtConstructor ctConstructor) {
+        return dataSet.getTestConstructors().stream()
             .anyMatch(constructor -> isSignatureMatch(ctConstructor, constructor));
     }
 
@@ -96,17 +92,17 @@ class JavassistCallGraphCollector implements CallGraphCollector {
     }
 
     @SneakyThrows
-    private Set<CtBehavior> getBehaviors(Coverage coverage, ClassPool classPool, Method method) {
+    private Set<CtBehavior> getBehaviors(DataSet dataSet, ClassPool classPool, Method method) {
         CtClass ctClass = classPool.get(method.getFullyQualifiedClassName());
         return Arrays.stream(ctClass.getDeclaredMethods())
-            .filter(ctMethod -> isCoveredMethod(coverage, ctMethod))
+            .filter(ctMethod -> isCoveredMethod(dataSet, ctMethod))
             .map(this::buildCallGraph)
             .flatMap(Set::stream)
             .collect(Collectors.toSet());
     }
 
-    private boolean isCoveredMethod(Coverage coverage, CtMethod ctMethod) {
-        return coverage.getTestMethods().stream()
+    private boolean isCoveredMethod(DataSet dataSet, CtMethod ctMethod) {
+        return dataSet.getTestMethods().stream()
             .anyMatch(method -> isSignatureMatch(ctMethod, method));
     }
 
@@ -139,6 +135,22 @@ class JavassistCallGraphCollector implements CallGraphCollector {
                 .loc(0)
                 .direct(false)
                 .build())
+            .collect(Collectors.toSet());
+    }
+
+    private Set<Constructor> getConstructors(DataSet dataSet, Set<Constructor> directConstructors) {
+        return dataSet.getConstructors().stream()
+            .map(constructor -> directConstructors.stream()
+                .map(Constructor::getSignature)
+                .anyMatch(signature -> signature.equals(constructor.getSignature())) ? constructor.withDirect(true) : constructor)
+            .collect(Collectors.toSet());
+    }
+
+    private Set<Method> getMethods(DataSet dataSet, Set<Method> directMethods) {
+        return dataSet.getMethods().stream()
+            .map(method -> directMethods.stream()
+                .map(Method::getSignature)
+                .anyMatch(signature -> signature.equals(method.getSignature())) ? method.withDirect(true) : method)
             .collect(Collectors.toSet());
     }
 

@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class RecursiveDirectnessMetricCalculatorTest {
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .methods(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")
@@ -30,7 +30,7 @@ class RecursiveDirectnessMetricCalculatorTest {
 
     @Test
     void whenDirectAndIndirectEqual_expectOne() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .methods(Set.of(
                 CoreTestData.methodBuilder()
                     .loc(5)
@@ -39,7 +39,7 @@ class RecursiveDirectnessMetricCalculatorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")
@@ -49,7 +49,7 @@ class RecursiveDirectnessMetricCalculatorTest {
 
     @Test
     void whenDirectAndIndirectInequal_expectFraction() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .methods(Set.of(
                 CoreTestData.methodBuilder()
                     .loc(5)
@@ -62,7 +62,7 @@ class RecursiveDirectnessMetricCalculatorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")

@@ -6,7 +6,7 @@ import dagger.Provides;
 import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.collector.MutationCollector;
-import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.writer.Writer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class MetricCalculationIntegrationTest {
     public Writer writer;
 
     @Captor
-    private ArgumentCaptor<Collection<TestMetrics>> captor;
+    private ArgumentCaptor<Collection<MetricSet>> captor;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +49,7 @@ class MetricCalculationIntegrationTest {
 
         verify(writer, only()).write(captor.capture());
         assertThat(captor.getValue()).containsExactly(
-            CoreTestData.testMetricsBuilder()
+            CoreTestData.metricSetBuilder()
                 .metrics(List.of(
                     CoreTestData.integerMetricBuilder()
                         .identifier("rTDATA")
@@ -100,7 +100,7 @@ class MetricCalculationIntegrationTest {
 
         @Provides
         static CoverageCollector coverageCollector() {
-            return () -> Set.of(CoreTestData.coverageBuilder().build());
+            return () -> Set.of(CoreTestData.dataSetBuilder().build());
         }
     }
 

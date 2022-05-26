@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class RecursiveTdataMetricCollectorTest {
 
     @Test
     void whenEmptyCoveredConstructors_expectZero() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .constructors(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")
@@ -30,7 +30,7 @@ class RecursiveTdataMetricCollectorTest {
 
     @Test
     void whenSingleCoveredConstructor_expectOne() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .constructors(Set.of(
                 CoreTestData.constructorBuilder()
                     .direct(true)
@@ -38,7 +38,7 @@ class RecursiveTdataMetricCollectorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")
@@ -48,7 +48,7 @@ class RecursiveTdataMetricCollectorTest {
 
     @Test
     void whenTwoDistinctConstructors_expectTwo() {
-        Coverage coverage = CoreTestData.coverageBuilder()
+        DataSet dataSet = CoreTestData.dataSetBuilder()
             .constructors(Set.of(
                 CoreTestData.constructorBuilder()
                     .direct(true)
@@ -60,7 +60,7 @@ class RecursiveTdataMetricCollectorTest {
             ))
             .build();
 
-        Metric result = sut.collect(coverage);
+        Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")

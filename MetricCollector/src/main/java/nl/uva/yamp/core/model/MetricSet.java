@@ -1,11 +1,11 @@
-package nl.uva.yamp.core.model.metric;
+package nl.uva.yamp.core.model;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import nl.uva.yamp.core.model.TestCase;
+import nl.uva.yamp.core.model.metric.Metric;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class TestMetrics {
+public class MetricSet {
 
     @NonNull
     private final TestCase testCase;

@@ -3,12 +3,12 @@ package nl.uva.yamp.core;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.Constructor;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.TestCase;
 import nl.uva.yamp.core.model.metric.DoubleMetric;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
-import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.model.MetricSet;
 
 import java.util.List;
 import java.util.Set;
@@ -26,8 +26,8 @@ public class CoreTestData {
     public static final int METRIC_VALUE_INTEGER = 0;
     public static final double METRIC_VALUE_DOUBLE = 0d;
 
-    public static Coverage.CoverageBuilder coverageBuilder() {
-        return Coverage.builder()
+    public static DataSet.DataSetBuilder dataSetBuilder() {
+        return DataSet.builder()
             .testCase(testCaseBuilder().build())
             .mutationScore(MUTATION_SCORE)
             .constructors(Set.of(constructorBuilder().build()))
@@ -62,8 +62,8 @@ public class CoreTestData {
             .direct(false);
     }
 
-    public static TestMetrics.TestMetricsBuilder testMetricsBuilder() {
-        return TestMetrics.builder()
+    public static MetricSet.MetricSetBuilder metricSetBuilder() {
+        return MetricSet.builder()
             .testCase(testCaseBuilder().build())
             .metrics(List.of(integerMetricBuilder().build()));
     }

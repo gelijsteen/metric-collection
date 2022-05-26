@@ -2,7 +2,7 @@ package nl.uva.yamp.writer.console;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.writer.Writer;
 
 import javax.inject.Inject;
@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 class ConsoleWriter implements Writer {
 
     @Override
-    public void write(Collection<TestMetrics> testMetrics) {
-        testMetrics.forEach(this::writeRow);
+    public void write(Collection<MetricSet> metricSets) {
+        metricSets.forEach(this::writeRow);
     }
 
-    private void writeRow(TestMetrics testMetrics) {
+    private void writeRow(MetricSet metricSet) {
         List<String> list = new LinkedList<>();
-        list.add(testMetrics.getTestCase().getFullyQualifiedMethodName());
-        list.addAll(testMetrics.getMetrics()
+        list.add(metricSet.getTestCase().getFullyQualifiedMethodName());
+        list.addAll(metricSet.getMetrics()
             .stream()
             .map(metric -> metric.getIdentifier() + "=" + metric.getStringValue())
             .collect(Collectors.toList()));

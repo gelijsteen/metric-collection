@@ -4,7 +4,7 @@ import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,10 +27,10 @@ class JacocoCoverageCollectorIntegrationTest {
 
     @Test
     void happyFlow() {
-        Set<Coverage> result = sut.collect();
+        Set<DataSet> result = sut.collect();
 
         assertThat(result).containsExactlyInAnyOrder(
-            CollectorTestData.coverageBuilder()
+            CollectorTestData.dataSetBuilder()
                 .testCase(CollectorTestData.testCaseBuilder().build())
                 .constructors(Set.of(
                     CollectorTestData.constructorBuilder()
@@ -63,7 +63,7 @@ class JacocoCoverageCollectorIntegrationTest {
                     .loc(3)
                     .build()))
                 .build(),
-            CollectorTestData.coverageBuilder()
+            CollectorTestData.dataSetBuilder()
                 .testCase(CollectorTestData.testCaseBuilder()
                     .methodName("test2")
                     .build())
@@ -99,7 +99,7 @@ class JacocoCoverageCollectorIntegrationTest {
                     .loc(3)
                     .build()))
                 .build(),
-            CollectorTestData.coverageBuilder()
+            CollectorTestData.dataSetBuilder()
                 .testCase(CollectorTestData.testCaseBuilder()
                     .methodName("test3")
                     .build())

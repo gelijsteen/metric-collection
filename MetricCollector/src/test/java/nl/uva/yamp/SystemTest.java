@@ -8,7 +8,7 @@ import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
 import nl.uva.yamp.collector.mutation.pitest.PitestMutationModule;
 import nl.uva.yamp.core.CoreModule;
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.writer.Writer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class SystemTest {
     public Writer writer;
 
     @Captor
-    private ArgumentCaptor<Collection<TestMetrics>> captor;
+    private ArgumentCaptor<Collection<MetricSet>> captor;
 
     @BeforeEach
     void setUp() {
@@ -52,7 +52,7 @@ class SystemTest {
 
         verify(writer, only()).write(captor.capture());
         assertThat(captor.getValue()).contains(
-            CoreTestData.testMetricsBuilder()
+            CoreTestData.metricSetBuilder()
                 .testCase(CoreTestData.testCaseBuilder()
                     .packageName("test.pkg")
                     .className("UnitTest")

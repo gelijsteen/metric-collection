@@ -6,8 +6,8 @@ import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.metric.MetricCollector;
-import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.metric.TestMetrics;
+import nl.uva.yamp.core.model.DataSet;
+import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.writer.Writer;
 
 import javax.inject.Inject;
@@ -26,35 +26,29 @@ public class MetricCalculation {
     private final Writer writer;
 
     public void calculate() {
-        log.info("Collecting coverage data.");
-        Set<Coverage> coverages = coverageCollector.collect();
-
-        log.info("Collecting call graph data.");
-        Set<Coverage> callGraphs = coverages.stream()
+        log.info("Collecting data.");
+        Set<DataSet> dataSets = coverageCollector.collect()
+            .stream()
             .map(callGraphCollector::collect)
-            .collect(Collectors.toSet());
-
-        log.info("Collecting mutation data.");
-        Set<Coverage> mutations = callGraphs.stream()
             .map(mutationCollector::collect)
             .collect(Collectors.toSet());
 
         log.info("Collecting metric(s).");
-        List<TestMetrics> testMetrics = mutations.stream()
+        List<MetricSet> metricSets = dataSets.stream()
             .map(this::collectMetrics)
             .collect(Collectors.toList());
 
         log.info("Applying writer.");
-        writer.write(testMetrics);
+        writer.write(metricSets);
 
         log.info("Metric collection finished.");
     }
 
-    private TestMetrics collectMetrics(Coverage combinedData) {
-        return TestMetrics.builder()
-            .testCase(combinedData.getTestCase())
+    private MetricSet collectMetrics(DataSet dataSet) {
+        return MetricSet.builder()
+            .testCase(dataSet.getTestCase())
             .metrics(metricCollectors.stream()
-                .map(metricCollector -> metricCollector.collect(combinedData))
+                .map(metricCollector -> metricCollector.collect(dataSet))
                 .collect(Collectors.toList()))
             .build();
     }

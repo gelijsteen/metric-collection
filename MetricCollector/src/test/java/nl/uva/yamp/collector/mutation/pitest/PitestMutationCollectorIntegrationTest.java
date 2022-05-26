@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ class PitestMutationCollectorIntegrationTest {
 
     @Test
     void happyFlow() {
-        Coverage result = sut.collect(CollectorTestData.coverageBuilder()
+        DataSet result = sut.collect(CollectorTestData.dataSetBuilder()
             .testCase(CollectorTestData.testCaseBuilder().build())
             .constructors(Set.of(
                 CollectorTestData.constructorBuilder()
@@ -59,7 +59,7 @@ class PitestMutationCollectorIntegrationTest {
             ))
             .build());
 
-        assertThat(result).isEqualTo(CollectorTestData.coverageBuilder()
+        assertThat(result).isEqualTo(CollectorTestData.dataSetBuilder()
             .mutationScore(33)
             .constructors(Set.of(
                 CollectorTestData.constructorBuilder()

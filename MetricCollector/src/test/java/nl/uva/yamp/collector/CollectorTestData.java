@@ -3,7 +3,7 @@ package nl.uva.yamp.collector;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.Constructor;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.TestCase;
 
@@ -20,8 +20,8 @@ public class CollectorTestData {
     public static final int COVERAGE_LOC = 0;
     public static final boolean DIRECT = false;
 
-    public static Coverage.CoverageBuilder coverageBuilder() {
-        return Coverage.builder()
+    public static DataSet.DataSetBuilder dataSetBuilder() {
+        return DataSet.builder()
             .testCase(testCaseBuilder().build())
             .mutationScore(MUTATION_SCORE)
             .constructors(Set.of(constructorBuilder().build()))

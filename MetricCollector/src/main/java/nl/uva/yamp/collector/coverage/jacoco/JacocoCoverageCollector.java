@@ -9,7 +9,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.model.Constructor;
-import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.TestCase;
 import org.jacoco.core.analysis.Analyzer;
@@ -44,7 +44,7 @@ class JacocoCoverageCollector implements CoverageCollector {
 
     @Override
     @SneakyThrows
-    public Set<Coverage> collect() {
+    public Set<DataSet> collect() {
         Set<TargetDirectory> targetDirectories = targetDirectoryLocator.findTargetDirectories(projectDirectory);
         return targetDirectories.stream()
             .map(this::readModule)
@@ -52,7 +52,7 @@ class JacocoCoverageCollector implements CoverageCollector {
             .collect(Collectors.toSet());
     }
 
-    private Set<Coverage> readModule(TargetDirectory targetDirectory) {
+    private Set<DataSet> readModule(TargetDirectory targetDirectory) {
         log.info("Discovered module: {}", targetDirectory.getModuleName());
 
         Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec(targetDirectory.getPath());
@@ -70,16 +70,16 @@ class JacocoCoverageCollector implements CoverageCollector {
         return sessionId != null && sessionId.contains("#");
     }
 
-    private Coverage collectTestCaseData(String sessionId,
-                                         ExecutionDataStore executionDataStore,
-                                         Set<Path> classes,
-                                         Set<Path> testClasses) {
+    private DataSet collectTestCaseData(String sessionId,
+                                        ExecutionDataStore executionDataStore,
+                                        Set<Path> classes,
+                                        Set<Path> testClasses) {
         CoverageBuilder coverageBuilder = getCoverageBuilder(executionDataStore, classes);
         CoverageBuilder testCoverageBuilder = getCoverageBuilder(executionDataStore, testClasses);
         TestCase testCase = getTestCase(sessionId);
         Set<JacocoMethod> coveredMethods = getCoveredMethods(coverageBuilder);
         Set<JacocoMethod> testCoverageMethods = getCoveredMethods(testCoverageBuilder);
-        return Coverage.builder()
+        return DataSet.builder()
             .testCase(testCase)
             .mutationScore(0)
             .constructors(filterConstructors(coveredMethods))

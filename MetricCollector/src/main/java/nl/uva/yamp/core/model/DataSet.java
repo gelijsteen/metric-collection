@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class Coverage {
+public class DataSet {
 
     @NonNull
     private final TestCase testCase;

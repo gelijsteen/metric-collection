@@ -10,7 +10,7 @@ import lombok.With;
 @Getter
 @Builder
 @ToString
-@EqualsAndHashCode(exclude = {"loc", "direct"})
+@EqualsAndHashCode
 public class Method {
 
     @NonNull
