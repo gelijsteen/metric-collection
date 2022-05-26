@@ -5,13 +5,18 @@ import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.core.model.TestCase;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CollectorTestData {
 
+    public static final String TARGET_MODULE = "module-name";
+    public static final Path TARGET_PATH = Paths.get(TARGET_MODULE);
     public static final String PACKAGE_NAME = "test.pkg";
     public static final String CLASS_NAME = "UnitTest";
     public static final String METHOD_NAME = "test1";
@@ -19,6 +24,12 @@ public class CollectorTestData {
     public static final int MUTATION_SCORE = 0;
     public static final int COVERAGE_LOC = 0;
     public static final boolean DIRECT = false;
+
+    public static TargetDirectory.TargetDirectoryBuilder targetDirectoryBuilder() {
+        return TargetDirectory.builder()
+            .path(TARGET_PATH)
+            .moduleName(TARGET_MODULE);
+    }
 
     public static DataSet.DataSetBuilder dataSetBuilder() {
         return DataSet.builder()

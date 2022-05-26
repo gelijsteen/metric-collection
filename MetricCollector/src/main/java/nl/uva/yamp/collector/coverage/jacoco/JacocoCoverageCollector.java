@@ -11,6 +11,7 @@ import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.core.model.TestCase;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -36,24 +37,14 @@ class JacocoCoverageCollector implements CoverageCollector {
 
     private static final Pattern PATTERN = Pattern.compile("(.*)(\\[.*])");
     private static final String CONSTRUCTOR_NAME = "<init>";
-    private final Path projectDirectory;
     private final JacocoCoverageConfiguration configuration;
     private final JacocoFileParser jacocoFileParser;
-    private final TargetDirectoryLocator targetDirectoryLocator;
     private final ClassFileLoader classFileLoader;
 
     @Override
     @SneakyThrows
-    public Set<DataSet> collect() {
-        Set<TargetDirectory> targetDirectories = targetDirectoryLocator.findTargetDirectories(projectDirectory);
-        return targetDirectories.stream()
-            .map(this::readModule)
-            .flatMap(Set::stream)
-            .collect(Collectors.toSet());
-    }
-
-    private Set<DataSet> readModule(TargetDirectory targetDirectory) {
-        log.info("Discovered module: {}", targetDirectory.getModuleName());
+    public Set<DataSet> collect(TargetDirectory targetDirectory) {
+        log.info("Calculating coverage for module: {}", targetDirectory.getModuleName());
 
         Map<String, ExecutionDataStore> jacocoData = jacocoFileParser.readJacocoExec(targetDirectory.getPath());
 

@@ -17,10 +17,10 @@ import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TargetDirectory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,14 +31,13 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 class JavassistCallGraphCollector implements CallGraphCollector {
 
-    private final Path projectDirectory;
-
     @Override
     @SneakyThrows
-    public DataSet collect(DataSet dataSet) {
+    public DataSet collect(TargetDirectory targetDirectory, DataSet dataSet) {
+        log.debug("Calculating directness for: {}", dataSet.getTestCase().getFullyQualifiedMethodName());
         ClassPool classPool = new ClassPool();
-        classPool.insertClassPath(projectDirectory.resolve("target").resolve("classes").toString());
-        classPool.insertClassPath(projectDirectory.resolve("target").resolve("test-classes").toString());
+        classPool.insertClassPath(targetDirectory.getPath().resolve("classes").toString());
+        classPool.insertClassPath(targetDirectory.getPath().resolve("test-classes").toString());
 
         Set<CtBehavior> behaviors = getBehaviors(dataSet, classPool);
 

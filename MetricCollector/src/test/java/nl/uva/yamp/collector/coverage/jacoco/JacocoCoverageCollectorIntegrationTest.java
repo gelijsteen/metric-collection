@@ -1,15 +1,12 @@
 package nl.uva.yamp.collector.coverage.jacoco;
 
 import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.core.model.DataSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 
@@ -27,7 +24,9 @@ class JacocoCoverageCollectorIntegrationTest {
 
     @Test
     void happyFlow() {
-        Set<DataSet> result = sut.collect();
+        Set<DataSet> result = sut.collect(CollectorTestData.targetDirectoryBuilder()
+            .path(Paths.get("src/test/resources/reference/target"))
+            .build());
 
         assertThat(result).containsExactlyInAnyOrder(
             CollectorTestData.dataSetBuilder()
@@ -139,20 +138,10 @@ class JacocoCoverageCollectorIntegrationTest {
     }
 
     @Component(modules = {
-        JacocoCoverageModule.class,
-        ProjectDirectoryModule.class
+        JacocoCoverageModule.class
     })
     public interface TestComponent {
 
         void inject(JacocoCoverageCollectorIntegrationTest jacocoCoverageCollectorIntegrationTest);
-    }
-
-    @Module
-    public interface ProjectDirectoryModule {
-
-        @Provides
-        static Path path() {
-            return Paths.get("src/test/resources/reference");
-        }
     }
 }

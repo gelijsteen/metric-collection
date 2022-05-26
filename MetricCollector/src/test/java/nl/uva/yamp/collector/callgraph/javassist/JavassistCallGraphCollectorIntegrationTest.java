@@ -1,8 +1,6 @@
 package nl.uva.yamp.collector.callgraph.javassist;
 
 import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
 import nl.uva.yamp.core.model.DataSet;
@@ -10,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 
@@ -28,29 +25,32 @@ class JavassistCallGraphCollectorIntegrationTest {
 
     @Test
     void happyFlow() {
-        DataSet result = sut.collect(CollectorTestData.dataSetBuilder()
-            .testCase(CollectorTestData.testCaseBuilder().build())
-            .constructors(Set.of(
-                CollectorTestData.constructorBuilder()
-                    .className("Direct")
-                    .build(),
-                CollectorTestData.constructorBuilder()
-                    .className("Indirect")
-                    .build()
-            ))
-            .methods(Set.of(
-                CollectorTestData.methodBuilder()
-                    .className("Direct")
-                    .methodName("call")
-                    .descriptor("(I)I")
-                    .build(),
-                CollectorTestData.methodBuilder()
-                    .className("Indirect")
-                    .methodName("call")
-                    .descriptor("(I)I")
-                    .build()
-            ))
-            .build());
+        DataSet result = sut.collect(CollectorTestData.targetDirectoryBuilder()
+                .path(Paths.get("src/test/resources/reference/target"))
+                .build(),
+            CollectorTestData.dataSetBuilder()
+                .testCase(CollectorTestData.testCaseBuilder().build())
+                .constructors(Set.of(
+                    CollectorTestData.constructorBuilder()
+                        .className("Direct")
+                        .build(),
+                    CollectorTestData.constructorBuilder()
+                        .className("Indirect")
+                        .build()
+                ))
+                .methods(Set.of(
+                    CollectorTestData.methodBuilder()
+                        .className("Direct")
+                        .methodName("call")
+                        .descriptor("(I)I")
+                        .build(),
+                    CollectorTestData.methodBuilder()
+                        .className("Indirect")
+                        .methodName("call")
+                        .descriptor("(I)I")
+                        .build()
+                ))
+                .build());
 
         assertThat(result).isEqualTo(CollectorTestData.dataSetBuilder()
             .constructors(Set.of(
@@ -81,20 +81,10 @@ class JavassistCallGraphCollectorIntegrationTest {
     }
 
     @Component(modules = {
-        JacocoCoverageModule.class,
-        ProjectDirectoryModule.class
+        JacocoCoverageModule.class
     })
     public interface TestComponent {
 
         void inject(JavassistCallGraphCollectorIntegrationTest javassistCallGraphCollectorIntegrationTest);
-    }
-
-    @Module
-    public interface ProjectDirectoryModule {
-
-        @Provides
-        static Path path() {
-            return Paths.get("src/test/resources/reference");
-        }
     }
 }

@@ -5,6 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uva.yamp.collector.callgraph.javassist.JavassistCallGraphModule;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
+import nl.uva.yamp.collector.module.maven.MavenTargetModule;
 import nl.uva.yamp.collector.mutation.pitest.PitestMutationModule;
 import nl.uva.yamp.core.CoreModule;
 import nl.uva.yamp.core.CoreTestData;
@@ -93,6 +94,7 @@ class SystemTest {
     @Singleton
     @Component(modules = {
         CoreModule.class,
+        MavenTargetModule.class,
         JacocoCoverageModule.class,
         JavassistCallGraphModule.class,
         PitestMutationModule.class,

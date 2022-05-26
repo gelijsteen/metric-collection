@@ -5,17 +5,22 @@ import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.MetricSet;
+import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.core.model.TestCase;
 import nl.uva.yamp.core.model.metric.DoubleMetric;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
-import nl.uva.yamp.core.model.MetricSet;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CoreTestData {
 
+    public static final String TARGET_MODULE = "module-name";
+    public static final Path TARGET_PATH = Paths.get(TARGET_MODULE);
     public static final String PACKAGE_NAME = "a.b.c";
     public static final String CLASS_NAME = "D";
     public static final String METHOD_NAME = "e";
@@ -25,6 +30,12 @@ public class CoreTestData {
     public static final String METRIC_IDENTIFIER = "identifier";
     public static final int METRIC_VALUE_INTEGER = 0;
     public static final double METRIC_VALUE_DOUBLE = 0d;
+
+    public static TargetDirectory.TargetDirectoryBuilder targetDirectoryBuilder() {
+        return TargetDirectory.builder()
+            .path(TARGET_PATH)
+            .moduleName(TARGET_MODULE);
+    }
 
     public static DataSet.DataSetBuilder dataSetBuilder() {
         return DataSet.builder()

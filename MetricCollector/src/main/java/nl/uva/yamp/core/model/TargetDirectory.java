@@ -1,4 +1,4 @@
-package nl.uva.yamp.collector.coverage.jacoco;
+package nl.uva.yamp.core.model;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,7 @@ import java.nio.file.Path;
 @Builder
 @ToString
 @EqualsAndHashCode
-class TargetDirectory {
+public class TargetDirectory {
 
     @NonNull
     private final Path path;

@@ -1,12 +1,14 @@
-package nl.uva.yamp.core;
+package nl.uva.yamp;
 
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
-import nl.uva.yamp.core.collector.CallGraphCollector;
-import nl.uva.yamp.core.collector.CoverageCollector;
-import nl.uva.yamp.core.collector.MutationCollector;
-import nl.uva.yamp.core.collector.TargetCollector;
+import nl.uva.yamp.collector.callgraph.javassist.JavassistCallGraphModule;
+import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
+import nl.uva.yamp.collector.module.maven.MavenTargetModule;
+import nl.uva.yamp.collector.mutation.pitest.PitestMutationModule;
+import nl.uva.yamp.core.CoreModule;
+import nl.uva.yamp.core.CoreTestData;
 import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.writer.Writer;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,19 +21,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class MetricCalculationIntegrationTest {
+class MultiModuleSystemTest {
 
     @Inject
-    public MetricCalculation sut;
+    public Application sut;
 
     @Inject
     public Writer writer;
@@ -41,16 +44,21 @@ class MetricCalculationIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        DaggerMetricCalculationIntegrationTest_TestComponent.create().inject(this);
+        DaggerMultiModuleSystemTest_TestComponent.create().inject(this);
     }
 
     @Test
     void happyFlow() {
-        sut.calculate();
+        sut.run();
 
         verify(writer, only()).write(captor.capture());
-        assertThat(captor.getValue()).containsExactly(
+        assertThat(captor.getValue()).contains(
             CoreTestData.metricSetBuilder()
+                .testCase(CoreTestData.testCaseBuilder()
+                    .packageName("test.pkg")
+                    .className("UnitTest")
+                    .methodName("test1")
+                    .build())
                 .metrics(List.of(
                     CoreTestData.integerMetricBuilder()
                         .identifier("rTDATA")
@@ -58,11 +66,11 @@ class MetricCalculationIntegrationTest {
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("IMC")
-                        .value(1)
+                        .value(2)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("ICC")
-                        .value(1)
+                        .value(2)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("IPC")
@@ -74,11 +82,11 @@ class MetricCalculationIntegrationTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("rDirectness")
-                        .value(0.0)
+                        .value(2d / 3)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(1.0)
+                        .value(0.33)
                         .build()))
                 .build());
     }
@@ -86,51 +94,16 @@ class MetricCalculationIntegrationTest {
     @Singleton
     @Component(modules = {
         CoreModule.class,
-        FakeTargetModule.class,
-        FakeCoverageModule.class,
-        FakeCallGraphModule.class,
-        FakeMutationModule.class,
-        MockedWriterModule.class
+        MavenTargetModule.class,
+        JacocoCoverageModule.class,
+        JavassistCallGraphModule.class,
+        PitestMutationModule.class,
+        MockedWriterModule.class,
+        ProjectDirectoryModule.class
     })
     public interface TestComponent {
 
-        void inject(MetricCalculationIntegrationTest metricCalculationIntegrationTest);
-    }
-
-    @Module
-    public interface FakeTargetModule {
-
-        @Provides
-        static TargetCollector targetCollector() {
-            return () -> Set.of(CoreTestData.targetDirectoryBuilder().build());
-        }
-    }
-
-    @Module
-    public interface FakeCoverageModule {
-
-        @Provides
-        static CoverageCollector coverageCollector() {
-            return (targetDirectory) -> Set.of(CoreTestData.dataSetBuilder().build());
-        }
-    }
-
-    @Module
-    public interface FakeCallGraphModule {
-
-        @Provides
-        static CallGraphCollector callGraphCollector() {
-            return (targetDirectory, dataSet) -> dataSet;
-        }
-    }
-
-    @Module
-    public interface FakeMutationModule {
-
-        @Provides
-        static MutationCollector mutationCollector() {
-            return (dataSet) -> dataSet;
-        }
+        void inject(MultiModuleSystemTest multiModuleSystemTest);
     }
 
     @Module
@@ -140,6 +113,15 @@ class MetricCalculationIntegrationTest {
         @Singleton
         static Writer writer() {
             return Mockito.mock(Writer.class);
+        }
+    }
+
+    @Module
+    public interface ProjectDirectoryModule {
+
+        @Provides
+        static Path path() {
+            return Paths.get("src/test/resources/system-test/multi-module");
         }
     }
 }
