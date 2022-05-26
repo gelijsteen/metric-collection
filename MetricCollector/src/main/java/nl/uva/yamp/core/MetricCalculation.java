@@ -51,7 +51,7 @@ public class MetricCalculation {
         return coverageCollector.collect(targetDirectory)
             .stream()
             .map(dataSet -> callGraphCollector.collect(targetDirectory, dataSet))
-            .map(dataSet -> mutationCollector.collect(dataSet));
+            .map(dataSet -> mutationCollector.collect(targetDirectory, dataSet));
     }
 
     private MetricSet collectMetrics(DataSet dataSet) {

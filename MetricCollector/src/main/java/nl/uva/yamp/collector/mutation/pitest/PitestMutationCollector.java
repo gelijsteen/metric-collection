@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.util.PathResolver;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
@@ -31,16 +32,15 @@ class PitestMutationCollector implements MutationCollector {
     private static final String PITEST_RESULT_FILE = "mutations.csv";
     private static final String PITEST_TEMPLATE_FILE = "pitest-template.xml";
 
-    private final Path projectDirectory;
     private final MavenProfileAppender mavenProfileAppender;
 
     @SneakyThrows
-    public DataSet collect(DataSet dataSet) {
+    public DataSet collect(TargetDirectory targetDirectory, DataSet dataSet) {
         log.debug("Calculating mutation score for: {}", dataSet.getTestCase().getFullyQualifiedMethodName());
-        Path pomFile = Files.createTempFile(projectDirectory, "temp-", ".xml");
-        Path reportDirectory = Files.createTempDirectory(projectDirectory, "temp-");
+        Path pomFile = Files.createTempFile(targetDirectory.getPath().getParent(), "temp-", ".xml");
+        Path reportDirectory = Files.createTempDirectory(targetDirectory.getPath().getParent(), "temp-");
         try {
-            addPitestProfileToPomFile(dataSet, pomFile, reportDirectory);
+            addPitestProfileToPomFile(targetDirectory, dataSet, pomFile, reportDirectory);
 
             int mutationScore = invokePitestProfile(pomFile);
 
@@ -53,8 +53,8 @@ class PitestMutationCollector implements MutationCollector {
     }
 
     @SneakyThrows
-    private void addPitestProfileToPomFile(DataSet dataSet, Path pomFile, Path reportDirectory) {
-        String originalPom = Files.readString(projectDirectory.resolve("pom.xml"));
+    private void addPitestProfileToPomFile(TargetDirectory targetDirectory, DataSet dataSet, Path pomFile, Path reportDirectory) {
+        String originalPom = Files.readString(targetDirectory.getPath().getParent().resolve("pom.xml"));
         String profileTemplate = Files.readString(PathResolver.getPath(PITEST_TEMPLATE_FILE));
 
         String pitestProfile = replaceTemplatePlaceholders(dataSet, reportDirectory, profileTemplate);

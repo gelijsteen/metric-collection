@@ -52,11 +52,11 @@ class MultiModuleSystemTest {
         sut.run();
 
         verify(writer, only()).write(captor.capture());
-        assertThat(captor.getValue()).contains(
+        assertThat(captor.getValue()).containsExactlyInAnyOrder(
             CoreTestData.metricSetBuilder()
                 .testCase(CoreTestData.testCaseBuilder()
                     .packageName("test.pkg")
-                    .className("UnitTest")
+                    .className("FirstTest")
                     .methodName("test1")
                     .build())
                 .metrics(List.of(
@@ -66,11 +66,11 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("IMC")
-                        .value(2)
+                        .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("ICC")
-                        .value(2)
+                        .value(1)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("IPC")
@@ -82,11 +82,47 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("rDirectness")
-                        .value(2d / 3)
+                        .value(1d)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(0.33)
+                        .value(1d)
+                        .build()))
+                .build(),
+            CoreTestData.metricSetBuilder()
+                .testCase(CoreTestData.testCaseBuilder()
+                    .packageName("test.pkg")
+                    .className("SecondTest")
+                    .methodName("test1")
+                    .build())
+                .metrics(List.of(
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("rTDATA")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("IMC")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("ICC")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("IPC")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("DPHC")
+                        .value(1)
+                        .build(),
+                    CoreTestData.doubleMetricBuilder()
+                        .identifier("rDirectness")
+                        .value(1d)
+                        .build(),
+                    CoreTestData.doubleMetricBuilder()
+                        .identifier("MutationScore")
+                        .value(1d)
                         .build()))
                 .build());
     }

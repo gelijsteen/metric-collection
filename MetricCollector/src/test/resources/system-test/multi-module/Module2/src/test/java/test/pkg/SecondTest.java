@@ -12,6 +12,6 @@ public class SecondTest {
     public void test1() {
         int result = sut.call(1);
 
-        assertThat(result).isZero();
+        assertThat(result).isEqualTo(1);
     }
 }

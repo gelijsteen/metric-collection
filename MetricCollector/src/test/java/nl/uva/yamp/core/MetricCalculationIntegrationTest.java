@@ -129,7 +129,7 @@ class MetricCalculationIntegrationTest {
 
         @Provides
         static MutationCollector mutationCollector() {
-            return (dataSet) -> dataSet;
+            return (targetDirectory, dataSet) -> dataSet;
         }
     }
 
