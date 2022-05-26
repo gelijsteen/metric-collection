@@ -1,8 +1,8 @@
 package nl.uva.yamp.core.metric;
 
 import lombok.NoArgsConstructor;
-import nl.uva.yamp.core.model.CombinedData;
-import nl.uva.yamp.core.model.CombinedMethod;
+import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 
@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
 public class IndirectPackagesCoveredMetricCollector implements MetricCollector {
 
     @Override
-    public Metric collect(CombinedData combinedData) {
+    public Metric collect(Coverage combinedData) {
         return IntegerMetric.builder()
             .identifier("IPC")
             .value(calculate(combinedData))
             .build();
     }
 
-    private int calculate(CombinedData combinedData) {
-        return combinedData.getIndirectMethods()
+    private int calculate(Coverage combinedData) {
+        return combinedData.getMethods()
             .stream()
-            .map(CombinedMethod::getPackageName)
+            .map(Method::getPackageName)
             .collect(Collectors.toSet())
             .size();
     }

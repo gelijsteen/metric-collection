@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.CombinedData;
+import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class DistinctPackageHierarchiesCoveredMetricCollectorTest {
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .methods(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("DPHC")
@@ -30,10 +30,10 @@ class DistinctPackageHierarchiesCoveredMetricCollectorTest {
 
     @Test
     void whenSingleCoveredMethod_expectOne() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("DPHC")
@@ -43,17 +43,17 @@ class DistinctPackageHierarchiesCoveredMetricCollectorTest {
 
     @Test
     void whenTwoNestedPackages_expectOne() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .methods(Set.of(
-                CoreTestData.combinedMethodBuilder()
+                CoreTestData.methodBuilder()
                     .packageName("one.two")
                     .build(),
-                CoreTestData.combinedMethodBuilder()
+                CoreTestData.methodBuilder()
                     .packageName("one.two.three")
                     .build()))
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("DPHC")
@@ -63,17 +63,17 @@ class DistinctPackageHierarchiesCoveredMetricCollectorTest {
 
     @Test
     void whenTwoDistinctPackages_expectTwo() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .methods(Set.of(
-                CoreTestData.combinedMethodBuilder()
+                CoreTestData.methodBuilder()
                     .packageName("one.two")
                     .build(),
-                CoreTestData.combinedMethodBuilder()
+                CoreTestData.methodBuilder()
                     .packageName("alpha.beta")
                     .build()))
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("DPHC")

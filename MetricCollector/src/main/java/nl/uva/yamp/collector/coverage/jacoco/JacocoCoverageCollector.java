@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.CoverageCollector;
+import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.CoverageConstructor;
-import nl.uva.yamp.core.model.CoverageMethod;
+import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.TestCase;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -81,6 +81,7 @@ class JacocoCoverageCollector implements CoverageCollector {
         Set<JacocoMethod> testCoverageMethods = getCoveredMethods(testCoverageBuilder);
         return Coverage.builder()
             .testCase(testCase)
+            .mutationScore(0)
             .constructors(filterConstructors(coveredMethods))
             .methods(filterMethods(coveredMethods))
             .testConstructors(filterConstructors(testCoverageMethods))
@@ -157,27 +158,29 @@ class JacocoCoverageCollector implements CoverageCollector {
             .build();
     }
 
-    private Set<CoverageConstructor> filterConstructors(Set<JacocoMethod> coveredMethods) {
+    private Set<Constructor> filterConstructors(Set<JacocoMethod> coveredMethods) {
         return coveredMethods.stream()
             .filter(method -> method.getMethodName().equals(CONSTRUCTOR_NAME))
-            .map(method -> CoverageConstructor.builder()
+            .map(method -> Constructor.builder()
                 .packageName(method.getPackageName())
                 .className(method.getClassName())
                 .descriptor(method.getDescriptor())
                 .loc(method.getLoc())
+                .direct(false)
                 .build())
             .collect(Collectors.toSet());
     }
 
-    private Set<CoverageMethod> filterMethods(Set<JacocoMethod> coveredMethods) {
+    private Set<Method> filterMethods(Set<JacocoMethod> coveredMethods) {
         return coveredMethods.stream()
             .filter(method -> !method.getMethodName().equals(CONSTRUCTOR_NAME))
-            .map(method -> CoverageMethod.builder()
+            .map(method -> Method.builder()
                 .packageName(method.getPackageName())
                 .className(method.getClassName())
                 .methodName(method.getMethodName())
                 .descriptor(method.getDescriptor())
                 .loc(method.getLoc())
+                .direct(false)
                 .build())
             .collect(Collectors.toSet());
     }

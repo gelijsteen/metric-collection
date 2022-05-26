@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.CombinedData;
+import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class RecursiveTdataMetricCollectorTest {
 
     @Test
     void whenEmptyCoveredConstructors_expectZero() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .constructors(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")
@@ -30,9 +30,15 @@ class RecursiveTdataMetricCollectorTest {
 
     @Test
     void whenSingleCoveredConstructor_expectOne() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder().build();
+        Coverage coverage = CoreTestData.coverageBuilder()
+            .constructors(Set.of(
+                CoreTestData.constructorBuilder()
+                    .direct(true)
+                    .build()
+            ))
+            .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")
@@ -42,16 +48,19 @@ class RecursiveTdataMetricCollectorTest {
 
     @Test
     void whenTwoDistinctConstructors_expectTwo() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .constructors(Set.of(
-                CoreTestData.combinedConstructorBuilder().build(),
-                CoreTestData.combinedConstructorBuilder()
+                CoreTestData.constructorBuilder()
+                    .direct(true)
+                    .build(),
+                CoreTestData.constructorBuilder()
                     .className("Unique")
+                    .direct(true)
                     .build()
             ))
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("rTDATA")

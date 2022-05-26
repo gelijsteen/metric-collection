@@ -1,17 +1,17 @@
 package nl.uva.yamp.core.model;
 
-import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
+@Builder
 @ToString
-@EqualsAndHashCode
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-abstract class Method {
+@EqualsAndHashCode(exclude = {"loc", "direct"})
+public class Method {
 
     @NonNull
     private final String packageName;
@@ -21,13 +21,18 @@ abstract class Method {
     private final String methodName;
     @NonNull
     private final String descriptor; // Used to distinguish between overloaded methods.
+    @NonNull
+    private final Integer loc;
+    @With
+    @NonNull
+    private final Boolean direct;
 
     public String getFullyQualifiedClassName() {
         return packageName + "." + className;
     }
 
     public String getFullyQualifiedMethodName() {
-        return packageName + "." + className + "." + methodName;
+        return getFullyQualifiedClassName() + "." + methodName;
     }
 
     public String getSignature() {

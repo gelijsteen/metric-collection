@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.CombinedData;
+import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class IndirectClassesCoveredMetricCollectorTest {
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .methods(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("ICC")
@@ -30,9 +30,9 @@ class IndirectClassesCoveredMetricCollectorTest {
 
     @Test
     void whenSingleCoveredMethod_expectOne() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder().build();
+        Coverage coverage = CoreTestData.coverageBuilder().build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("ICC")
@@ -42,16 +42,16 @@ class IndirectClassesCoveredMetricCollectorTest {
 
     @Test
     void whenMultipleMethodsInClass_expectOne() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .methods(Set.of(
-                CoreTestData.combinedMethodBuilder().build(),
-                CoreTestData.combinedMethodBuilder()
+                CoreTestData.methodBuilder().build(),
+                CoreTestData.methodBuilder()
                     .methodName("unique")
                     .build()
             ))
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("ICC")
@@ -61,16 +61,16 @@ class IndirectClassesCoveredMetricCollectorTest {
 
     @Test
     void whenTwoDistinctClasses_expectTwo() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .methods(Set.of(
-                CoreTestData.combinedMethodBuilder().build(),
-                CoreTestData.combinedMethodBuilder()
+                CoreTestData.methodBuilder().build(),
+                CoreTestData.methodBuilder()
                     .className("Unique")
                     .build()
             ))
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
             .identifier("ICC")

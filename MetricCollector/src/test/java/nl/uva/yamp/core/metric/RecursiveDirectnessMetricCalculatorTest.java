@@ -1,7 +1,7 @@
 package nl.uva.yamp.core.metric;
 
 import nl.uva.yamp.core.CoreTestData;
-import nl.uva.yamp.core.model.CombinedData;
+import nl.uva.yamp.core.model.Coverage;
 import nl.uva.yamp.core.model.metric.Metric;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,11 @@ class RecursiveDirectnessMetricCalculatorTest {
 
     @Test
     void whenEmptyCoveredMethods_expectZero() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
             .methods(Collections.emptySet())
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")
@@ -30,13 +30,16 @@ class RecursiveDirectnessMetricCalculatorTest {
 
     @Test
     void whenDirectAndIndirectEqual_expectOne() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
-            .methods(Set.of(CoreTestData.combinedMethodBuilder()
-                .loc(5)
-                .build()))
+        Coverage coverage = CoreTestData.coverageBuilder()
+            .methods(Set.of(
+                CoreTestData.methodBuilder()
+                    .loc(5)
+                    .direct(true)
+                    .build()
+            ))
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")
@@ -46,16 +49,20 @@ class RecursiveDirectnessMetricCalculatorTest {
 
     @Test
     void whenDirectAndIndirectInequal_expectFraction() {
-        CombinedData combinedData = CoreTestData.combinedDataBuilder()
-            .methods(Set.of(CoreTestData.combinedMethodBuilder()
-                .methods(Set.of(CoreTestData.combinedMethodBuilder()
+        Coverage coverage = CoreTestData.coverageBuilder()
+            .methods(Set.of(
+                CoreTestData.methodBuilder()
+                    .loc(5)
+                    .direct(true)
+                    .build(),
+                CoreTestData.methodBuilder()
+                    .methodName("alternative")
                     .loc(10)
-                    .build()))
-                .loc(5)
-                .build()))
+                    .build()
+            ))
             .build();
 
-        Metric result = sut.collect(combinedData);
+        Metric result = sut.collect(coverage);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
             .identifier("rDirectness")

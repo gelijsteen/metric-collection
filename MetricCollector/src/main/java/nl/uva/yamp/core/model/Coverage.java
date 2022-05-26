@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
+import lombok.With;
 
 import java.util.Set;
 
@@ -16,12 +17,15 @@ public class Coverage {
 
     @NonNull
     private final TestCase testCase;
+    @With
     @NonNull
-    private final Set<CoverageConstructor> constructors;
+    private final Integer mutationScore;
     @NonNull
-    private final Set<CoverageMethod> methods;
+    private final Set<Constructor> constructors;
     @NonNull
-    private final Set<CoverageConstructor> testConstructors;
+    private final Set<Method> methods;
     @NonNull
-    private final Set<CoverageMethod> testMethods;
+    private final Set<Constructor> testConstructors;
+    @NonNull
+    private final Set<Method> testMethods;
 }

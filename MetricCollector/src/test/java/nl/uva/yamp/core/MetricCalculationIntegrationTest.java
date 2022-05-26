@@ -109,7 +109,7 @@ class MetricCalculationIntegrationTest {
 
         @Provides
         static CallGraphCollector callGraphCollector() {
-            return (coverage) -> CoreTestData.callGraphBuilder().build();
+            return (coverage) -> coverage;
         }
     }
 
@@ -118,7 +118,7 @@ class MetricCalculationIntegrationTest {
 
         @Provides
         static MutationCollector mutationCollector() {
-            return (coverage) -> CoreTestData.mutationBuilder().build();
+            return (coverage) -> coverage;
         }
     }
 

@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
-import nl.uva.yamp.core.model.CallGraph;
+import nl.uva.yamp.core.model.Coverage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,23 +28,23 @@ class JavassistCallGraphCollectorIntegrationTest {
 
     @Test
     void happyFlow() {
-        CallGraph result = sut.collect(CollectorTestData.coverageBuilder()
+        Coverage result = sut.collect(CollectorTestData.coverageBuilder()
             .testCase(CollectorTestData.testCaseBuilder().build())
             .constructors(Set.of(
-                CollectorTestData.coverageConstructorBuilder()
+                CollectorTestData.constructorBuilder()
                     .className("Direct")
                     .build(),
-                CollectorTestData.coverageConstructorBuilder()
+                CollectorTestData.constructorBuilder()
                     .className("Indirect")
                     .build()
             ))
             .methods(Set.of(
-                CollectorTestData.coverageMethodBuilder()
+                CollectorTestData.methodBuilder()
                     .className("Direct")
                     .methodName("call")
                     .descriptor("(I)I")
                     .build(),
-                CollectorTestData.coverageMethodBuilder()
+                CollectorTestData.methodBuilder()
                     .className("Indirect")
                     .methodName("call")
                     .descriptor("(I)I")
@@ -52,23 +52,31 @@ class JavassistCallGraphCollectorIntegrationTest {
             ))
             .build());
 
-        assertThat(result).isEqualTo(CollectorTestData.callGraphBuilder()
-            .constructors(Set.of(CollectorTestData.callGraphConstructorBuilder()
-                .className("Direct")
-                .build()))
-            .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
-                .className("Direct")
-                .methodName("call")
-                .descriptor("(I)I")
-                .constructors(Set.of(CollectorTestData.callGraphConstructorBuilder()
+        assertThat(result).isEqualTo(CollectorTestData.coverageBuilder()
+            .constructors(Set.of(
+                CollectorTestData.constructorBuilder()
+                    .className("Direct")
+                    .direct(true)
+                    .build(),
+                CollectorTestData.constructorBuilder()
                     .className("Indirect")
-                    .build()))
-                .methods(Set.of(CollectorTestData.callGraphMethodBuilder()
+                    .direct(false)
+                    .build()
+            ))
+            .methods(Set.of(
+                CollectorTestData.methodBuilder()
+                    .className("Direct")
+                    .methodName("call")
+                    .descriptor("(I)I")
+                    .direct(true)
+                    .build(),
+                CollectorTestData.methodBuilder()
                     .className("Indirect")
                     .methodName("call")
                     .descriptor("(I)I")
-                    .build()))
-                .build()))
+                    .direct(false)
+                    .build()
+            ))
             .build());
     }
 

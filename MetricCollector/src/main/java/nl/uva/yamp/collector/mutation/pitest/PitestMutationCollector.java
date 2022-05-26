@@ -5,8 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.model.Coverage;
-import nl.uva.yamp.core.model.CoverageMethod;
-import nl.uva.yamp.core.model.Mutation;
+import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.util.PathResolver;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
@@ -36,7 +35,7 @@ class PitestMutationCollector implements MutationCollector {
     private final MavenProfileAppender mavenProfileAppender;
 
     @SneakyThrows
-    public Mutation collect(Coverage coverage) {
+    public Coverage collect(Coverage coverage) {
         log.debug("Calculating mutation score for: {}", coverage.getTestCase().getFullyQualifiedMethodName());
         Path pomFile = Files.createTempFile(projectDirectory, "temp-", ".xml");
         Path reportDirectory = Files.createTempDirectory(projectDirectory, "temp-");
@@ -45,10 +44,7 @@ class PitestMutationCollector implements MutationCollector {
 
             int mutationScore = invokePitestProfile(pomFile);
 
-            return Mutation.builder()
-                .testCase(coverage.getTestCase())
-                .mutationScore(mutationScore)
-                .build();
+            return coverage.withMutationScore(mutationScore);
         } finally {
             Files.deleteIfExists(pomFile);
             Files.deleteIfExists(reportDirectory.resolve(PITEST_RESULT_FILE));
@@ -69,7 +65,7 @@ class PitestMutationCollector implements MutationCollector {
     @NotNull
     private String replaceTemplatePlaceholders(Coverage coverage, Path reportDirectory, String profileTemplate) {
         StringBuilder targetClasses = coverage.getMethods().stream()
-            .map(CoverageMethod::getFullyQualifiedClassName)
+            .map(Method::getFullyQualifiedClassName)
             .distinct()
             .reduce(new StringBuilder(), (stringBuilder, fqn) -> stringBuilder.append("<param>").append(fqn).append("</param>"), StringBuilder::append);
 

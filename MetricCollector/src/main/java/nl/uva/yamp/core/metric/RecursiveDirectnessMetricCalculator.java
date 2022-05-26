@@ -1,8 +1,8 @@
 package nl.uva.yamp.core.metric;
 
 import lombok.NoArgsConstructor;
-import nl.uva.yamp.core.model.CombinedData;
-import nl.uva.yamp.core.model.CombinedMethod;
+import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.metric.DoubleMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 
@@ -12,19 +12,20 @@ import javax.inject.Inject;
 public class RecursiveDirectnessMetricCalculator implements MetricCollector {
 
     @Override
-    public Metric collect(CombinedData combinedData) {
+    public Metric collect(Coverage combinedData) {
         return DoubleMetric.builder()
             .identifier("rDirectness")
             .value(calculate(combinedData))
             .build();
     }
 
-    private double calculate(CombinedData combinedData) {
+    private double calculate(Coverage combinedData) {
         double directLoc = combinedData.getMethods().stream()
-            .mapToDouble(CombinedMethod::getLoc)
+            .filter(Method::getDirect)
+            .mapToDouble(Method::getLoc)
             .sum();
-        double indirectLoc = combinedData.getIndirectMethods().stream()
-            .mapToDouble(CombinedMethod::getLoc)
+        double indirectLoc = combinedData.getMethods().stream()
+            .mapToDouble(Method::getLoc)
             .sum();
         return indirectLoc == 0 ? 0 : directLoc / indirectLoc;
     }

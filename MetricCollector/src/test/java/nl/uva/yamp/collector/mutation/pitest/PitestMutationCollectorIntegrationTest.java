@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.collector.coverage.jacoco.JacocoCoverageModule;
-import nl.uva.yamp.core.model.Mutation;
+import nl.uva.yamp.core.model.Coverage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,30 +28,66 @@ class PitestMutationCollectorIntegrationTest {
 
     @Test
     void happyFlow() {
-        Mutation result = sut.collect(CollectorTestData.coverageBuilder()
+        Coverage result = sut.collect(CollectorTestData.coverageBuilder()
             .testCase(CollectorTestData.testCaseBuilder().build())
             .constructors(Set.of(
-                CollectorTestData.coverageConstructorBuilder()
+                CollectorTestData.constructorBuilder()
                     .className("Direct")
                     .build(),
-                CollectorTestData.coverageConstructorBuilder()
+                CollectorTestData.constructorBuilder()
                     .className("Indirect")
                     .build()
             ))
             .methods(Set.of(
-                CollectorTestData.coverageMethodBuilder()
+                CollectorTestData.methodBuilder()
                     .className("Direct")
                     .methodName("call")
                     .build(),
-                CollectorTestData.coverageMethodBuilder()
+                CollectorTestData.methodBuilder()
                     .className("Indirect")
                     .methodName("call")
                     .build()
             ))
+            .testConstructors(Set.of(
+                CollectorTestData.constructorBuilder()
+                    .build()
+            ))
+            .testMethods(Set.of(
+                CollectorTestData.methodBuilder()
+                    .methodName("test1")
+                    .build()
+            ))
             .build());
 
-        assertThat(result).isEqualTo(CollectorTestData.mutationBuilder()
+        assertThat(result).isEqualTo(CollectorTestData.coverageBuilder()
             .mutationScore(33)
+            .constructors(Set.of(
+                CollectorTestData.constructorBuilder()
+                    .className("Direct")
+                    .build(),
+                CollectorTestData.constructorBuilder()
+                    .className("Indirect")
+                    .build()
+            ))
+            .methods(Set.of(
+                CollectorTestData.methodBuilder()
+                    .className("Direct")
+                    .methodName("call")
+                    .build(),
+                CollectorTestData.methodBuilder()
+                    .className("Indirect")
+                    .methodName("call")
+                    .build()
+            ))
+            .testConstructors(Set.of(
+                CollectorTestData.constructorBuilder()
+                    .build()
+            ))
+            .testMethods(Set.of(
+                CollectorTestData.methodBuilder()
+                    .methodName("test1")
+                    .build()
+            ))
             .build());
     }
 

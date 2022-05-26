@@ -1,8 +1,8 @@
 package nl.uva.yamp.core.metric;
 
 import lombok.NoArgsConstructor;
-import nl.uva.yamp.core.model.CombinedData;
-import nl.uva.yamp.core.model.CombinedMethod;
+import nl.uva.yamp.core.model.Coverage;
+import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 
@@ -14,18 +14,18 @@ import java.util.Set;
 public class DistinctPackageHierarchiesCoveredMetricCollector implements MetricCollector {
 
     @Override
-    public Metric collect(CombinedData combinedData) {
+    public Metric collect(Coverage combinedData) {
         return IntegerMetric.builder()
             .identifier("DPHC")
             .value(calculate(combinedData))
             .build();
     }
 
-    private int calculate(CombinedData combinedData) {
+    private int calculate(Coverage combinedData) {
         Set<String> hierarchyPackages = new HashSet<>();
-        combinedData.getIndirectMethods()
+        combinedData.getMethods()
             .stream()
-            .map(CombinedMethod::getPackageName)
+            .map(Method::getPackageName)
             .sorted()
             .forEach(sortedPackage -> {
                 if (hierarchyPackages.stream().noneMatch(sortedPackage::contains)) {
