@@ -33,6 +33,9 @@ public class CoreTestData {
     public static final String MUTATION_OPERATOR = "mutation-operator";
     public static final int MUTATION_LINE_NUMBER = 10;
     public static final boolean MUTATION_KILLED = false;
+    public static final boolean MUTATION_DISJOINT = false;
+    public static final boolean CONSTRUCTOR_DIRECT = true;
+    public static final boolean METHOD_DIRECT = true;
 
     public static TargetDirectory.TargetDirectoryBuilder targetDirectoryBuilder() {
         return TargetDirectory.builder()
@@ -63,7 +66,7 @@ public class CoreTestData {
             .className(CLASS_NAME)
             .descriptor(DESCRIPTOR)
             .loc(COVERAGE_LOC)
-            .direct(true);
+            .direct(CONSTRUCTOR_DIRECT);
     }
 
     public static Method.MethodBuilder methodBuilder() {
@@ -73,7 +76,7 @@ public class CoreTestData {
             .methodName(METHOD_NAME)
             .descriptor(DESCRIPTOR)
             .loc(COVERAGE_LOC)
-            .direct(true);
+            .direct(METHOD_DIRECT);
     }
 
     public static MetricSet.MetricSetBuilder metricSetBuilder() {
@@ -99,6 +102,7 @@ public class CoreTestData {
             .fullyQualifiedMethodName(PACKAGE_NAME + "." + CLASS_NAME + "." + METHOD_NAME)
             .mutationOperator(MUTATION_OPERATOR)
             .lineNumber(MUTATION_LINE_NUMBER)
-            .killed(MUTATION_KILLED);
+            .killed(MUTATION_KILLED)
+            .disjoint(MUTATION_DISJOINT);
     }
 }

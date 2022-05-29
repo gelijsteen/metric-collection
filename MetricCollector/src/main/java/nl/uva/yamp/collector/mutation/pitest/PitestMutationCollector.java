@@ -114,6 +114,7 @@ class PitestMutationCollector implements MutationCollector {
                         .mutationOperator(parts[2])
                         .lineNumber(Integer.parseInt(parts[4]))
                         .killed("KILLED".equals(parts[5]))
+                        .disjoint(false)
                         .build());
                 }
             }

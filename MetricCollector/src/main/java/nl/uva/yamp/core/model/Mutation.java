@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
 @Builder
@@ -20,4 +21,7 @@ public class Mutation {
     private final Integer lineNumber;
     @NonNull
     private final Boolean killed;
+    @With
+    @NonNull
+    private final Boolean disjoint;
 }

@@ -23,10 +23,12 @@ public class CollectorTestData {
     public static final String METHOD_NAME = "test1";
     public static final String DESCRIPTOR = "()V";
     public static final int COVERAGE_LOC = 0;
-    public static final boolean DIRECT = false;
+    public static final boolean CONSTRUCTOR_DIRECT = false;
+    public static final boolean METHOD_DIRECT = false;
     public static final String MUTATION_OPERATOR = "mutation-operator";
     public static final int MUTATION_LINE_NUMBER = 10;
     public static final boolean MUTATION_KILLED = false;
+    public static final boolean MUTATION_DISJOINT = false;
 
     public static TargetDirectory.TargetDirectoryBuilder targetDirectoryBuilder() {
         return TargetDirectory.builder()
@@ -57,7 +59,7 @@ public class CollectorTestData {
             .className(CLASS_NAME)
             .descriptor(DESCRIPTOR)
             .loc(COVERAGE_LOC)
-            .direct(DIRECT);
+            .direct(CONSTRUCTOR_DIRECT);
     }
 
     public static Method.MethodBuilder methodBuilder() {
@@ -67,7 +69,7 @@ public class CollectorTestData {
             .methodName(METHOD_NAME)
             .descriptor(DESCRIPTOR)
             .loc(COVERAGE_LOC)
-            .direct(DIRECT);
+            .direct(METHOD_DIRECT);
     }
 
     public static Mutation.MutationBuilder mutationBuilder() {
@@ -75,6 +77,7 @@ public class CollectorTestData {
             .fullyQualifiedMethodName(PACKAGE_NAME + "." + CLASS_NAME + "." + METHOD_NAME)
             .mutationOperator(MUTATION_OPERATOR)
             .lineNumber(MUTATION_LINE_NUMBER)
-            .killed(MUTATION_KILLED);
+            .killed(MUTATION_KILLED)
+            .disjoint(MUTATION_DISJOINT);
     }
 }

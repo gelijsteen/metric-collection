@@ -6,6 +6,7 @@ import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.collector.CoverageCollector;
 import nl.uva.yamp.core.collector.MutationCollector;
 import nl.uva.yamp.core.collector.TargetCollector;
+import nl.uva.yamp.core.enricher.DisjointMutatantEnricher;
 import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.MetricSet;
@@ -26,6 +27,7 @@ public class MetricCalculation {
     private final CoverageCollector coverageCollector;
     private final CallGraphCollector callGraphCollector;
     private final MutationCollector mutationCollector;
+    private final DisjointMutatantEnricher disjointMutatantEnricher;
     private final List<MetricCollector> metricCollectors;
     private final Writer writer;
 
@@ -36,8 +38,11 @@ public class MetricCalculation {
             .flatMap(this::collectDataSets)
             .collect(Collectors.toSet());
 
+        log.info("Calculating disjoint mutation(s).");
+        Set<DataSet> enrichedDataSets = disjointMutatantEnricher.enrich(dataSets);
+
         log.info("Collecting metric(s).");
-        List<MetricSet> metricSets = dataSets.stream()
+        List<MetricSet> metricSets = enrichedDataSets.stream()
             .map(this::collectMetrics)
             .collect(Collectors.toList());
 
