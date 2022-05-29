@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.core.model.TestCase;
 
@@ -21,9 +22,11 @@ public class CollectorTestData {
     public static final String CLASS_NAME = "UnitTest";
     public static final String METHOD_NAME = "test1";
     public static final String DESCRIPTOR = "()V";
-    public static final int MUTATION_SCORE = 0;
     public static final int COVERAGE_LOC = 0;
     public static final boolean DIRECT = false;
+    public static final String MUTATION_OPERATOR = "mutation-operator";
+    public static final int MUTATION_LINE_NUMBER = 10;
+    public static final boolean MUTATION_KILLED = false;
 
     public static TargetDirectory.TargetDirectoryBuilder targetDirectoryBuilder() {
         return TargetDirectory.builder()
@@ -34,11 +37,11 @@ public class CollectorTestData {
     public static DataSet.DataSetBuilder dataSetBuilder() {
         return DataSet.builder()
             .testCase(testCaseBuilder().build())
-            .mutationScore(MUTATION_SCORE)
             .constructors(Set.of(constructorBuilder().build()))
             .methods(Set.of(methodBuilder().build()))
             .testConstructors(Set.of(constructorBuilder().build()))
-            .testMethods(Set.of(methodBuilder().build()));
+            .testMethods(Set.of(methodBuilder().build()))
+            .mutations(Set.of());
     }
 
     public static TestCase.TestCaseBuilder testCaseBuilder() {
@@ -65,5 +68,13 @@ public class CollectorTestData {
             .descriptor(DESCRIPTOR)
             .loc(COVERAGE_LOC)
             .direct(DIRECT);
+    }
+
+    public static Mutation.MutationBuilder mutationBuilder() {
+        return Mutation.builder()
+            .fullyQualifiedMethodName(PACKAGE_NAME + "." + CLASS_NAME + "." + METHOD_NAME)
+            .mutationOperator(MUTATION_OPERATOR)
+            .lineNumber(MUTATION_LINE_NUMBER)
+            .killed(MUTATION_KILLED);
     }
 }

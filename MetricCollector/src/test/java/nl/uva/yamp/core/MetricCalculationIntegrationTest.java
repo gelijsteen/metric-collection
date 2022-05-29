@@ -74,11 +74,11 @@ class MetricCalculationIntegrationTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("rDirectness")
-                        .value(0.0)
+                        .value(1.0)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(1.0)
+                        .value(0.5)
                         .build()))
                 .build());
     }
@@ -111,7 +111,18 @@ class MetricCalculationIntegrationTest {
 
         @Provides
         static CoverageCollector coverageCollector() {
-            return (targetDirectory) -> Set.of(CoreTestData.dataSetBuilder().build());
+            return (targetDirectory) -> Set.of(CoreTestData.dataSetBuilder()
+                .mutations(Set.of(
+                    CoreTestData.mutationBuilder()
+                        .lineNumber(1)
+                        .killed(false)
+                        .build(),
+                    CoreTestData.mutationBuilder()
+                        .lineNumber(2)
+                        .killed(true)
+                        .build()
+                ))
+                .build());
         }
     }
 

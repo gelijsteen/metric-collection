@@ -17,9 +17,6 @@ public class DataSet {
 
     @NonNull
     private final TestCase testCase;
-    @With
-    @NonNull
-    private final Integer mutationScore;
     @NonNull
     private final Set<Constructor> constructors;
     @NonNull
@@ -28,4 +25,7 @@ public class DataSet {
     private final Set<Constructor> testConstructors;
     @NonNull
     private final Set<Method> testMethods;
+    @With
+    @NonNull
+    private final Set<Mutation> mutations;
 }

@@ -34,7 +34,6 @@ class RecursiveDirectnessMetricCalculatorTest {
             .methods(Set.of(
                 CoreTestData.methodBuilder()
                     .loc(5)
-                    .direct(true)
                     .build()
             ))
             .build();
@@ -53,11 +52,11 @@ class RecursiveDirectnessMetricCalculatorTest {
             .methods(Set.of(
                 CoreTestData.methodBuilder()
                     .loc(5)
-                    .direct(true)
                     .build(),
                 CoreTestData.methodBuilder()
                     .methodName("alternative")
                     .loc(10)
+                    .direct(false)
                     .build()
             ))
             .build();

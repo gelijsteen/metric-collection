@@ -72,11 +72,11 @@ class JacocoCoverageCollector implements CoverageCollector {
         Set<JacocoMethod> testCoverageMethods = getCoveredMethods(testCoverageBuilder);
         return DataSet.builder()
             .testCase(testCase)
-            .mutationScore(0)
             .constructors(filterConstructors(coveredMethods))
             .methods(filterMethods(coveredMethods))
             .testConstructors(filterConstructors(testCoverageMethods))
             .testMethods(filterMethods(testCoverageMethods))
+            .mutations(Set.of())
             .build();
     }
 

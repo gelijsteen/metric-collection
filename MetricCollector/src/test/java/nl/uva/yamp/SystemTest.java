@@ -86,7 +86,7 @@ class SystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(0.33)
+                        .value(1d / 3)
                         .build()))
                 .build());
     }

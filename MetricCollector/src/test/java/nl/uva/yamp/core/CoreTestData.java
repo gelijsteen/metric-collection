@@ -6,6 +6,7 @@ import nl.uva.yamp.core.model.Constructor;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.MetricSet;
+import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.core.model.TestCase;
 import nl.uva.yamp.core.model.metric.DoubleMetric;
@@ -25,11 +26,13 @@ public class CoreTestData {
     public static final String CLASS_NAME = "D";
     public static final String METHOD_NAME = "e";
     public static final String DESCRIPTOR = "()V";
-    public static final int MUTATION_SCORE = 100;
-    public static final int COVERAGE_LOC = 0;
+    public static final int COVERAGE_LOC = 1;
     public static final String METRIC_IDENTIFIER = "identifier";
     public static final int METRIC_VALUE_INTEGER = 0;
     public static final double METRIC_VALUE_DOUBLE = 0d;
+    public static final String MUTATION_OPERATOR = "mutation-operator";
+    public static final int MUTATION_LINE_NUMBER = 10;
+    public static final boolean MUTATION_KILLED = false;
 
     public static TargetDirectory.TargetDirectoryBuilder targetDirectoryBuilder() {
         return TargetDirectory.builder()
@@ -40,11 +43,11 @@ public class CoreTestData {
     public static DataSet.DataSetBuilder dataSetBuilder() {
         return DataSet.builder()
             .testCase(testCaseBuilder().build())
-            .mutationScore(MUTATION_SCORE)
             .constructors(Set.of(constructorBuilder().build()))
             .methods(Set.of(methodBuilder().build()))
             .testConstructors(Set.of(constructorBuilder().build()))
-            .testMethods(Set.of(methodBuilder().build()));
+            .testMethods(Set.of(methodBuilder().build()))
+            .mutations(Set.of());
     }
 
     public static TestCase.TestCaseBuilder testCaseBuilder() {
@@ -70,7 +73,7 @@ public class CoreTestData {
             .methodName(METHOD_NAME)
             .descriptor(DESCRIPTOR)
             .loc(COVERAGE_LOC)
-            .direct(false);
+            .direct(true);
     }
 
     public static MetricSet.MetricSetBuilder metricSetBuilder() {
@@ -89,5 +92,13 @@ public class CoreTestData {
         return DoubleMetric.builder()
             .identifier(METRIC_IDENTIFIER)
             .value(METRIC_VALUE_DOUBLE);
+    }
+
+    public static Mutation.MutationBuilder mutationBuilder() {
+        return Mutation.builder()
+            .fullyQualifiedMethodName(PACKAGE_NAME + "." + CLASS_NAME + "." + METHOD_NAME)
+            .mutationOperator(MUTATION_OPERATOR)
+            .lineNumber(MUTATION_LINE_NUMBER)
+            .killed(MUTATION_KILLED);
     }
 }

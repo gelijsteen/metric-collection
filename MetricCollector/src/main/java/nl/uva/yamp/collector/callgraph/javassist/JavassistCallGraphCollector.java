@@ -49,11 +49,11 @@ class JavassistCallGraphCollector implements CallGraphCollector {
 
         return DataSet.builder()
             .testCase(dataSet.getTestCase())
-            .mutationScore(dataSet.getMutationScore())
             .constructors(constructors)
             .methods(methods)
             .testConstructors(dataSet.getTestConstructors())
             .testMethods(dataSet.getTestMethods())
+            .mutations(dataSet.getMutations())
             .build();
     }
 

@@ -12,6 +12,6 @@ public class DisabledMutationCollector implements MutationCollector {
 
     @Override
     public DataSet collect(TargetDirectory targetDirectory, DataSet dataSet) {
-        return dataSet.withMutationScore(0);
+        return dataSet;
     }
 }

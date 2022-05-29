@@ -60,7 +60,6 @@ class PitestMutationCollectorIntegrationTest {
                 .build());
 
         assertThat(result).isEqualTo(CollectorTestData.dataSetBuilder()
-            .mutationScore(33)
             .constructors(Set.of(
                 CollectorTestData.constructorBuilder()
                     .className("Direct")
@@ -86,6 +85,26 @@ class PitestMutationCollectorIntegrationTest {
             .testMethods(Set.of(
                 CollectorTestData.methodBuilder()
                     .methodName("test1")
+                    .build()
+            ))
+            .mutations(Set.of(
+                CollectorTestData.mutationBuilder()
+                    .fullyQualifiedMethodName("test.pkg.Indirect.call")
+                    .mutationOperator("org.pitest.mutationtest.engine.gregor.mutators.returns.PrimitiveReturnsMutator")
+                    .lineNumber(6)
+                    .killed(false)
+                    .build(),
+                CollectorTestData.mutationBuilder()
+                    .fullyQualifiedMethodName("test.pkg.Indirect.call")
+                    .mutationOperator("org.pitest.mutationtest.engine.gregor.mutators.MathMutator")
+                    .lineNumber(6)
+                    .killed(true)
+                    .build(),
+                CollectorTestData.mutationBuilder()
+                    .fullyQualifiedMethodName("test.pkg.Direct.call")
+                    .mutationOperator("org.pitest.mutationtest.engine.gregor.mutators.returns.PrimitiveReturnsMutator")
+                    .lineNumber(7)
+                    .killed(false)
                     .build()
             ))
             .build());
