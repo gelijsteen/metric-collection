@@ -16,9 +16,6 @@ class JacocoFileParserTest {
     void happyFlow() {
         Map<String, ExecutionDataStore> result = sut.readJacocoExec(Paths.get("src/test/resources/reference/target"));
 
-        assertThat(result)
-            .containsKey("test.pkg.UnitTest#test1")
-            .containsKey("test.pkg.UnitTest#test2")
-            .containsKey("test.pkg.UnitTest#test3");
+        assertThat(result).containsKey("test.pkg.UnitTest#test1");
     }
 }

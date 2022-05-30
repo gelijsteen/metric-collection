@@ -14,18 +14,4 @@ public class UnitTest {
 
         assertThat(result).isZero();
     }
-
-    @Test
-    public void test2() {
-        int result = sut.call(0);
-
-        assertThat(result).isEqualTo(-1);
-    }
-
-    @Test
-    public void test3() {
-        int result = sut.call(-1);
-
-        assertThat(result).isEqualTo(-2);
-    }
 }

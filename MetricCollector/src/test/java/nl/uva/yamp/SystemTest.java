@@ -52,7 +52,7 @@ class SystemTest {
         sut.run();
 
         verify(writer, only()).write(captor.capture());
-        assertThat(captor.getValue()).contains(
+        assertThat(captor.getValue()).containsExactly(
             CoreTestData.metricSetBuilder()
                 .testCase(CoreTestData.testCaseBuilder()
                     .packageName("test.pkg")
@@ -90,7 +90,7 @@ class SystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("disjointMutationScore")
-                        .value(0d)
+                        .value(1d)
                         .build()))
                 .build());
     }
