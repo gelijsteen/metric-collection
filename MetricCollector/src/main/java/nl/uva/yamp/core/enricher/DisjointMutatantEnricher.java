@@ -7,21 +7,33 @@ import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.TestCase;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @NoArgsConstructor(onConstructor = @__(@Inject))
 public class DisjointMutatantEnricher {
 
     public Set<DataSet> enrich(Set<DataSet> dataSets) {
+        Set<Mutation> collect = IntStream.range(0, 8)
+            .mapToObj(i -> applyDisjointMutantAlgorithm(dataSets))
+            .flatMap(Collection::stream)
+            .collect(Collectors.toSet());
+        return enrichDataSets(dataSets, collect);
+    }
+
+    private Set<Mutation> applyDisjointMutantAlgorithm(Set<DataSet> dataSets) {
         Map<Mutation, Map<TestCase, Boolean>> matrix = mapToMatrix(dataSets);
         Map<Mutation, Map<TestCase, Boolean>> filteredMatrix = removeLiveMutants(matrix);
-        Set<Mutation> disjointMutants = selectDisjointMutants(filteredMatrix);
-        return enrichDataSets(dataSets, disjointMutants);
+        return selectDisjointMutants(filteredMatrix);
     }
 
     private Map<Mutation, Map<TestCase, Boolean>> mapToMatrix(Set<DataSet> dataSets) {
@@ -44,7 +56,8 @@ public class DisjointMutatantEnricher {
         while (!matrix.isEmpty()) {
             Set<Mutation> subsumedMutants = new HashSet<>();
             Mutation disjointMutant = null;
-            for (Map.Entry<Mutation, Map<TestCase, Boolean>> mutant : matrix.entrySet()) {
+            List<Map.Entry<Mutation, Map<TestCase, Boolean>>> list = shuffleMatrix(matrix);
+            for (Map.Entry<Mutation, Map<TestCase, Boolean>> mutant : list) {
                 Set<Mutation> currentSubsumedMutants = getSubsumedMutants(matrix, mutant.getValue());
                 if (currentSubsumedMutants.size() > subsumedMutants.size()) {
                     disjointMutant = mutant.getKey();
@@ -62,15 +75,21 @@ public class DisjointMutatantEnricher {
         return results;
     }
 
+    private List<Map.Entry<Mutation, Map<TestCase, Boolean>>> shuffleMatrix(Map<Mutation, Map<TestCase, Boolean>> matrix) {
+        List<Map.Entry<Mutation, Map<TestCase, Boolean>>> list = new ArrayList<>(matrix.entrySet());
+        Collections.shuffle(list);
+        return list;
+    }
+
     private Set<Mutation> getSubsumedMutants(Map<Mutation, Map<TestCase, Boolean>> matrix, Map<TestCase, Boolean> mutant) {
         return matrix.entrySet()
             .stream()
-            .filter(entry -> compareMutants(mutant, entry.getValue()))
+            .filter(entry -> subsumesMutant(mutant, entry.getValue()))
             .map(Map.Entry::getKey)
             .collect(Collectors.toSet());
     }
 
-    private boolean compareMutants(Map<TestCase, Boolean> mutant1, Map<TestCase, Boolean> mutant2) {
+    private boolean subsumesMutant(Map<TestCase, Boolean> mutant1, Map<TestCase, Boolean> mutant2) {
         return mutant1.entrySet().stream()
             .filter(Map.Entry::getValue)
             .allMatch(entry -> mutant2.getOrDefault(entry.getKey(), false));

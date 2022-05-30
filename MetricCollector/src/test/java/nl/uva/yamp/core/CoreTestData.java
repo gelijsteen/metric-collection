@@ -31,6 +31,7 @@ public class CoreTestData {
     public static final int METRIC_VALUE_INTEGER = 0;
     public static final double METRIC_VALUE_DOUBLE = 0d;
     public static final String MUTATION_OPERATOR = "mutation-operator";
+    public static final String MUTATION_FQN = PACKAGE_NAME + "." + CLASS_NAME + "." + METHOD_NAME;
     public static final int MUTATION_LINE_NUMBER = 10;
     public static final boolean MUTATION_KILLED = false;
     public static final boolean MUTATION_DISJOINT = false;
@@ -99,7 +100,7 @@ public class CoreTestData {
 
     public static Mutation.MutationBuilder mutationBuilder() {
         return Mutation.builder()
-            .fullyQualifiedMethodName(PACKAGE_NAME + "." + CLASS_NAME + "." + METHOD_NAME)
+            .fullyQualifiedMethodName(MUTATION_FQN)
             .mutationOperator(MUTATION_OPERATOR)
             .lineNumber(MUTATION_LINE_NUMBER)
             .killed(MUTATION_KILLED)
