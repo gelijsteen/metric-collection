@@ -1,5 +1,6 @@
 package nl.uva.yamp.core.enricher;
 
+import nl.uva.yamp.core.CoreConfiguration.DisjointMutantConfiguration;
 import nl.uva.yamp.core.CoreTestData;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Mutation;
@@ -11,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class DisjointMutatantEnricherTest {
 
-    private final DisjointMutatantEnricher sut = new DisjointMutatantEnricher();
+    private final DisjointMutatantEnricher sut = new DisjointMutatantEnricher(new DisjointMutantConfiguration());
 
     @Test
     void whenEmptyDataSets_expectEmptyResult() {

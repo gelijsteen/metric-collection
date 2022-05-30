@@ -1,7 +1,8 @@
 package nl.uva.yamp.core.enricher;
 
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nl.uva.yamp.core.CoreConfiguration.DisjointMutantConfiguration;
 import nl.uva.yamp.core.model.DataSet;
 import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.TestCase;
@@ -19,11 +20,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
-@NoArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DisjointMutatantEnricher {
 
+    private final DisjointMutantConfiguration configuration;
+
     public Set<DataSet> enrich(Set<DataSet> dataSets) {
-        Set<Mutation> collect = IntStream.range(0, 8)
+        Set<Mutation> collect = IntStream.range(0, configuration.getRepetitions())
             .mapToObj(i -> applyDisjointMutantAlgorithm(dataSets))
             .flatMap(Collection::stream)
             .collect(Collectors.toSet());

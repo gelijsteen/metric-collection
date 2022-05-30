@@ -1,6 +1,8 @@
-coverage:
-  jacoco:
-    parallel: true
+parallelExecution:
+  numThreads: 2
+
+disjointMutants:
+  repetitions: 8
 
 writer:
   csv:

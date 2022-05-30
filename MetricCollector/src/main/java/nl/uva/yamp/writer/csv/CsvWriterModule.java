@@ -6,6 +6,7 @@ import dagger.Provides;
 import nl.uva.yamp.core.writer.Writer;
 import nl.uva.yamp.util.ConfigurationLoader;
 import nl.uva.yamp.writer.WriterConfiguration;
+import nl.uva.yamp.writer.WriterConfiguration.CsvWriterConfiguration;
 
 import java.util.Optional;
 

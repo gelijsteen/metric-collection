@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.model.MetricSet;
 import nl.uva.yamp.core.model.metric.Metric;
 import nl.uva.yamp.core.writer.Writer;
+import nl.uva.yamp.writer.WriterConfiguration.CsvWriterConfiguration;
 
 import javax.inject.Inject;
 import java.io.BufferedWriter;

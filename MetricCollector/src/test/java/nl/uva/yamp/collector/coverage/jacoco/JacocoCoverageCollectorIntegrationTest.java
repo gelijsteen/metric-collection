@@ -1,6 +1,8 @@
 package nl.uva.yamp.collector.coverage.jacoco;
 
 import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import nl.uva.yamp.collector.CollectorTestData;
 import nl.uva.yamp.core.model.DataSet;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import javax.inject.Inject;
 import java.nio.file.Paths;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,10 +69,20 @@ class JacocoCoverageCollectorIntegrationTest {
     }
 
     @Component(modules = {
-        JacocoCoverageModule.class
+        JacocoCoverageModule.class,
+        ForkJoinPoolModule.class
     })
     public interface TestComponent {
 
         void inject(JacocoCoverageCollectorIntegrationTest jacocoCoverageCollectorIntegrationTest);
+    }
+
+    @Module
+    public interface ForkJoinPoolModule {
+
+        @Provides
+        static ForkJoinPool forkJoinPool() {
+            return new ForkJoinPool(1);
+        }
     }
 }

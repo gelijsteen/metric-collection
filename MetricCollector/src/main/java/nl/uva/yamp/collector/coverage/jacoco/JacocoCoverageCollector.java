@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ class JacocoCoverageCollector implements CoverageCollector {
 
     private static final Pattern PATTERN = Pattern.compile("(.*)(\\[.*])");
     private static final String CONSTRUCTOR_NAME = "<init>";
-    private final JacocoCoverageConfiguration configuration;
+    private final ForkJoinPool forkJoinPool;
     private final JacocoFileParser jacocoFileParser;
     private final ClassFileLoader classFileLoader;
 
@@ -51,10 +52,11 @@ class JacocoCoverageCollector implements CoverageCollector {
         Set<Path> classes = classFileLoader.getClassFiles(targetDirectory.getPath().resolve("classes"));
         Set<Path> testClasses = classFileLoader.getClassFiles(targetDirectory.getPath().resolve("test-classes"));
 
-        return (configuration.getParallel() ? jacocoData.entrySet().parallelStream() : jacocoData.entrySet().stream())
-            .filter(pair -> isValidSessionId(pair.getKey()))
-            .map(pair -> collectTestCaseData(pair.getKey(), pair.getValue(), classes, testClasses))
-            .collect(Collectors.toSet());
+        return forkJoinPool.submit(() -> jacocoData.entrySet().parallelStream()
+                .filter(pair -> isValidSessionId(pair.getKey()))
+                .map(pair -> collectTestCaseData(pair.getKey(), pair.getValue(), classes, testClasses))
+                .collect(Collectors.toSet()))
+            .get();
     }
 
     private boolean isValidSessionId(String sessionId) {

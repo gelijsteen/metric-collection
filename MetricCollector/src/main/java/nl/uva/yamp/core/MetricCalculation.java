@@ -1,6 +1,7 @@
 package nl.uva.yamp.core;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.collector.CallGraphCollector;
 import nl.uva.yamp.core.collector.CoverageCollector;
@@ -16,13 +17,14 @@ import nl.uva.yamp.core.writer.Writer;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class MetricCalculation {
 
+    private final ForkJoinPool forkJoinPool;
     private final TargetCollector targetCollector;
     private final CoverageCollector coverageCollector;
     private final CallGraphCollector callGraphCollector;
@@ -35,7 +37,8 @@ public class MetricCalculation {
         log.info("Collecting dataset(s).");
         Set<DataSet> dataSets = targetCollector.collect()
             .stream()
-            .flatMap(this::collectDataSets)
+            .map(this::collectDataSets)
+            .flatMap(Set::stream)
             .collect(Collectors.toSet());
 
         log.info("Calculating disjoint mutation(s).");
@@ -52,11 +55,14 @@ public class MetricCalculation {
         log.info("Metric collection finished.");
     }
 
-    private Stream<DataSet> collectDataSets(TargetDirectory targetDirectory) {
-        return coverageCollector.collect(targetDirectory)
-            .stream()
-            .map(dataSet -> callGraphCollector.collect(targetDirectory, dataSet))
-            .map(dataSet -> mutationCollector.collect(targetDirectory, dataSet));
+    @SneakyThrows
+    private Set<DataSet> collectDataSets(TargetDirectory targetDirectory) {
+        Set<DataSet> coverage = coverageCollector.collect(targetDirectory);
+        return forkJoinPool.submit(() -> coverage.parallelStream()
+                .map(dataSet -> callGraphCollector.collect(targetDirectory, dataSet))
+                .map(dataSet -> mutationCollector.collect(targetDirectory, dataSet))
+                .collect(Collectors.toSet()))
+            .get();
     }
 
     private MetricSet collectMetrics(DataSet dataSet) {

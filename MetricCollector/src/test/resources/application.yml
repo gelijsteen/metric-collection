@@ -1,3 +1,5 @@
-coverage:
-  jacoco:
-    parallel: false
+parallelExecution:
+  numThreads: 1
+
+disjointMutants:
+  repetitions: 1
