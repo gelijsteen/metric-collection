@@ -2,6 +2,7 @@ package nl.uva.yamp.core;
 
 import dagger.Module;
 import dagger.Provides;
+import nl.uva.yamp.core.metric.DisjointMutationScoreMetricCollector;
 import nl.uva.yamp.core.metric.DistinctPackageHierarchiesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectClassesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectMethodsCoveredMetricCollector;
@@ -23,7 +24,8 @@ public interface CoreModule {
                                                  IndirectPackagesCoveredMetricCollector indirectPackagesCoveredMetricCollector,
                                                  DistinctPackageHierarchiesCoveredMetricCollector distinctPackageHierarchiesCoveredMetricCollector,
                                                  RecursiveDirectnessMetricCalculator recursiveDirectnessMetricCalculator,
-                                                 MutationScoreMetricCollector mutationScoreMetricCollector) {
+                                                 MutationScoreMetricCollector mutationScoreMetricCollector,
+                                                 DisjointMutationScoreMetricCollector disjointMutationScoreMetricCollector) {
         return List.of(
             recursiveTdataMetricCollector,
             indirectMethodsCoveredMetricCollector,
@@ -31,6 +33,7 @@ public interface CoreModule {
             indirectPackagesCoveredMetricCollector,
             distinctPackageHierarchiesCoveredMetricCollector,
             recursiveDirectnessMetricCalculator,
-            mutationScoreMetricCollector);
+            mutationScoreMetricCollector,
+            disjointMutationScoreMetricCollector);
     }
 }

@@ -87,6 +87,10 @@ class MultiModuleSystemTest {
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(1d)
+                        .build(),
+                    CoreTestData.doubleMetricBuilder()
+                        .identifier("disjointMutationScore")
+                        .value(1d)
                         .build()))
                 .build(),
             CoreTestData.metricSetBuilder()
@@ -122,6 +126,10 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
+                        .value(1d)
+                        .build(),
+                    CoreTestData.doubleMetricBuilder()
+                        .identifier("disjointMutationScore")
                         .value(1d)
                         .build()))
                 .build());

@@ -79,6 +79,10 @@ class MetricCalculationIntegrationTest {
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(0.5)
+                        .build(),
+                    CoreTestData.doubleMetricBuilder()
+                        .identifier("disjointMutationScore")
+                        .value(1d)
                         .build()))
                 .build());
     }

@@ -11,18 +11,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
-public class MutationScoreMetricCollector implements MetricCollector {
+public class DisjointMutationScoreMetricCollector implements MetricCollector {
 
     @Override
     public Metric collect(DataSet dataSet) {
         return DoubleMetric.builder()
-            .identifier("MutationScore")
-            .value(getMutationScore(dataSet))
+            .identifier("disjointMutationScore")
+            .value(getDisjointMutationScore(dataSet))
             .build();
     }
 
-    private double getMutationScore(DataSet dataSet) {
-        Set<Mutation> allMutations = dataSet.getMutations();
+    private double getDisjointMutationScore(DataSet dataSet) {
+        Set<Mutation> allMutations = dataSet.getMutations().stream()
+            .filter(Mutation::getDisjoint)
+            .collect(Collectors.toSet());
         Set<Mutation> killedMutations = allMutations.stream()
             .filter(Mutation::getKilled)
             .collect(Collectors.toSet());

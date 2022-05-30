@@ -9,9 +9,9 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MutationScoreMetricCollectorTest {
+class DisjointMutationScoreMetricCollectorTest {
 
-    private final MutationScoreMetricCollector sut = new MutationScoreMetricCollector();
+    private final DisjointMutationScoreMetricCollector sut = new DisjointMutationScoreMetricCollector();
 
     @Test
     void whenEmptyMutations_expectZero() {
@@ -22,21 +22,17 @@ class MutationScoreMetricCollectorTest {
         Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
-            .identifier("MutationScore")
+            .identifier("disjointMutationScore")
             .value(0d)
             .build());
     }
 
     @Test
-    void whenOneKilledOneSurvivedMutation_expectValidScore() {
+    void whenNonDisjointMutation_expectZero() {
         DataSet dataSet = CoreTestData.dataSetBuilder()
             .mutations(Set.of(
                 CoreTestData.mutationBuilder()
-                    .lineNumber(5)
-                    .killed(false)
-                    .build(),
-                CoreTestData.mutationBuilder()
-                    .killed(true)
+                    .disjoint(false)
                     .build()
             ))
             .build();
@@ -44,7 +40,31 @@ class MutationScoreMetricCollectorTest {
         Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
-            .identifier("MutationScore")
+            .identifier("disjointMutationScore")
+            .value(0d)
+            .build());
+    }
+
+    @Test
+    void whenTwoDisjointMutations_expectValidScore() {
+        DataSet dataSet = CoreTestData.dataSetBuilder()
+            .mutations(Set.of(
+                CoreTestData.mutationBuilder()
+                    .lineNumber(5)
+                    .killed(false)
+                    .disjoint(true)
+                    .build(),
+                CoreTestData.mutationBuilder()
+                    .killed(true)
+                    .disjoint(true)
+                    .build()
+            ))
+            .build();
+
+        Metric result = sut.collect(dataSet);
+
+        assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
+            .identifier("disjointMutationScore")
             .value(0.5)
             .build());
     }

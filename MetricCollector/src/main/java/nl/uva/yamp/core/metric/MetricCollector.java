@@ -5,5 +5,5 @@ import nl.uva.yamp.core.model.metric.Metric;
 
 public interface MetricCollector {
 
-    Metric collect(DataSet combinedData);
+    Metric collect(DataSet dataSet);
 }
