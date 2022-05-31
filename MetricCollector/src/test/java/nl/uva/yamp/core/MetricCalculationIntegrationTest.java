@@ -76,6 +76,14 @@ class MetricCalculationIntegrationTest {
                         .identifier("rDirectness")
                         .value(1.0)
                         .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("tLOC")
+                        .value(2)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("aLOC")
+                        .value(2)
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(0.5)

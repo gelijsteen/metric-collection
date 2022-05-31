@@ -84,6 +84,14 @@ class SystemTest {
                         .identifier("rDirectness")
                         .value(2d / 3)
                         .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("tLOC")
+                        .value(5)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("aLOC")
+                        .value(5)
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(1d / 3)

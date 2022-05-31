@@ -17,11 +17,11 @@ public class MutationScoreMetricCollector implements MetricCollector {
     public Metric collect(DataSet dataSet) {
         return DoubleMetric.builder()
             .identifier("MutationScore")
-            .value(getMutationScore(dataSet))
+            .value(calculate(dataSet))
             .build();
     }
 
-    private double getMutationScore(DataSet dataSet) {
+    private double calculate(DataSet dataSet) {
         Set<Mutation> allMutations = dataSet.getMutations();
         Set<Mutation> killedMutations = allMutations.stream()
             .filter(Mutation::getKilled)

@@ -84,6 +84,14 @@ class MultiModuleSystemTest {
                         .identifier("rDirectness")
                         .value(1d)
                         .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("tLOC")
+                        .value(5)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("aLOC")
+                        .value(2)
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(1d)
@@ -123,6 +131,14 @@ class MultiModuleSystemTest {
                     CoreTestData.doubleMetricBuilder()
                         .identifier("rDirectness")
                         .value(1d)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("tLOC")
+                        .value(5)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("aLOC")
+                        .value(2)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")

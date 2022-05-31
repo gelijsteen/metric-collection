@@ -17,11 +17,11 @@ public class DisjointMutationScoreMetricCollector implements MetricCollector {
     public Metric collect(DataSet dataSet) {
         return DoubleMetric.builder()
             .identifier("disjointMutationScore")
-            .value(getDisjointMutationScore(dataSet))
+            .value(calculate(dataSet))
             .build();
     }
 
-    private double getDisjointMutationScore(DataSet dataSet) {
+    private double calculate(DataSet dataSet) {
         Set<Mutation> allMutations = dataSet.getMutations().stream()
             .filter(Mutation::getDisjoint)
             .collect(Collectors.toSet());

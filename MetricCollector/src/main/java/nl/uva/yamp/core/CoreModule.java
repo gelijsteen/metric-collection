@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uva.yamp.core.CoreConfiguration.DisjointMutantConfiguration;
 import nl.uva.yamp.core.CoreConfiguration.ParallelExecutionConfiguration;
+import nl.uva.yamp.core.metric.ApplicationLocMetricCollector;
 import nl.uva.yamp.core.metric.DisjointMutationScoreMetricCollector;
 import nl.uva.yamp.core.metric.DistinctPackageHierarchiesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectClassesCoveredMetricCollector;
@@ -13,6 +14,7 @@ import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.metric.MutationScoreMetricCollector;
 import nl.uva.yamp.core.metric.RecursiveDirectnessMetricCalculator;
 import nl.uva.yamp.core.metric.RecursiveTdataMetricCollector;
+import nl.uva.yamp.core.metric.TestLocMetricCollector;
 import nl.uva.yamp.util.ConfigurationLoader;
 
 import java.util.List;
@@ -29,6 +31,8 @@ public interface CoreModule {
                                                  IndirectPackagesCoveredMetricCollector indirectPackagesCoveredMetricCollector,
                                                  DistinctPackageHierarchiesCoveredMetricCollector distinctPackageHierarchiesCoveredMetricCollector,
                                                  RecursiveDirectnessMetricCalculator recursiveDirectnessMetricCalculator,
+                                                 TestLocMetricCollector testLocMetricCollector,
+                                                 ApplicationLocMetricCollector applicationLocMetricCollector,
                                                  MutationScoreMetricCollector mutationScoreMetricCollector,
                                                  DisjointMutationScoreMetricCollector disjointMutationScoreMetricCollector) {
         return List.of(
@@ -38,6 +42,8 @@ public interface CoreModule {
             indirectPackagesCoveredMetricCollector,
             distinctPackageHierarchiesCoveredMetricCollector,
             recursiveDirectnessMetricCalculator,
+            testLocMetricCollector,
+            applicationLocMetricCollector,
             mutationScoreMetricCollector,
             disjointMutationScoreMetricCollector);
     }
