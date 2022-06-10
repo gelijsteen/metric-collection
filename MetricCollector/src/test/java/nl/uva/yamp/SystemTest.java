@@ -94,7 +94,7 @@ class SystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(1d / 3)
+                        .value(0.7142857142857143)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("disjointMutationScore")

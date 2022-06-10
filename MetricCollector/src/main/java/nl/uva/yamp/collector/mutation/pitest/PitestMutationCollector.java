@@ -108,6 +108,8 @@ class PitestMutationCollector implements MutationCollector {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] parts = line.split(",");
+
+                // Filter for valid mutation results.
                 if (Set.of("KILLED", "SURVIVED").contains(parts[5])) {
                     result.add(Mutation.builder()
                         .fullyQualifiedMethodName(parts[1] + "." + parts[3])
