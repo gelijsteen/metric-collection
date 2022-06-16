@@ -31,7 +31,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class MultiModuleSystemTest {
+class OverloadedSystemTest {
 
     @Inject
     public Application sut;
@@ -44,19 +44,19 @@ class MultiModuleSystemTest {
 
     @BeforeEach
     void setUp() {
-        DaggerMultiModuleSystemTest_TestComponent.create().inject(this);
+        DaggerOverloadedSystemTest_TestComponent.create().inject(this);
     }
 
     @Test
-    void whenMultiModuleProject_expectValidResults() {
+    void whenOverloadedMethods_expectValidResults() {
         sut.run();
 
         verify(writer, only()).write(captor.capture());
-        assertThat(captor.getValue()).containsExactlyInAnyOrder(
+        assertThat(captor.getValue()).containsExactly(
             CoreTestData.metricSetBuilder()
                 .testCase(CoreTestData.testCaseBuilder()
                     .packageName("test.pkg")
-                    .className("FirstTest")
+                    .className("UnitTest")
                     .methodName("test1")
                     .build())
                 .metrics(List.of(
@@ -66,7 +66,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("IMC")
-                        .value(1)
+                        .value(3)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("ICC")
@@ -82,7 +82,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("rDirectness")
-                        .value(1d)
+                        .value(0.3333333333333333)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("tLOC")
@@ -90,7 +90,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("aLOC")
-                        .value(2)
+                        .value(11)
                         .build(),
                     CoreTestData.stringMetricBuilder()
                         .identifier("DEV")
@@ -98,59 +98,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(1d)
-                        .build(),
-                    CoreTestData.doubleMetricBuilder()
-                        .identifier("disjointMutationScore")
-                        .value(1d)
-                        .build()))
-                .build(),
-            CoreTestData.metricSetBuilder()
-                .testCase(CoreTestData.testCaseBuilder()
-                    .packageName("test.pkg")
-                    .className("SecondTest")
-                    .methodName("test1")
-                    .build())
-                .metrics(List.of(
-                    CoreTestData.integerMetricBuilder()
-                        .identifier("rTDATA")
-                        .value(1)
-                        .build(),
-                    CoreTestData.integerMetricBuilder()
-                        .identifier("IMC")
-                        .value(1)
-                        .build(),
-                    CoreTestData.integerMetricBuilder()
-                        .identifier("ICC")
-                        .value(1)
-                        .build(),
-                    CoreTestData.integerMetricBuilder()
-                        .identifier("IPC")
-                        .value(1)
-                        .build(),
-                    CoreTestData.integerMetricBuilder()
-                        .identifier("DPHC")
-                        .value(1)
-                        .build(),
-                    CoreTestData.doubleMetricBuilder()
-                        .identifier("rDirectness")
-                        .value(1d)
-                        .build(),
-                    CoreTestData.integerMetricBuilder()
-                        .identifier("tLOC")
-                        .value(5)
-                        .build(),
-                    CoreTestData.integerMetricBuilder()
-                        .identifier("aLOC")
-                        .value(2)
-                        .build(),
-                    CoreTestData.stringMetricBuilder()
-                        .identifier("DEV")
-                        .value("UT")
-                        .build(),
-                    CoreTestData.doubleMetricBuilder()
-                        .identifier("MutationScore")
-                        .value(1d)
+                        .value(0.4626865671641791)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("disjointMutationScore")
@@ -171,7 +119,7 @@ class MultiModuleSystemTest {
     })
     public interface TestComponent {
 
-        void inject(MultiModuleSystemTest multiModuleSystemTest);
+        void inject(OverloadedSystemTest overloadedSystemTest);
     }
 
     @Module
@@ -189,7 +137,7 @@ class MultiModuleSystemTest {
 
         @Provides
         static Path path() {
-            return Paths.get("src/test/resources/system-test/multi-module");
+            return Paths.get("src/test/resources/system-test/overloaded");
         }
     }
 }

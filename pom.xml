@@ -173,8 +173,7 @@
 
     <modules>
         <module>JacocoListener</module>
-        <module>MetricCollector</module>
-        <module>SystemTest</module>
         <module>MavenPreparation</module>
+        <module>MetricCollector</module>
     </modules>
 </project>

@@ -31,7 +31,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class MultiModuleSystemTest {
+class ParameterizedSystemTest {
 
     @Inject
     public Application sut;
@@ -44,20 +44,21 @@ class MultiModuleSystemTest {
 
     @BeforeEach
     void setUp() {
-        DaggerMultiModuleSystemTest_TestComponent.create().inject(this);
+        DaggerParameterizedSystemTest_TestComponent.create().inject(this);
     }
 
     @Test
-    void whenMultiModuleProject_expectValidResults() {
+    void whenParameterizedTests_expectValidResults() {
         sut.run();
 
         verify(writer, only()).write(captor.capture());
-        assertThat(captor.getValue()).containsExactlyInAnyOrder(
+        assertThat(captor.getValue()).containsExactly(
             CoreTestData.metricSetBuilder()
                 .testCase(CoreTestData.testCaseBuilder()
                     .packageName("test.pkg")
-                    .className("FirstTest")
+                    .className("UnitTest")
                     .methodName("test1")
+                    .identifier("[0]")
                     .build())
                 .metrics(List.of(
                     CoreTestData.integerMetricBuilder()
@@ -86,7 +87,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("tLOC")
-                        .value(5)
+                        .value(8)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("aLOC")
@@ -98,7 +99,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(1d)
+                        .value(0.85)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("disjointMutationScore")
@@ -108,8 +109,9 @@ class MultiModuleSystemTest {
             CoreTestData.metricSetBuilder()
                 .testCase(CoreTestData.testCaseBuilder()
                     .packageName("test.pkg")
-                    .className("SecondTest")
+                    .className("UnitTest")
                     .methodName("test1")
+                    .identifier("[1]")
                     .build())
                 .metrics(List.of(
                     CoreTestData.integerMetricBuilder()
@@ -138,7 +140,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("tLOC")
-                        .value(5)
+                        .value(8)
                         .build(),
                     CoreTestData.integerMetricBuilder()
                         .identifier("aLOC")
@@ -150,7 +152,7 @@ class MultiModuleSystemTest {
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
-                        .value(1d)
+                        .value(0.85)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("disjointMutationScore")
@@ -171,7 +173,7 @@ class MultiModuleSystemTest {
     })
     public interface TestComponent {
 
-        void inject(MultiModuleSystemTest multiModuleSystemTest);
+        void inject(ParameterizedSystemTest parameterizedSystemTest);
     }
 
     @Module
@@ -189,7 +191,7 @@ class MultiModuleSystemTest {
 
         @Provides
         static Path path() {
-            return Paths.get("src/test/resources/system-test/multi-module");
+            return Paths.get("src/test/resources/system-test/parameterized");
         }
     }
 }

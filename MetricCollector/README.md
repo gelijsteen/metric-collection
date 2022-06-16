@@ -20,7 +20,12 @@ java -jar MetricCollector-exec.jar /path/to/project
 | rDirectness           | Ratio between the LOC of directly covered methods and the LOC of indirectly covered methods |
 | tLOC                  | Number of test lines-of-code covered by test case                                           |
 | aLOC                  | Number of application lines-of-code covered by test case                                    |
+| DEV                   | Classification of test according to developer(s)                                            |
 | mutationScore         | Ratio between the number of mutants killed and the total number of mutants                  |
 | disjointMutationScore | Similar to _mutationScore_, excluding equivalent and subsumed mutants                       |
 
-**Note**: Currently requires the _application.yml_ and _pitest-template.xml_ files to be present in the directory to execute properly. Both files can be found in the application resources directory.
+**Note**: Currently requires the _application.yml_ and _pitest-template.xml_ files to be present in the directory to execute properly. These files can be found in the following directory:
+
+```shell
+src/main/resources/
+```
