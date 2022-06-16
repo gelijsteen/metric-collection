@@ -84,6 +84,10 @@ class MetricCalculationIntegrationTest {
                         .identifier("aLOC")
                         .value(2)
                         .build(),
+                    CoreTestData.stringMetricBuilder()
+                        .identifier("DEV")
+                        .value("NA")
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(0.5)

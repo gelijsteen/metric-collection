@@ -92,6 +92,10 @@ class MultiModuleSystemTest {
                         .identifier("aLOC")
                         .value(2)
                         .build(),
+                    CoreTestData.stringMetricBuilder()
+                        .identifier("DEV")
+                        .value("UT")
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(1d)
@@ -139,6 +143,10 @@ class MultiModuleSystemTest {
                     CoreTestData.integerMetricBuilder()
                         .identifier("aLOC")
                         .value(2)
+                        .build(),
+                    CoreTestData.stringMetricBuilder()
+                        .identifier("DEV")
+                        .value("UT")
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")

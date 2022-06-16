@@ -5,6 +5,7 @@ import dagger.Provides;
 import nl.uva.yamp.core.CoreConfiguration.DisjointMutantConfiguration;
 import nl.uva.yamp.core.CoreConfiguration.ParallelExecutionConfiguration;
 import nl.uva.yamp.core.metric.ApplicationLocMetricCollector;
+import nl.uva.yamp.core.metric.DeveloperClassificationMetricCollector;
 import nl.uva.yamp.core.metric.DisjointMutationScoreMetricCollector;
 import nl.uva.yamp.core.metric.DistinctPackageHierarchiesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectClassesCoveredMetricCollector;
@@ -33,6 +34,7 @@ public interface CoreModule {
                                                  RecursiveDirectnessMetricCalculator recursiveDirectnessMetricCalculator,
                                                  TestLocMetricCollector testLocMetricCollector,
                                                  ApplicationLocMetricCollector applicationLocMetricCollector,
+                                                 DeveloperClassificationMetricCollector developerClassificationMetricCollector,
                                                  MutationScoreMetricCollector mutationScoreMetricCollector,
                                                  DisjointMutationScoreMetricCollector disjointMutationScoreMetricCollector) {
         return List.of(
@@ -44,6 +46,7 @@ public interface CoreModule {
             recursiveDirectnessMetricCalculator,
             testLocMetricCollector,
             applicationLocMetricCollector,
+            developerClassificationMetricCollector,
             mutationScoreMetricCollector,
             disjointMutationScoreMetricCollector);
     }
