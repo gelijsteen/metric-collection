@@ -3,8 +3,9 @@ package nl.uva.yamp;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Slf4j
 public class Main {
@@ -16,22 +17,23 @@ public class Main {
             System.exit(1);
         }
 
-        File profileFile = new File(args[0]);
-        if (!profileFile.exists()) {
-            log.warn("File [{}] does not exist.", args[0]);
+        Path profileFile = Paths.get(args[0]);
+        if (!profileFile.toFile().exists()) {
+            log.warn("Profile file [{}] does not exist.", args[0]);
             System.exit(2);
         }
 
-        File pomFile = new File(args[1]);
-        if (!pomFile.exists()) {
-            log.warn("File [{}] does not exist.", args[1]);
+        Path pomFile = Paths.get(args[1]);
+        if (!pomFile.toFile().exists()) {
+            log.warn("POM file [{}] does not exist.", args[1]);
             System.exit(3);
         }
 
-        try (FileWriter fileWriter = new FileWriter(pomFile)) {
-            new Processor().process(profileFile, pomFile, fileWriter);
-            fileWriter.flush();
-        }
+        String pomContent = Files.readString(pomFile);
+        String profileContent = Files.readString(profileFile);
+
+        MavenProfileAppender mavenProfileAppender = new MavenProfileAppender();
+        Files.writeString(pomFile, mavenProfileAppender.addProfileToPomFile(pomContent, profileContent));
 
         System.exit(0);
     }

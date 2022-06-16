@@ -7,8 +7,8 @@
     <artifactId>MavenPreparation</artifactId>
 
     <parent>
-        <artifactId>ya-maven-plugin</artifactId>
         <groupId>org.uva</groupId>
+        <artifactId>ya-maven-plugin</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
