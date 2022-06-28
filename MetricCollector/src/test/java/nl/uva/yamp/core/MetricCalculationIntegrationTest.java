@@ -88,12 +88,28 @@ class MetricCalculationIntegrationTest {
                         .identifier("UT")
                         .value(0)
                         .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NKM")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NSM")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNKM")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNSM")
+                        .value(0)
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(0.5)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
-                        .identifier("disjointMutationScore")
+                        .identifier("dMutationScore")
                         .value(1d)
                         .build()))
                 .build());

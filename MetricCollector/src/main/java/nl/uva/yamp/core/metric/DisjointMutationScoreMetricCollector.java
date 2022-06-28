@@ -16,7 +16,7 @@ public class DisjointMutationScoreMetricCollector implements MetricCollector {
     @Override
     public Metric collect(DataSet dataSet) {
         return DoubleMetric.builder()
-            .identifier("disjointMutationScore")
+            .identifier("dMutationScore")
             .value(calculate(dataSet))
             .build();
     }

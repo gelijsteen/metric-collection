@@ -97,12 +97,28 @@ class ParameterizedSystemTest {
                         .identifier("UT")
                         .value(1)
                         .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NKM")
+                        .value(17)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NSM")
+                        .value(3)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNKM")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNSM")
+                        .value(0)
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(0.85)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
-                        .identifier("disjointMutationScore")
+                        .identifier("dMutationScore")
                         .value(1d)
                         .build()))
                 .build(),
@@ -150,12 +166,28 @@ class ParameterizedSystemTest {
                         .identifier("UT")
                         .value(1)
                         .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NKM")
+                        .value(17)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NSM")
+                        .value(3)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNKM")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNSM")
+                        .value(0)
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(0.85)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
-                        .identifier("disjointMutationScore")
+                        .identifier("dMutationScore")
                         .value(1d)
                         .build()))
                 .build());

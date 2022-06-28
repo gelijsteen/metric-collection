@@ -96,12 +96,28 @@ class OverloadedSystemTest {
                         .identifier("UT")
                         .value(1)
                         .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NKM")
+                        .value(31)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("NSM")
+                        .value(36)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNKM")
+                        .value(1)
+                        .build(),
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("dNSM")
+                        .value(0)
+                        .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")
                         .value(0.4626865671641791)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
-                        .identifier("disjointMutationScore")
+                        .identifier("dMutationScore")
                         .value(1d)
                         .build()))
                 .build());

@@ -22,7 +22,7 @@ class DisjointMutationScoreMetricCollectorTest {
         Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
-            .identifier("disjointMutationScore")
+            .identifier("dMutationScore")
             .value(0d)
             .build());
     }
@@ -40,7 +40,7 @@ class DisjointMutationScoreMetricCollectorTest {
         Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
-            .identifier("disjointMutationScore")
+            .identifier("dMutationScore")
             .value(0d)
             .build());
     }
@@ -64,7 +64,7 @@ class DisjointMutationScoreMetricCollectorTest {
         Metric result = sut.collect(dataSet);
 
         assertThat(result).isEqualTo(CoreTestData.doubleMetricBuilder()
-            .identifier("disjointMutationScore")
+            .identifier("dMutationScore")
             .value(0.5)
             .build());
     }

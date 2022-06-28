@@ -11,10 +11,14 @@ import nl.uva.yamp.core.metric.DistinctPackageHierarchiesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectClassesCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectMethodsCoveredMetricCollector;
 import nl.uva.yamp.core.metric.IndirectPackagesCoveredMetricCollector;
+import nl.uva.yamp.core.metric.KilledDisjointMutantMetricCollector;
+import nl.uva.yamp.core.metric.KilledMutantMetricCollector;
 import nl.uva.yamp.core.metric.MetricCollector;
 import nl.uva.yamp.core.metric.MutationScoreMetricCollector;
 import nl.uva.yamp.core.metric.RecursiveDirectnessMetricCalculator;
 import nl.uva.yamp.core.metric.RecursiveTdataMetricCollector;
+import nl.uva.yamp.core.metric.SurvivingDisjointMutantMetricCollector;
+import nl.uva.yamp.core.metric.SurvivingMutantMetricCollector;
 import nl.uva.yamp.core.metric.TestLocMetricCollector;
 import nl.uva.yamp.util.ConfigurationLoader;
 
@@ -35,6 +39,10 @@ public interface CoreModule {
                                                  TestLocMetricCollector testLocMetricCollector,
                                                  ApplicationLocMetricCollector applicationLocMetricCollector,
                                                  DeveloperClassificationMetricCollector developerClassificationMetricCollector,
+                                                 KilledMutantMetricCollector killedMutantMetricCollector,
+                                                 SurvivingMutantMetricCollector survivingMutantMetricCollector,
+                                                 KilledDisjointMutantMetricCollector killedDisjointMutantMetricCollector,
+                                                 SurvivingDisjointMutantMetricCollector survivingDisjointMutantMetricCollector,
                                                  MutationScoreMetricCollector mutationScoreMetricCollector,
                                                  DisjointMutationScoreMetricCollector disjointMutationScoreMetricCollector) {
         return List.of(
@@ -47,6 +55,10 @@ public interface CoreModule {
             testLocMetricCollector,
             applicationLocMetricCollector,
             developerClassificationMetricCollector,
+            killedMutantMetricCollector,
+            survivingMutantMetricCollector,
+            killedDisjointMutantMetricCollector,
+            survivingDisjointMutantMetricCollector,
             mutationScoreMetricCollector,
             disjointMutationScoreMetricCollector);
     }
