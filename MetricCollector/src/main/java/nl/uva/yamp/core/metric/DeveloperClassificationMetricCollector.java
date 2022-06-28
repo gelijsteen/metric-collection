@@ -2,34 +2,33 @@ package nl.uva.yamp.core.metric;
 
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.DataSet;
+import nl.uva.yamp.core.model.Method;
+import nl.uva.yamp.core.model.metric.IntegerMetric;
 import nl.uva.yamp.core.model.metric.Metric;
-import nl.uva.yamp.core.model.metric.StringMetric;
 
 import javax.inject.Inject;
-import java.util.Set;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
 public class DeveloperClassificationMetricCollector implements MetricCollector {
 
     @Override
     public Metric collect(DataSet dataSet) {
-        return StringMetric.builder()
-            .identifier("DEV")
-            .value(calculate(dataSet))
+        return IntegerMetric.builder()
+            .identifier("UT")
+            .value(isUnitTest(dataSet) ? 1 : 0)
             .build();
     }
 
-    private String calculate(DataSet dataSet) {
+    private boolean isUnitTest(DataSet dataSet) {
         String className = dataSet.getTestCase().getClassName();
-        Set<String> integrationTests = Set.of("IT", "Integration", "integration");
-        Set<String> unitTests = Set.of("Test", "test");
+        return dataSet.getMethods().stream()
+            .map(Method::getClassName)
+            .filter(className::contains)
+            .anyMatch(clazz -> isTestClassMatch(className, clazz));
+    }
 
-        if (integrationTests.stream().anyMatch(className::contains)) {
-            return "IT";
-        }
-        if (unitTests.stream().anyMatch(className::endsWith)) {
-            return "UT";
-        }
-        return "NA";
+    private boolean isTestClassMatch(String className, String clazz) {
+        return className.equalsIgnoreCase(clazz + "Test") ||
+            className.equalsIgnoreCase("Test" + clazz);
     }
 }

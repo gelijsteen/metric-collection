@@ -92,9 +92,9 @@ class BasicSystemTest {
                         .identifier("aLOC")
                         .value(2)
                         .build(),
-                    CoreTestData.stringMetricBuilder()
-                        .identifier("DEV")
-                        .value("UT")
+                    CoreTestData.integerMetricBuilder()
+                        .identifier("UT")
+                        .value(1)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")

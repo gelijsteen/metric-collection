@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class DisjointMutatantEnricher {
+public class DisjointMutantEnricher {
 
     private final DisjointMutantConfiguration configuration;
 

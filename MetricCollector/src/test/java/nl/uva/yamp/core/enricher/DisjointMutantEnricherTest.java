@@ -10,9 +10,9 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DisjointMutatantEnricherTest {
+class DisjointMutantEnricherTest {
 
-    private final DisjointMutatantEnricher sut = new DisjointMutatantEnricher(new DisjointMutantConfiguration());
+    private final DisjointMutantEnricher sut = new DisjointMutantEnricher(new DisjointMutantConfiguration());
 
     @Test
     void whenEmptyDataSets_expectEmptyResult() {
