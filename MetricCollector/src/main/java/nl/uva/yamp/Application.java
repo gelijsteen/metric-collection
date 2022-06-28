@@ -13,8 +13,8 @@ import java.nio.file.Paths;
 public class Application {
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            log.info("Usage: <projectDirectory>");
+        if (args.length < 1 || args.length > 2) {
+            log.info("Usage: <projectDirectory> <disable mutation testing (-D)>");
             System.exit(1);
         }
 
@@ -24,11 +24,26 @@ public class Application {
             System.exit(2);
         }
 
-        createApplication(projectDirectory).run();
+        if (isMutationTestingDisabled(args)) {
+            createApplicationWithoutMutationTests(projectDirectory).run();
+        } else {
+            createApplication(projectDirectory).run();
+        }
+    }
+
+    private static boolean isMutationTestingDisabled(String[] args) {
+        return args.length == 2 && args[1].equals("-D");
     }
 
     private static Application createApplication(Path projectDirectory) {
         return DaggerApplicationComponent.builder()
+            .projectDirectory(projectDirectory)
+            .build()
+            .application();
+    }
+
+    private static Application createApplicationWithoutMutationTests(Path projectDirectory) {
+        return DaggerDisabledMutationComponent.builder()
             .projectDirectory(projectDirectory)
             .build()
             .application();
