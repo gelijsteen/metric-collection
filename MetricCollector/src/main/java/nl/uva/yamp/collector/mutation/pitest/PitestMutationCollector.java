@@ -10,23 +10,19 @@ import nl.uva.yamp.core.model.Method;
 import nl.uva.yamp.core.model.Mutation;
 import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.util.PathResolver;
-import org.apache.maven.shared.invoker.DefaultInvocationRequest;
-import org.apache.maven.shared.invoker.DefaultInvoker;
-import org.apache.maven.shared.invoker.InvocationOutputHandler;
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.apache.maven.shared.invoker.Invoker;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -84,18 +80,14 @@ class PitestMutationCollector implements MutationCollector {
 
     @SneakyThrows
     private void invokePitestProfile(Path pomFile) {
-        InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile(pomFile.toFile());
-        request.setGoals(List.of("-Ppitest-analysis", "org.pitest:pitest-maven:mutationCoverage"));
-        request.setInputStream(InputStream.nullInputStream());
-        request.setOutputHandler(line -> { /* Empty to suppress standard output. */ });
-        OutputHandler errorOutput = new OutputHandler();
-        request.setErrorHandler(errorOutput);
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("mvn", "-f", pomFile.toFile().toString(), "-Ppitest-analysis", "org.pitest:pitest-maven:mutationCoverage");
+        Process process = processBuilder.start();
 
-        Invoker invoker = new DefaultInvoker();
-        InvocationResult result = invoker.execute(request);
+        OutputHandler errorOutput = new OutputHandler(process.getErrorStream());
+        Executors.newSingleThreadExecutor().submit(errorOutput);
 
-        if (result.getExitCode() != 0) {
+        if (process.waitFor() != 0) {
             errorOutput.getOutput().forEach(log::warn);
             throw new IllegalStateException("Maven build failed.");
         }
@@ -125,13 +117,18 @@ class PitestMutationCollector implements MutationCollector {
     }
 
     @Getter
-    private static class OutputHandler implements InvocationOutputHandler {
+    @RequiredArgsConstructor
+    private static class OutputHandler implements Runnable {
 
+        private final InputStream inputStream;
         private final List<String> output = new LinkedList<>();
 
         @Override
-        public void consumeLine(String line) {
-            output.add(line);
+        @SneakyThrows
+        public void run() {
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                bufferedReader.lines().forEach(output::add);
+            }
         }
     }
 }
