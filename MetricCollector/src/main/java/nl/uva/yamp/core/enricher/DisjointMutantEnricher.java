@@ -1,6 +1,7 @@
 package nl.uva.yamp.core.enricher;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.uva.yamp.core.CoreConfiguration.DisjointMutantConfiguration;
 import nl.uva.yamp.core.model.DataSet;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,13 +25,18 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DisjointMutantEnricher {
 
+    private final ForkJoinPool forkJoinPool;
+
     private final DisjointMutantConfiguration configuration;
 
+    @SneakyThrows
     public Set<DataSet> enrich(Set<DataSet> dataSets) {
-        Set<Mutation> collect = IntStream.range(0, configuration.getRepetitions())
+        Set<Mutation> collect = forkJoinPool.submit(() -> IntStream.range(0, configuration.getRepetitions())
+            .parallel()
+            .peek(i -> log.info("Calculating disjoint mutation {}/{}", i + 1, configuration.getRepetitions()))
             .mapToObj(i -> applyDisjointMutantAlgorithm(dataSets))
             .flatMap(Collection::stream)
-            .collect(Collectors.toSet());
+            .collect(Collectors.toSet())).get();
         return enrichDataSets(dataSets, collect);
     }
 

@@ -7,12 +7,16 @@ import nl.uva.yamp.core.model.Mutation;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DisjointMutantEnricherTest {
 
-    private final DisjointMutantEnricher sut = new DisjointMutantEnricher(new DisjointMutantConfiguration());
+    private final DisjointMutantEnricher sut = new DisjointMutantEnricher(
+        ForkJoinPool.commonPool(),
+        new DisjointMutantConfiguration()
+    );
 
     @Test
     void whenEmptyDataSets_expectEmptyResult() {
