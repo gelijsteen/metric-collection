@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -57,8 +58,14 @@ public class MetricCalculation {
 
     @SneakyThrows
     private Set<DataSet> collectDataSets(TargetDirectory targetDirectory) {
+        AtomicInteger atomicInteger = new AtomicInteger();
         Set<DataSet> coverage = coverageCollector.collect(targetDirectory);
         return forkJoinPool.submit(() -> coverage.parallelStream()
+                .peek(dataSet -> log.info("Collecting test case {}/{} ({}.{})",
+                    atomicInteger.incrementAndGet(),
+                    coverage.size(),
+                    dataSet.getTestCase().getClassName(),
+                    dataSet.getTestCase().getMethodName()))
                 .map(dataSet -> callGraphCollector.collect(targetDirectory, dataSet))
                 .map(dataSet -> mutationCollector.collect(targetDirectory, dataSet))
                 .collect(Collectors.toSet()))

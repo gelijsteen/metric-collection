@@ -21,9 +21,9 @@ class SurvivingDisjointMutantMetricCollectorTest {
 
         Metric result = sut.collect(dataSet);
 
-        assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
+        assertThat(result).isEqualTo(CoreTestData.longMetricBuilder()
             .identifier("dNSM")
-            .value(0)
+            .value(0L)
             .build());
     }
 
@@ -68,9 +68,9 @@ class SurvivingDisjointMutantMetricCollectorTest {
 
         Metric result = sut.collect(dataSet);
 
-        assertThat(result).isEqualTo(CoreTestData.integerMetricBuilder()
+        assertThat(result).isEqualTo(CoreTestData.longMetricBuilder()
             .identifier("dNSM")
-            .value(2)
+            .value(2L)
             .build());
     }
 }

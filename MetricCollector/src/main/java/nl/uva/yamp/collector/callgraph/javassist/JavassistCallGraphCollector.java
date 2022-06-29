@@ -34,7 +34,7 @@ class JavassistCallGraphCollector implements CallGraphCollector {
     @Override
     @SneakyThrows
     public DataSet collect(TargetDirectory targetDirectory, DataSet dataSet) {
-        log.debug("Calculating directness for: {}", dataSet.getTestCase().getFullyQualifiedMethodName());
+        log.trace("Calculating directness for: {}", dataSet.getTestCase().getFullyQualifiedMethodName());
         ClassPool classPool = new ClassPool();
         classPool.insertClassPath(targetDirectory.getPath().resolve("classes").toString());
         classPool.insertClassPath(targetDirectory.getPath().resolve("test-classes").toString());

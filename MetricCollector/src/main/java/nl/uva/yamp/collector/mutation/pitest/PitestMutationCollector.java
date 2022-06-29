@@ -1,6 +1,5 @@
 package nl.uva.yamp.collector.mutation.pitest;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +13,11 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -37,7 +32,7 @@ class PitestMutationCollector implements MutationCollector {
 
     @SneakyThrows
     public DataSet collect(TargetDirectory targetDirectory, DataSet dataSet) {
-        log.debug("Calculating mutation score for: {}", dataSet.getTestCase().getFullyQualifiedMethodName());
+        log.trace("Calculating mutation score for: {}", dataSet.getTestCase().getFullyQualifiedMethodName());
         Path pomFile = Files.createTempFile(targetDirectory.getPath().getParent(), "temp-", ".xml");
         Path reportDirectory = Files.createTempDirectory(targetDirectory.getPath().getParent(), "temp-");
         try {
@@ -48,6 +43,9 @@ class PitestMutationCollector implements MutationCollector {
             Set<Mutation> mutations = collectMutations(reportDirectory);
 
             return dataSet.withMutations(mutations);
+        } catch (Exception e) {
+            log.warn("Encountered exception", e);
+            return dataSet;
         } finally {
             Files.deleteIfExists(pomFile);
             Files.deleteIfExists(reportDirectory.resolve(PITEST_RESULT_FILE));
@@ -81,15 +79,18 @@ class PitestMutationCollector implements MutationCollector {
     @SneakyThrows
     private void invokePitestProfile(Path pomFile) {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("mvn", "-f", pomFile.toFile().toString(), "-Ppitest-analysis", "org.pitest:pitest-maven:mutationCoverage");
+        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+            processBuilder.command("mvn.cmd", "-f", pomFile.toFile().toString(), "-Ppitest-analysis", "org.pitest:pitest-maven:mutationCoverage");
+        } else {
+            processBuilder.command("mvn", "-f", pomFile.toFile().toString(), "-Ppitest-analysis", "org.pitest:pitest-maven:mutationCoverage");
+        }
         Process process = processBuilder.start();
 
-        OutputHandler errorOutput = new OutputHandler(process.getErrorStream());
-        Executors.newSingleThreadExecutor().submit(errorOutput);
-
         if (process.waitFor() != 0) {
-            errorOutput.getOutput().forEach(log::warn);
-            throw new IllegalStateException("Maven build failed.");
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                bufferedReader.lines().forEach(log::warn);
+            }
+            throw new IllegalStateException("Maven pitest invocation failed.");
         }
     }
 
@@ -114,21 +115,5 @@ class PitestMutationCollector implements MutationCollector {
             }
         }
         return result;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    private static class OutputHandler implements Runnable {
-
-        private final InputStream inputStream;
-        private final List<String> output = new LinkedList<>();
-
-        @Override
-        @SneakyThrows
-        public void run() {
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                bufferedReader.lines().forEach(output::add);
-            }
-        }
     }
 }

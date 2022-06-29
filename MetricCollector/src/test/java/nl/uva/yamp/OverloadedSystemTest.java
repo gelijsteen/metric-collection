@@ -96,21 +96,21 @@ class OverloadedSystemTest {
                         .identifier("UT")
                         .value(1)
                         .build(),
-                    CoreTestData.integerMetricBuilder()
+                    CoreTestData.longMetricBuilder()
                         .identifier("NKM")
-                        .value(31)
+                        .value(31L)
                         .build(),
-                    CoreTestData.integerMetricBuilder()
+                    CoreTestData.longMetricBuilder()
                         .identifier("NSM")
-                        .value(36)
+                        .value(36L)
                         .build(),
-                    CoreTestData.integerMetricBuilder()
+                    CoreTestData.longMetricBuilder()
                         .identifier("dNKM")
-                        .value(1)
+                        .value(1L)
                         .build(),
-                    CoreTestData.integerMetricBuilder()
+                    CoreTestData.longMetricBuilder()
                         .identifier("dNSM")
-                        .value(0)
+                        .value(0L)
                         .build(),
                     CoreTestData.doubleMetricBuilder()
                         .identifier("MutationScore")

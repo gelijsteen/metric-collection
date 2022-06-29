@@ -2,7 +2,7 @@ package nl.uva.yamp.core.metric;
 
 import lombok.NoArgsConstructor;
 import nl.uva.yamp.core.model.DataSet;
-import nl.uva.yamp.core.model.metric.IntegerMetric;
+import nl.uva.yamp.core.model.metric.LongMetric;
 import nl.uva.yamp.core.model.metric.Metric;
 
 import javax.inject.Inject;
@@ -12,14 +12,14 @@ public class SurvivingMutantMetricCollector implements MetricCollector {
 
     @Override
     public Metric collect(DataSet dataSet) {
-        return IntegerMetric.builder()
+        return LongMetric.builder()
             .identifier("NSM")
             .value(calculate(dataSet))
             .build();
     }
 
-    private int calculate(DataSet dataSet) {
-        return (int) dataSet.getMutations()
+    private long calculate(DataSet dataSet) {
+        return dataSet.getMutations()
             .stream()
             .filter(m -> !m.getKilled())
             .count();

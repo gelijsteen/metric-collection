@@ -11,6 +11,7 @@ import nl.uva.yamp.core.model.TargetDirectory;
 import nl.uva.yamp.core.model.TestCase;
 import nl.uva.yamp.core.model.metric.DoubleMetric;
 import nl.uva.yamp.core.model.metric.IntegerMetric;
+import nl.uva.yamp.core.model.metric.LongMetric;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,6 +30,7 @@ public class CoreTestData {
     public static final int COVERAGE_LOC = 1;
     public static final String METRIC_IDENTIFIER = "identifier";
     public static final int METRIC_VALUE_INTEGER = 0;
+    public static final long METRIC_VALUE_LONG = 0;
     public static final double METRIC_VALUE_DOUBLE = 0d;
     public static final String MUTATION_OPERATOR = "mutation-operator";
     public static final String MUTATION_FQN = PACKAGE_NAME + "." + CLASS_NAME + "." + METHOD_NAME;
@@ -90,6 +92,12 @@ public class CoreTestData {
         return IntegerMetric.builder()
             .identifier(METRIC_IDENTIFIER)
             .value(METRIC_VALUE_INTEGER);
+    }
+
+    public static LongMetric.LongMetricBuilder longMetricBuilder() {
+        return LongMetric.builder()
+            .identifier(METRIC_IDENTIFIER)
+            .value(METRIC_VALUE_LONG);
     }
 
     public static DoubleMetric.DoubleMetricBuilder doubleMetricBuilder() {
