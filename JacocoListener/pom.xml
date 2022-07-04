@@ -7,8 +7,8 @@
     <artifactId>JacocoListener</artifactId>
 
     <parent>
-        <groupId>org.uva</groupId>
-        <artifactId>ya-maven-plugin</artifactId>
+        <groupId>org.uva.meco</groupId>
+        <artifactId>metric-collection</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 

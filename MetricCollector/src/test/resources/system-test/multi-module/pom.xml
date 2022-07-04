@@ -56,7 +56,7 @@
                             <properties>
                                 <property>
                                     <name>listener</name>
-                                    <value>nl.uva.yamp.JUnitListener</value>
+                                    <value>nl.uva.meco.JUnitListener</value>
                                 </property>
                             </properties>
                         </configuration>

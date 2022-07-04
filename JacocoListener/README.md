@@ -49,7 +49,7 @@ To set up the JaCoCo Listener for a subject project, add the Maven profile below
                     <properties>
                         <property>
                             <name>listener</name>
-                            <value>nl.uva.yamp.JUnitListener</value>
+                            <value>nl.uva.meco.JUnitListener</value>
                         </property>
                     </properties>
                 </configuration>
@@ -58,7 +58,7 @@ To set up the JaCoCo Listener for a subject project, add the Maven profile below
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.uva</groupId>
+            <groupId>org.uva.meco</groupId>
             <artifactId>JacocoListener</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
