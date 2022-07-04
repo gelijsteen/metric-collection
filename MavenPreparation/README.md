@@ -1,8 +1,8 @@
 ### Maven Preparation
 
-Command-line tool to add profile with identifier 'test-analysis' to existing `pom.xml` file.
+Utility command-line tool to add or replace a Maven profile in existing `pom.xml` file.
 
-If a profile with identifier 'test-analysis' is already present, it is replaced.
+If a profile with given identifier is already present, it is replaced.
 
 Requires two arguments; (1) the profile XML file and (2) the `pom.xml` to modify.
 
