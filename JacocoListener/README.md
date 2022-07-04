@@ -1,6 +1,24 @@
-### Jacoco Listener
+### JaCoCo Listener
 
-To set up the Jacoco Listener to collect coverage data for individual test cases, add the profile below to the `pom.xml` file, then run the tests using `mvn clean test -Ptest-analysis`.
+Minimal Java library used to have JaCoCo collect coverage per test case. Supports the JUnit test framework.
+
+#### Prerequisites
+
+*Environment:* Requires Java version `11.x` and Maven version `3.x`.
+
+*Subject project*: Contains at least one `pom.xml` file (Maven multi-module projects are supported).
+
+#### Initial Setup
+
+Install the JaCoCo Listener to your local Maven repository using the following command in this directory:
+
+```shell
+mvn clean install
+```
+
+#### Running the Tool
+
+To set up the JaCoCo Listener for a subject project, add the Maven profile below to the `pom.xml` file, then run the tests using `mvn clean test -Ptest-analysis`.
 
 **Note**: To automate the modification of `pom.xml` files you can use the `MavenPreparation` module.
 

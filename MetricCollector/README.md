@@ -6,7 +6,15 @@ Command-line tool to collect a set of metrics for the test cases within a given 
 
 *Environment*: Requires Java version `11.x` and Maven version `3.x`.
 
-*Subject project*: Contains at least one `pom.xml` (Maven multi-module projects are supported) and a `jacoco.exec` file generated using `JacocoListener` module. 
+*Subject project*: Contains at least one `pom.xml` file (Maven multi-module projects are supported) and a `jacoco.exec` file generated using `JacocoListener` module. 
+
+#### Initial Setup
+
+To obtain the required dependencies and have the dependency injection framework (Dagger) generate its code, run the following command in this directory:
+
+```shell
+mvn clean test-compile
+```
 
 #### Running the tool
 
